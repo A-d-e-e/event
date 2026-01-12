@@ -10,8 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edutech.eventmanagementsystem.entity.Event;
 import com.edutech.eventmanagementsystem.service.EventService;
 
-
+@RestController
 public class ClientController {
+    @Autowired
+    private EventService eventService;
 
+    @GetMapping("/api/client/booking-details/{eventId}")
+    public ResponseEntity<Event> getBookingDetails(@PathVariable Long eventId) {
+        // get event details by event id and return with status code 200 OK
+        return ResponseEntity.status(200).body(eventService.getEventDetails(eventId));
 
+    }
 }

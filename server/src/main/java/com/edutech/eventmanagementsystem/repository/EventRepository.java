@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.edutech.eventmanagementsystem.entity.Event;
 
-
-public interface EventRepository {
+@Repository
+public interface EventRepository extends JpaRepository<Event, Long>{
     // extend jpa repository and add custom method if needed
 }

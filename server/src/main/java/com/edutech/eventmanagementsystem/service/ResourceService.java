@@ -45,7 +45,7 @@ public class ResourceService {
         // Update resource availability
         resource.setAvailability(false);
         resourceRepository.save(resource);
-        // ifiweuhfuwehfweuibfu
+        // ifiweuhfuwehfweuibf
     }
 
 }

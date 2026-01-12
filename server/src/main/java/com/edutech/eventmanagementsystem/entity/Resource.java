@@ -1,66 +1,65 @@
 package com.edutech.eventmanagementsystem.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
+import javax.persistence.*;
+
+@Table(name = "resources") // do not change table name
 @Entity
-@Table(name = "resources")
 public class Resource {
-
-    // i. Primary Key and Auto Increment
+    // implement entity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long resourceID;
+    
+    private String name;
+    private String type;
+    private boolean availability;
 
-    // ii. resourceType
-    private String resourceType;
-
-    // iii. description
-    private String description;
-
-    // iv. event (MTO1)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
-
-    // --- Getters and Setters ---
-
-    public Long getId() {
-        return id;
+    public Resource() {
     }
 
-    public String getResourceType() {
-        return resourceType;
+    public Resource(Long resourceID, String name, String type, boolean availability) {
+        this.resourceID = resourceID;
+        this.name = name;
+        this.type = type;
+        this.availability = availability;
     }
 
-    public String getDescription() {
-        return description;
+    public Long getResourceID() {
+        return resourceID;
     }
 
-    public Event getEvent() {
-        return event;
+    public void setResourceID(Long resourceID) {
+        this.resourceID = resourceID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getName() {
+        return name;
     }
 
-    public void setResourceType(String resourceType) {
-        this.resourceType = resourceType;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getType() {
+        return type;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setType(String type) {
+        this.type = type;
     }
+
+    public boolean isAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(boolean availability) {
+        this.availability = availability;
+    }
+
+    
+    
+
+    
+
 }
-

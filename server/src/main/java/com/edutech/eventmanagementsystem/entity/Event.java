@@ -1,78 +1,96 @@
 package com.edutech.eventmanagementsystem.entity;
-
-import java.util.ArrayList;
+ 
+ 
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
+ 
+@Table(name = "events") // do not change table name
+ 
 @Entity
-@Table(name = "events")
 public class Event {
-
-    // i. Primary Key and Auto Increment
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    // ii. name
-    private String name;
-
-    // iii. description
-    private String description;
-
-    // iv. materials
-    private String materials;
-
-    // v. resourceAllocations (1TOM)
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Resource> resourceAllocations = new ArrayList<>();
-
-    // --- Getters and Setters ---
-
-    public Long getId() {
-        return id;
+ 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long eventID;
+    private String title;
+    private  String description;
+    private Date dateTime;
+    private String location;
+    private String status;
+ 
+    @OneToMany(mappedBy = "event")
+    private List<Allocation> allocations;
+ 
+    public Event() {
     }
-
-    public String getName() {
-        return name;
+ 
+    public Event(Long eventID, String title, String description, Date dateTime, String location, String status, List<Allocation> allocations) {
+        this.eventID = eventID;
+        this.title = title;
+        this.description = description;
+        this.dateTime = dateTime;
+        this.location = location;
+        this.status = status;
+        this.allocations = allocations;
     }
-
+ 
+    public Long getEventID() {
+        return eventID;
+    }
+ 
+    public void setEventID(Long eventID) {
+        this.eventID = eventID;
+    }
+ 
+    public String getTitle() {
+        return title;
+    }
+ 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+ 
     public String getDescription() {
         return description;
     }
-
-    public String getMaterials() {
-        return materials;
-    }
-
-    public List<Resource> getResourceAllocations() {
-        return resourceAllocations;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+ 
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public void setMaterials(String materials) {
-        this.materials = materials;
+ 
+    public Date getDateTime() {
+        return dateTime;
     }
-
-    public void setResourceAllocations(List<Resource> resourceAllocations) {
-        this.resourceAllocations = resourceAllocations;
+ 
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
+ 
+    public String getLocation() {
+        return location;
+    }
+ 
+    public void setLocation(String location) {
+        this.location = location;
+    }
+ 
+    public String getStatus() {
+        return status;
+    }
+ 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+ 
+    public List<Allocation> getAllocations() {
+        return allocations;
+    }
+ 
+    public void setAllocations(List<Allocation> allocations) {
+        this.allocations = allocations;
+    }
+   
 }
+ 
+ 

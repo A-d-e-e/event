@@ -1,73 +1,71 @@
 package com.edutech.eventmanagementsystem.entity;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+ 
+ 
+import javax.persistence.*;
+ 
 @Entity
-@Table(name = "users")
+@Table(name = "users") // do not change table name
+ 
 public class User {
-
-    // i. Primary Key and Auto Increment
+    // implement entity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    // ii. username
-    @Column(unique = true)
+    private Long userID;
     private String username;
-
-    // iii. password
     private String password;
-
-    // iv. role // roles: "INSTITUTION", "EDUCATOR", "STUDENT"
-    private String role;
-
-    // v. email
     private String email;
-
-    // --- Getters and Setters ---
-
-    public Long getId() {
-        return id;
+    private String role;
+ 
+   
+    public User() {
     }
-
+ 
+    public User(Long userID, String username, String password, String email, String role) {
+        this.userID = userID;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+ 
+    public Long getUserID() {
+        return userID;
+    }
+ 
+    public void setUserID(Long userID) {
+        this.userID = userID;
+    }
+ 
     public String getUsername() {
         return username;
     }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+ 
     public void setUsername(String username) {
         this.username = username;
     }
-
+ 
+    public String getPassword() {
+        return password;
+    }
+ 
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public void setRole(String role) {
-        this.role = role;
+ 
+    public String getEmail() {
+        return email;
     }
-
+ 
     public void setEmail(String email) {
         this.email = email;
     }
+ 
+    public String getRole() {
+        return role;
+    }
+ 
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
+ 

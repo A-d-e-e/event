@@ -1,3 +1,53 @@
-<div class="row text-center">
-<h1 class="text-capitalize">Event Management System</h1>
+<!-- <div class="row text-center">
+    <h3 class="display-4 text-capitalize">Event Management System</h3>
+</div>
+<div *ngIf="roleName === 'PLANNER'">
+    <div class="card mt-4">
+        <div class="card-body">
+            <app-add-resource></app-add-resource>   
+        </div>
+    </div>
+    <div class="card mt-4">
+        <div class="card-body">
+            <app-event></app-event>
+        </div>
+    </div>
+    <div class="card mt-4">
+        <div class="card-body">
+            <app-resource-allocate></app-resource-allocate>
+        </div>
+    </div>
+</div>
+<div *ngIf="roleName === 'STAFF'">
+    <div class="card mt-4">
+        <div class="card-body">
+            <app-view-events></app-view-events>
+        </div>
+    </div>
+</div>
+<div *ngIf="roleName === 'CLIENT'">
+    <div class="card mt-4">
+        <div class="card-body">
+            <app-booking-details></app-booking-details> 
+        </div>
+    </div>
+</div> -->
+
+
+
+<!-- Planner -->
+<div class="d-flex justify-content-center" *ngIf="roleName === 'PLANNER'">
+  <app-landing-page></app-landing-page>
+
+</div>
+
+<!-- Staff -->
+<div *ngIf="roleName === 'STAFF'">
+  <app-landing-page></app-landing-page>
+</div>
+
+
+<!-- <CLIENT> -->
+<div *ngIf="roleName === 'CLIENT'">
+  <app-landing-page></app-landing-page>
 </div>

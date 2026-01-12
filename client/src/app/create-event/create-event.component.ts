@@ -11,4 +11,6 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./create-event.component.scss']
 })
 export class CreateEventComponent 
-//doto: complete missing code..
+{
+  
+}

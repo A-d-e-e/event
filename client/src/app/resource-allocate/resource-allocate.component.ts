@@ -9,4 +9,6 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./resource-allocate.component.scss']
 })
 export class ResourceAllocateComponent 
-//todo: complete missing code..
+{
+  
+}

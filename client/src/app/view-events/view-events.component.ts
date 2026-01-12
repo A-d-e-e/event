@@ -12,4 +12,6 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ViewEventsComponent 
   
-//todo: complete missing code..
+{
+  
+}

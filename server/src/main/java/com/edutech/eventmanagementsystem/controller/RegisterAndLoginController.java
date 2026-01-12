@@ -19,9 +19,40 @@ import com.edutech.eventmanagementsystem.entity.User;
 import com.edutech.eventmanagementsystem.jwt.JwtUtil;
 import com.edutech.eventmanagementsystem.service.UserService;
 
-
+@RestController
 public class RegisterAndLoginController {
 
+    @Autowired
+    private UserService userService;
 
-   
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @PostMapping("/api/user/register")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        User registeredUser = userService.registerUser(user);
+        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/api/user/login")
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            );
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password", e);
+        }
+
+        final UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUsername());
+        final String token = jwtUtil.generateToken(userDetails.getUsername());
+
+        User user = userService.getUserByUsername(loginRequest.getUsername());
+
+        return ResponseEntity.ok(new LoginResponse(token, user.getUsername(), user.getEmail(), user.getRole(),user.getUserID()));
+
+    }
 }

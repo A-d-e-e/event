@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.edutech.eventmanagementsystem.entity.Allocation;
 
-
-public interface AllocationRepository  {
+@Repository
+public interface AllocationRepository extends JpaRepository<Allocation, Long> {
     // extend jpa repository and add custom methods if needed
 }

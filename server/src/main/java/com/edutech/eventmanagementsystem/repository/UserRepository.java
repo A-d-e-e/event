@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import com.edutech.eventmanagementsystem.entity.User;
 
-
-public interface UserRepository {
+@Repository
+public interface UserRepository extends JpaRepository<User,Long> {
     // extend jpa repository and add custom method if needed
+    User findByUsername(String userName);
 }
 

@@ -16,6 +16,7 @@ public class Event {
     private  Date dateTime;
     private String location;
     private  String status;
+    @OneToMany(mappedBy = "event")
     private List<Allocation> allocations;
 
 

@@ -1,1 +1,26 @@
-//todo: complete missing code.
+
+<div class="container">
+  <h2>Booking Details</h2>
+
+  <div class="form-inline mb-3">
+    <label for="eventID" class="mr-2">Event ID</label>
+    <input id="eventID" type="number" class="form-control mr-2" [(ngModel)]="formModel.eventID" placeholder="Enter Event ID">
+    <button class="btn btn-primary" (click)="searchEvent()">Search</button>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="showError">{{ errorMessage }}</div>
+
+  <div *ngIf="scores$ | async as scores">
+    <h4 *ngIf="scores.length === 0">No booking details found.</h4>
+    <ul class="list-group" *ngIf="scores.length > 0">
+      <li class="list-group-item" *ngFor="let ev of scores">
+        <div><strong>Title:</strong> {{ ev.title }}</div>
+        <div><strong>Description:</strong> {{ ev.description }}</div>
+        <div><strong>Date/Time:</strong> {{ ev.dateTime | date: 'short' }}</div>
+        <div><strong>Location:</strong> {{ ev.location }}</div>
+        <div><strong>Status:</strong> {{ ev.status }}</div>
+      </li>
+    </ul>
+  </div>
+</div>
+``

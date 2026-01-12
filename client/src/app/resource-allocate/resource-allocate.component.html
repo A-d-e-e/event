@@ -1,1 +1,45 @@
-//todo: complete missing code..
+
+<div class="container">
+  <h2>Allocate Resources</h2>
+
+  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="eventId">Event</label>
+      <select id="eventId" class="form-control" formControlName="eventId">
+        <option [ngValue]="null" disabled>Select Event</option>
+        <option *ngFor="let ev of eventList" [value]="ev.eventID">
+          {{ ev.title }} (ID: {{ ev.eventID }})
+        </option>
+      </select>
+      <div class="text-danger" *ngIf="itemForm.get('eventId')?.touched && itemForm.get('eventId')?.invalid">
+        Event is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="resourceId">Resource</label>
+      <select id="resourceId" class="form-control" formControlName="resourceId">
+        <option [ngValue]="null" disabled>Select Resource</option>
+        <option *ngFor="let r of resourceList" [value]="r.resourceID">
+          {{ r.name }} — {{ r.type }}
+        </option>
+      </select>
+      <div class="text-danger" *ngIf="itemForm.get('resourceId')?.touched && itemForm.get('resourceId')?.invalid">
+        Resource is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="quantity">Quantity</label>
+      <input id="quantity" type="number" class="form-control" formControlName="quantity" min="1" />
+      <div class="text-danger" *ngIf="itemForm.get('quantity')?.touched && itemForm.get('quantity')?.invalid">
+        Quantity must be at least 1.
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Allocate</button>
+  </form>
+
+  <div class="alert alert-success mt-3" *ngIf="showMessage">{{ responseMessage }}</div>
+  <div class="alert alert-danger mt-3" *ngIf="showError">{{ errorMessage }}</div>
+</div>

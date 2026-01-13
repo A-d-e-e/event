@@ -1,109 +1,176 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-// import { environment } from 'src/environments/environment';
-import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 import { environment } from '../environments/environment.development';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
+  public serverName = environment.apiUrl;
 
-  private serverName = environment.apiUrl;
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) {}
-
-  private getHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
-    return new HttpHeaders({
+  getEventById(id: number): Observable<any> {
+    const url = `${this.serverName}/api/planner/event-details/${id}`;
+    const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
+      'Authorization': `Bearer ${this.authService.getToken()}`
     });
+    return this.http.get(url, { headers });
+  }
+  
+  getEventsByTitle(title: string): Observable<any[]> {
+    const url = `${this.serverName}/api/planner/event-detail/${title}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get<any[]>(url, { headers });
   }
 
   getBookingDetails(eventId: any): Observable<any> {
-    return this.http.get(
-      `${this.serverName}/api/client/booking-details/${eventId}`,
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+    const url = `${this.serverName}/api/client/booking-details/${eventId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
   }
 
-  getEventDetails(eventId: any): Observable<any> {
-    return this.http.get(
-      `${this.serverName}/api/staff/event-details/${eventId}`,
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+  GetEventdetails(eventId: any): Observable<any> {
+    const url = `${this.serverName}/api/staff/event-details/${eventId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
   }
 
-  getAllEvents(): Observable<any> {
-    return this.http.get(
-      `${this.serverName}/api/planner/events`,
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+  deleteEventDetailsByID(eventId: any): Observable<any> {
+    const url = `${this.serverName}/api/planner/event/${eventId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.delete(url, { headers });
   }
 
-  getAllResources(): Observable<any> {
-    return this.http.get(
-      `${this.serverName}/api/planner/resources`,
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+  GetAllevents(): Observable<any> {
+    const url = `${this.serverName}/api/planner/events`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  GetEventdetailsbyTitleforClient(title: any): Observable<any> {
+    const url = `${this.serverName}/api/client/event-detailsbyTitleforClient/${title}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  GetEventdetailsbyTitle(title: any): Observable<any> {
+    const url = `${this.serverName}/api/staff/event-detailsbyTitle/${title}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  GetEvents(): Observable<any> {
+    const url = `${this.serverName}/api/staff/allEvents`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  GetAlleventsForClient():Observable<any> {
+    const url = `${this.serverName}/api/client/allEvents`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  
+
+  GetAllResources(): Observable<any> {
+    const url = `${this.serverName}/api/planner/resources`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
   }
 
   createEvent(details: any): Observable<any> {
-    return this.http.post(
-      `${this.serverName}/api/planner/event`,
-      details,
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+    const url = `${this.serverName}/api/planner/event`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.post(url, details, { headers });
   }
 
   updateEvent(details: any, eventId: any): Observable<any> {
-    return this.http.put(
-      `${this.serverName}/api/staff/update-setup/${eventId}`,
-      details,
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+    const url = `${this.serverName}/api/staff/update-setup/${eventId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.put(url, details, { headers });
   }
 
   addResource(details: any): Observable<any> {
-    return this.http.post(
-      `${this.serverName}/api/planner/resource`,
-      details,
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+    const url = `${this.serverName}/api/planner/resource`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.post(url, details, { headers });
   }
 
   allocateResources(eventId: any, resourceId: any, details: any): Observable<any> {
-    return this.http.post(
-      `${this.serverName}/api/planner/allocate-resources?eventId=${eventId}&resourceId=${resourceId}`,
-      details,
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError));
+    const url = `${this.serverName}/api/planner/allocate-resources?eventId=${eventId}&resourceId=${resourceId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.post(url, details, { headers });
   }
 
-  login(details: any): Observable<any> {
-    return this.http.post(
-      `${this.serverName}/api/user/login`,
-      details,
-      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
-    ).pipe(catchError(this.handleError));
+  Login(details: any): Observable<any> {
+    const url = `${this.serverName}/api/user/login`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(url, details, { headers });
   }
 
   registerUser(details: any): Observable<any> {
-    return this.http.post(
-      `${this.serverName}/api/user/register`,
-      details,
-      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
-    ).pipe(catchError(this.handleError));
+    const url = `${this.serverName}/api/user/register`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(url, details, { headers });
   }
 
-  private handleError(error: any): Observable<never> {
-    console.error('HTTP Error:', error);
-    return throwError(() => error);
+  getStatename(): Observable<any> {
+
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`)
+    return this.http.get(this.serverName + `/api/state/`, { headers: headers });
+  }
+
+  getAllUsers(): Observable<any> {
+    return this.http.get(`${this.serverName}/api/user/users`, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
   }
 }

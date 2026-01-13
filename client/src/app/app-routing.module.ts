@@ -5,7 +5,7 @@ import { RegistrationComponent } from './registration/registration.component';
 
 
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './dashbaord/dashbaord.component';
+import { DashbaordComponent } from './dashbaord/dashbaord.component';
 
 import { CreateEventComponent } from './create-event/create-event.component';
 import { AddResourceComponent } from './add-resource/add-resource.component';
@@ -16,7 +16,7 @@ import { BookingDetailsComponent } from './booking-details/booking-details.compo
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', component: DashbaordComponent },
   { path: 'create-event', component: CreateEventComponent },  
   { path: 'add-resource', component: AddResourceComponent }, 
   { path: 'resource-allocate', component: ResourceAllocateComponent },  

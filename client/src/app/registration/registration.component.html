@@ -1,1 +1,120 @@
-//todo: complete missing code..
+<body>
+    
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+               
+                <div class="register-container">
+                    <div class="header-text mb-4">
+                        <h3 class="typing-effect">Create Account</h3>
+                    </div>
+
+                    <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="form">
+                        <div class="mb-3">
+                            <input type="text" id="username" formControlName="username" class="form-control"
+                                placeholder="Username" required>
+                            <div *ngIf="itemForm.get('username')?.invalid && itemForm.get('username')?.touched"
+                                class="invalid-feedback">
+                                <span *ngIf="itemForm.get('username')?.hasError('required')">Username is required</span>
+                                <span *ngIf="itemForm.get('username')?.hasError('pattern')">Username should only contain
+                                    lowercase letters</span>
+                                <span *ngIf="itemForm.get('username')?.hasError('notUnique')">Username already
+                                    exists</span>
+                            </div>
+                        </div>
+                       
+                        <div class="mb-3">
+                            <input type="email" id="email" formControlName="email" class="form-control"
+                                placeholder="Email" required>
+                            <div *ngIf="itemForm.get('email')?.invalid && itemForm.get('email')?.touched"
+                                class="invalid-feedback">
+                                <span *ngIf="itemForm.get('email')?.hasError('required')">Email is required</span>
+                                <span *ngIf="itemForm.get('email')?.hasError('invalidEmailFormat')">Please enter a valid
+                                    email address</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" id="password" formControlName="password" class="form-control"
+                                placeholder="Password" required>
+                            <div *ngIf="itemForm.get('password')?.invalid && itemForm.get('password')?.touched"
+                                class="invalid-feedback">
+                                <span *ngIf="itemForm.get('password')?.hasError('required')">Password is required</span>
+                                <span *ngIf="itemForm.get('password')?.hasError('pattern')">Password must contain at
+                                    least one number, one uppercase and lowercase letter, one special character, and be
+                                    8-20 characters long</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <select id="role" formControlName="role" class="form-select">
+                                <option value="">Select Role</option>
+                                <option value="STAFF">Staff</option>
+                                <option value="PLANNER">Planner</option>
+                                <option value="CLIENT">Client</option>
+                            </select>
+                            <div *ngIf="itemForm.get('role')?.invalid && itemForm.get('role')?.touched"
+                                class="invalid-feedback">
+                                Role is required
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" [disabled]="itemForm.invalid">Sign
+                            Up</button>
+                    </form>
+                    <div class="separator">OR</div>
+                    <div class="footer-text">
+                        <p>Already have an account? <a (click)="openModal()" [routerLink]="['/login']" routerLinkActive="router-link-active" >Sign In</a></p>
+                    </div>
+                    <div *ngIf="showMessage" class="alert alert-success mt-3 text-center">
+                        {{responseMessage}}
+                    </div>
+                    <div *ngIf="showError" class="alert alert-danger mt-3 text-center">
+                        {{errorMessage}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-dark text-white text-center text-lg-start" id="footer" >
+        <div class="container p-8">
+          <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+              <h5 class="text-uppercase">Contact Us</h5>
+              <p>
+                123 Event Street, Event City, EV 12345<br>
+                Phone: (123) 456-7890<br>
+                Email: info@eliteevents.com
+              </p>
+            </div>
+    
+            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+              <h5 class="text-uppercase">Follow Us</h5>
+              <a class="me-3">
+                <i class="bi bi-facebook"></i>
+              </a>
+              <a class="me-3">
+                <i class="bi bi-twitter"></i>
+              </a>
+              <a class="me-3">
+                <i class="bi bi-instagram"></i>
+              </a>
+              <a class="me-3">
+                <i class="bi bi-linkedin"></i>
+              </a>
+            </div>
+    
+            <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+              <h5 class="text-uppercase">About Us</h5>
+              <p>
+                Elite Events is a premier event management and resource allocation application. We provide
+                top-notch services to ensure your events are successful and memorable.
+              </p>
+              <!-- <img src="/assets/Images/logo.png" alt="Elite Events Logo" class="img-fluid"> -->
+            </div>
+          </div>
+        </div>
+    
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+          © 2024 Elite Events. All rights reserved.
+        </div>
+      </footer>
+</body>

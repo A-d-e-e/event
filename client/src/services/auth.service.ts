@@ -4,14 +4,10 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-
   private token: string | null = null;
   private isLoggedIn: boolean = false;
 
-  constructor() {
-    this.token = localStorage.getItem('token');
-    this.isLoggedIn = !!this.token;
-  }
+  constructor() { }
 
   saveToken(token: string): void {
     this.token = token;
@@ -27,13 +23,20 @@ export class AuthService {
     return localStorage.getItem('role');
   }
 
+  SetId(id:any){
+    localStorage.setItem('id', id);
+  }
+
+  get getId(): string | null {
+    return localStorage.getItem('id');
+  }
+
   get getLoginStatus(): boolean {
-    return this.isLoggedIn;
+    return !!localStorage.getItem('token');
   }
 
   getToken(): string | null {
     this.token = localStorage.getItem('token');
-    this.isLoggedIn = !!this.token;
     return this.token;
   }
 

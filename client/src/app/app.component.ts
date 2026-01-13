@@ -1,72 +1,26 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-// import { AuthService } from './services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-
-  isLogin: boolean;
+  IsLoggin: boolean = false;
   roleName: string | null;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.isLogin = this.authService.getLoginStatus;
-    this.roleName = this.authService.getRole;
-
-    if (!this.isLogin) {
-      this.router.navigate(['/login']);
+  constructor(private authService: AuthService, private router: Router) {
+    this.IsLoggin = authService.getLoginStatus;
+    this.roleName = authService.getRole;
+    if (this.IsLoggin == false) {
+      this.router.navigateByUrl('/landing-page');
     }
   }
 
-  logout(): void {
+  logout() {
     this.authService.logout();
     window.location.reload();
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-// import { Component } from '@angular/core';
-// import { AuthService } from '../services/auth.service';
-// import { Router } from '@angular/router';
-
-// @Component({
-//   selector: 'app-root',
-//   templateUrl: './app.component.html',
-//   styleUrls: ['./app.component.scss']
-// })
-// export class AppComponent {
-//   IsLoggin:any=false;
-//   roleName: string | null;
-//   constructor(private authService: AuthService, private router:Router)
-//   {
-   
-//     this.IsLoggin=authService.getLoginStatus;
-//     this.roleName=authService.getRole;
-//     if(this.IsLoggin==false)
-//     {
-//       this.router.navigateByUrl('/login'); 
-    
-//     }
-//   }
-//   logout()
-// {
-//   this.authService.logout();
-//   window.location.reload();
-// }
-
-// }

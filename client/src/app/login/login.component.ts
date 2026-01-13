@@ -10,72 +10,28 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  itemForm!: FormGroup;
+  itemForm: FormGroup;
   showMessage: boolean = false;
   showError: boolean = false;
   responseMessage: string = '';
-  showPassword: boolean = false; 
-  
 
-  usernamePattern = '^[a-z]{3,}$';
-  passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,27}$';
-
-  usernameRules = [
-    { key: "required", label: "Username required", satisfied: false },
-    { key: "minLength", label: "Username should be at least 3 characters", satisfied: false},
-    { key: "lowerCase", label: "Username can only lowercase characters", satisfied: false}
-  ]
-
-  passwordRules = [
-    { key: "required", label: "Password required", satisfied: false },
-    { key: "capital", label: "Password should have a capital letter", satisfied: false },
-    { key: "special", label: "Password should have a special character", satisfied: false },
-    { key: "number", label: "Password should have a number", satisfied: false },
-    { key: "minLength", label: "Password should be of 8 characters at least", satisfied: false }
-  ]
+  usernamePattern = '^[a-z]+$';
+  passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$';
 
   constructor(
     private router: Router,
     private httpService: HttpService,
     private formBuilder: FormBuilder,
     private authService: AuthService
-  ) { }
-
-  ngOnInit(): void {
+  ) {
     this.itemForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.pattern(this.usernamePattern)]],
       password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]]
     });
-
-    this.itemForm.get('username')?.valueChanges.subscribe(value => {
-      this.checkUsernameRules(value || '')
-    })
-
-    this.itemForm.get('password')?.valueChanges.subscribe(value => {
-      this.checkPasswordRules(value || '')
-    })
   }
 
-  checkUsernameRules(username: string){
-    this.usernameRules[0].satisfied = username.length > 0
-    this.usernameRules[1].satisfied = username.length >= 3
-    this.usernameRules[2].satisfied = /^[a-z]+$/.test(username)
-  }
-
-  checkPasswordRules(password: string){
-    this.passwordRules[0].satisfied = password.length > 0
-    this.passwordRules[1].satisfied = /[A-Z]/.test(password)
-    this.passwordRules[2].satisfied = /[@#$%^&+=]/.test(password)
-    this.passwordRules[3].satisfied = /[0-9]/.test(password)
-    this.passwordRules[4].satisfied = password.length >= 8
-  }
-
-  get showUsernameRequirements(): boolean {
-    return this.usernameRules?.some( rule => !rule.satisfied)
-  }
-
-  get showPasswordRequirements(): boolean {
-    return this.passwordRules?.some(rule => !rule.satisfied)
+  ngOnInit(): void {
+    // No specific actions are taken here.
   }
 
   onLogin() {
@@ -84,12 +40,12 @@ export class LoginComponent implements OnInit {
       this.showError = false;
       this.responseMessage = '';
 
-      this.httpService.login(this.itemForm.value).subscribe(
+      this.httpService.Login(this.itemForm.value).subscribe(
         (data: any) => {
           this.showMessage = true;
           this.responseMessage = 'Login successful! Redirecting to dashboard...';
           
-         
+          // Set a timeout to allow the user to see the success message
           setTimeout(() => {
             this.authService.setRole(data.role);
             this.authService.saveToken(data.token);
@@ -97,7 +53,7 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl('dashboard').then(() => {
               window.location.reload();
             });
-          }, 1000); 
+          }, 2000); // 2 seconds delay
         },
         error => {
           this.showMessage = true;
@@ -115,9 +71,5 @@ export class LoginComponent implements OnInit {
       this.responseMessage = 'Please fill in all required fields correctly.';
       this.itemForm.markAllAsTouched();
     }
-  }
-  
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
   }
 }

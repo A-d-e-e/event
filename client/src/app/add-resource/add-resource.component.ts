@@ -118,7 +118,7 @@ export class AddResourceComponent implements OnInit {
     setTimeout(() => {
       this.showSuccess = false;
       this.successMessage = '';
-    }, 3000); // Message disappears after 3 seconds
+    }, 3000); 
   }
 
   private showErrorMessage(message: string) {
@@ -127,6 +127,6 @@ export class AddResourceComponent implements OnInit {
     setTimeout(() => {
       this.showError = false;
       this.errorMessage = '';
-    }, 3000); // Message disappears after 3 seconds
+    }, 3000); 
   }
 }

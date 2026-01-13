@@ -72,7 +72,7 @@ export class BookingDetailsComponent implements OnInit {
       this.tooltipY = event.clientY + 10;
     }
   }
- 
+  
   getStatusClass(status: string): string {
     switch (status.toLowerCase()) {
       case 'active':

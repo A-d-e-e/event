@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl('dashboard').then(() => {
               window.location.reload();
             });
-          }, 2000); // 2 seconds delay
+          }, 2000); 
         },
         error => {
           this.showMessage = true;

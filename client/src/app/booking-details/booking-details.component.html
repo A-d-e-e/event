@@ -14,7 +14,6 @@
     <div class="container px-4 py-5 px-md-5 my-5">
       <h1 class="display-4 fw-bold text-center mb-4 animate__animated animate__fadeInDown">Event Management Search</h1>
   
-      <!-- Search Form -->
       <div class="card bg-glass mx-auto mb-4">
         <div class="card-body">
           <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="mb-4">
@@ -34,7 +33,6 @@
         {{ message.text }}
       </div>
   
-      <!-- Events Table -->
       <div *ngIf="searchPerformed" class="card bg-glass mx-auto animate__animated animate__fadeInUp">
         <div class="card-body">
           <h3 class="mb-3">Search Results</h3>
@@ -63,7 +61,6 @@
                     <span class="allocation-info"
                           (mouseenter)="showTooltip($event, event.allocations)"
                           (mouseleave)="hideTooltip()">
-                      <!-- {{ event.allocations.length }}  -->
                       Allocation(s)
                     </span>
                   </td>

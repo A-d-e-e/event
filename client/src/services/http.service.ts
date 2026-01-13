@@ -29,7 +29,6 @@ export class HttpService {
     });
     return this.http.get<any[]>(url, { headers });
   }
-
   getBookingDetails(eventId: any): Observable<any> {
     const url = `${this.serverName}/api/client/booking-details/${eventId}`;
     const headers = new HttpHeaders({

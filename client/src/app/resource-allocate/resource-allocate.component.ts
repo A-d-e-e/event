@@ -128,7 +128,6 @@ export class ResourceAllocateComponent implements OnInit {
     }
   }
 
-  // Helper function to mark all controls in the form group as touched
   markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();

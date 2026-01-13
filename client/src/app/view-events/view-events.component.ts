@@ -198,7 +198,6 @@ export class ViewEventsComponent implements OnInit {
 
       } else {
 
-        // Add logic for creating a new event
         this.httpService.createEvent(eventData).subscribe(
           response => {
             this.showMessage = true;

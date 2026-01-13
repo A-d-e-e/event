@@ -5,12 +5,13 @@ import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http.service';
 
 
+
 @Component({
-  selector: 'app-dashbaord',
-  templateUrl: './dashbaord.component.html',
-  styleUrls: ['./dashbaord.component.scss']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class DashbaordComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   statename: any = {}
   showError: any;
   errorMessage: any;
@@ -35,11 +36,9 @@ export class DashbaordComponent implements OnInit {
       this.statename = data;
       console.log(this.statename);
     }, error => {
-      // Handle error
       this.showError = true;
       this.errorMessage = "An error occurred while searching in. Please try again later or no record found";
       console.error('Login error:', error);
     });;
   }
-  
 }

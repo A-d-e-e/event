@@ -1,40 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-  <a class="navbar-brand" href="#">Angular Event Managment System </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        //add nav link here
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angular Event Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="app.component.scss">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Italiana&family=Luxurious+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Italiana&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
 
-      </li>
-      <li class="nav-item">
-        //add nav link here
-      </li>
-      <li class="nav-item">
-       //add nav link here
-      </li>
-    </ul>
- 
-    <!-- Login/Logout buttons -->
-    <ul class="navbar-nav">
-      <li  class="nav-item">
-        //add nav link here
-      </li>
-      <li class="nav-item">
-        //add nav link here
-      </li>
-    </ul>
-  </div>
-</nav>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="assets/Images/Logo.png" alt="Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item" *ngIf="roleName === 'PLANNER'">
+                        <a class="nav-link" [routerLink]="['/create-event']">
+                            <i class="bi bi-calendar-plus"></i> Create Event
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="roleName === 'PLANNER'">
+                        <a class="nav-link" [routerLink]="['/add-resource']">
+                            <i class="bi bi-plus-circle"></i> Add Resources
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="roleName === 'PLANNER'">
+                        <a class="nav-link" [routerLink]="['/resource-allocate']">
+                            <i class="bi bi-diagram-3"></i> Resource Allocate
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="roleName === 'CLIENT'">
+                        <a class="nav-link" [routerLink]="['/booking-details']">
+                            <i class="bi bi-book"></i> Booking Details
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="roleName === 'STAFF'">
+                        <a class="nav-link" [routerLink]="['/view-events']">
+                            <i class="bi bi-eye"></i> View Events
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <button class="btn btn-login" *ngIf="!IsLoggin" [routerLink]="['/login']">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                    <button class="btn btn-register" *ngIf="!IsLoggin" [routerLink]="['/registration']">
+                        <i class="bi bi-person-plus"></i> Register
+                    </button>
+                    <button class="btn btn-login" *ngIf="IsLoggin" (click)="logout()" [routerLink]="['/login']">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid mt-4">
+        <router-outlet></router-outlet>
+    </div>
 
-<body  >
-  <div class="container mt-4 mx-5">
-    <router-outlet>    
-    </router-outlet>
-  </div>
+    <footer class="bg-dark text-white text-center text-lg-start" id="footer" *ngIf="IsLoggin">
+        <div class="container p-8">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Contact Us</h5>
+                    <p>
+                        123 Event Street, Event City, EV 12345<br>
+                        Phone: (123) 456-7890<br>
+                        Email: info@eliteevents.com
+                    </p>
+                </div>
 
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Follow Us</h5>
+                    <a class="me-3">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a class="me-3">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                    <a class="me-3">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a class="me-3">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                </div>
+
+                <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">About Us</h5>
+                    <p>
+                        Elite Events is a premier event management and resource allocation application. We provide
+                        top-notch services to ensure your events are successful and memorable.
+                    </p>
+                    <!-- <img src="/assets/Images/logo.png" alt="Elite Events Logo" class="img-fluid"> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2024 Elite Events. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
+</html>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
@@ -11,11 +11,14 @@ import { AuthService } from '../../services/auth.service';
 export class BookingDetailsComponent implements OnInit {
  
   itemForm: FormGroup;
-  myBookings: any[] = [];
-  displayedBookings: any[] = [];
+  eventObj: any[] = [];
   message: { type: 'success' | 'error', text: string } | null = null;
   searchPerformed: boolean = false;
-  loadingBookings: boolean = false;
+ 
+  tooltipVisible: boolean = false;
+  tooltipContent: any[] = [];
+  tooltipX: number = 0;
+  tooltipY: number = 0;
  
   constructor(
     private httpService: HttpService,
@@ -23,77 +26,81 @@ export class BookingDetailsComponent implements OnInit {
     private authService: AuthService
   ) {
     this.itemForm = this.formBuilder.group({
-      searchTerm: ['']
+      searchTerm: ['', Validators.required]
     });
   }
  
-  ngOnInit(): void {
-    // this.loadMyBookings();
-  }
-
-  // loadMyBookings(): void {
-  //   this.loadingBookings = true;
-  //   this.httpService.getMyBookings().subscribe(
-  //     (bookings: any) => {
-  //       this.myBookings = bookings;
-  //       this.displayedBookings = bookings;
-  //       this.loadingBookings = false;
-  //     },
-  //     (error: any) => {
-  //       console.error('Error loading bookings:', error);
-  //       this.showTemporaryMessage('error', 'Failed to load your bookings');
-  //       this.loadingBookings = false;
-  //     }
-  //   );
-  // }
+  ngOnInit(): void {}
  
-  searchBookings(): void {
-    const searchTerm = this.itemForm.get('searchTerm')?.value?.toLowerCase().trim();
-    
-    if (!searchTerm) {
-      this.displayedBookings = this.myBookings;
-      this.searchPerformed = false;
-      return;
-    }
-    
-    this.searchPerformed = true;
-    this.displayedBookings = this.myBookings.filter(booking => {
-      const eventTitle = booking.event?.title?.toLowerCase() || '';
-      const bookingId = booking.bookingId?.toString() || '';
-      const eventLocation = booking.event?.location?.toLowerCase() || '';
-      
-      return eventTitle.includes(searchTerm) || 
-             bookingId.includes(searchTerm) ||
-             eventLocation.includes(searchTerm);
-    });
-    
-    if (this.displayedBookings.length > 0) {
-      this.showTemporaryMessage('success', `Found ${this.displayedBookings.length} booking(s)`);
+  searchEvent(): void {
+    if (this.itemForm.valid) {
+      const searchTerm = this.itemForm.get('searchTerm')?.value;
+      if (isNaN(searchTerm)) {
+        // If searchTerm is a string, search by title
+        this.httpService.GetEventdetailsbyTitleforClient(searchTerm).subscribe(
+          response => this.handleSearchResponse(response),
+          error => this.handleSearchError(error)
+        );
+      } else {
+        // If searchTerm is a number, search by ID
+        this.httpService.getBookingDetails(searchTerm).subscribe(
+          response => this.handleSearchResponse(response),
+          error => this.handleSearchError(error)
+        );
+      }
     } else {
-      this.showTemporaryMessage('error', 'No bookings match your search');
+      this.itemForm.get('searchTerm')?.markAsTouched();
     }
-  }
-  
-  clearSearch(): void {
-    this.itemForm.reset();
-    this.displayedBookings = this.myBookings;
-    this.searchPerformed = false;
-    this.message = null;
   }
  
-  getBookingStatusClass(status: string): string {
-    switch (status?.toUpperCase()) {
-      case 'CONFIRMED':
-      case 'APPROVED':
-        return 'bg-success';
-      case 'PENDING':
-        return 'bg-warning';
-      case 'CANCELLED':
-      case 'REJECTED':
-        return 'bg-danger';
-      default:
-        return 'bg-secondary';
+  showTooltip(event: MouseEvent, allocations: any[]): void {
+    this.tooltipContent = allocations;
+    this.tooltipX = event.clientX + 100;
+    this.tooltipY = event.clientY + 10;
+    this.tooltipVisible = true;
+  }
+ 
+  hideTooltip(): void {
+    this.tooltipVisible = false;
+  }
+ 
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    if (this.tooltipVisible) {
+      this.tooltipX = event.clientX + 10;
+      this.tooltipY = event.clientY + 10;
     }
+  }
+ 
+  getStatusClass(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'active':
+        return 'badge-success';
+      case 'cancelled':
+        return 'badge-danger';
+      case 'pending':
+        return 'badge-warning';
+      default:
+        return 'badge-secondary';
+    }
+  }
+ 
+  private handleSearchResponse(response: any): void {
+    this.searchPerformed = true;
+    if (response && Object.keys(response).length !== 0) {
+      this.eventObj = [response];
+      this.showTemporaryMessage('success', 'Event found');
+    } else {
+      this.eventObj = [];
+      this.showTemporaryMessage('error', 'No event found');
+    }
+  }
+ 
+  private handleSearchError(error: any): void {
+    this.searchPerformed = true;
+    this.showTemporaryMessage('error', 'Failed to find event');
+    this.eventObj = [];
+    console.error('Error searching event:', error);
   }
  
   private showTemporaryMessage(type: 'success' | 'error', text: string): void {

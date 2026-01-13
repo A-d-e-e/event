@@ -27,7 +27,7 @@ export class AddResourceComponent implements OnInit {
     this.itemForm = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      availability: [true]
+      availability: [true, Validators.required]
     });
   }
 
@@ -55,7 +55,7 @@ export class AddResourceComponent implements OnInit {
   }
 
   getResources() {
-    this.httpService.getAllResources().subscribe(
+    this.httpService.GetAllResources().subscribe(
       (data) => {
         this.resourceList = data;
         this.totalPages = Math.ceil(this.resourceList.length / this.itemsPerPage);
@@ -118,7 +118,7 @@ export class AddResourceComponent implements OnInit {
     setTimeout(() => {
       this.showSuccess = false;
       this.successMessage = '';
-    }, 3000); 
+    }, 3000); // Message disappears after 3 seconds
   }
 
   private showErrorMessage(message: string) {
@@ -127,6 +127,6 @@ export class AddResourceComponent implements OnInit {
     setTimeout(() => {
       this.showError = false;
       this.errorMessage = '';
-    }, 3000); 
+    }, 3000); // Message disappears after 3 seconds
   }
 }

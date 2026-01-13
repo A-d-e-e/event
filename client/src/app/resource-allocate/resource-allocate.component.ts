@@ -3,12 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-resource-allocate',
   templateUrl: './resource-allocate.component.html',
   styleUrls: ['./resource-allocate.component.scss']
 })
-
 export class ResourceAllocateComponent implements OnInit {
   itemForm: FormGroup;
   showError: boolean = false;
@@ -23,7 +23,6 @@ export class ResourceAllocateComponent implements OnInit {
   totalPages: number = 1;
   isSuccess: boolean = false;
   showPopup: boolean = false;
-  selectedResourceUnavailable: boolean = false;
 
   constructor(
     private router: Router,
@@ -46,13 +45,13 @@ export class ResourceAllocateComponent implements OnInit {
 
 
   getResources() {
-    this.httpService.getAllResources().subscribe(
-      (data: any) => {
+    this.httpService.GetAllResources().subscribe(
+      (data) => {
         this.resourceList = data;
         this.totalPages = Math.ceil(this.resourceList.length / this.itemsPerPage);
         this.setPaginatedResources();
       },
-      (error: any) => {
+      (error) => {
         this.showErrorMessage(error.message || 'Failed to load resources');
       }
     );
@@ -79,11 +78,11 @@ export class ResourceAllocateComponent implements OnInit {
   }
 
   getEvent() {
-    this.httpService.getAllEvents().subscribe(
-      (data: any) => {
+    this.httpService.GetAllevents().subscribe(
+      data => {
         this.eventList = data;
       },
-      (error: any) => {
+      error => {
         this.showErrorMessage(error.message || 'Failed to load events');
       }
     );
@@ -95,7 +94,7 @@ export class ResourceAllocateComponent implements OnInit {
     this.showMessage = true;
     setTimeout(() => {
       this.showMessage = false;
-    }, 3000); 
+    }, 3000); // Message will disappear after 3 seconds
   }
 
   showErrorMessage(message: string) {
@@ -104,31 +103,18 @@ export class ResourceAllocateComponent implements OnInit {
     this.showError = true;
     setTimeout(() => {
       this.showError = false;
-    }, 3000); 
+    }, 3000); // Message will disappear after 3 seconds
   }
 
-  onResourceSelect(event: any) {
-    const resourceId = event.target.value;
-    const selectedResource = this.resourceList.find(r => r.resourceID == resourceId);
-    this.selectedResourceUnavailable = selectedResource ? !selectedResource.availability : false;
-  }
 
   onSubmit() {
-    if (this.selectedResourceUnavailable) {
-      this.showErrorMessage('Cannot allocate an unavailable resource. Please select an available resource.');
-      return;
-    }
-
     if (this.itemForm.valid) {
       this.httpService.allocateResources(this.itemForm.value.eventId, this.itemForm.value.resourceId, this.itemForm.value).subscribe(
-        (data: any) => {
+        data => {
           this.showSuccessMessage(data.message);
           this.itemForm.reset();
-          this.selectedResourceUnavailable = false;
-
-          this.getResources();
         },
-        (error: any) => {
+        error => {
           if (error.status === 409) {
             this.showErrorMessage(error.error.message);
           } else {
@@ -137,13 +123,14 @@ export class ResourceAllocateComponent implements OnInit {
         }
       );
     } else {
-      
+      // Form is invalid, display error messages
       this.markFormGroupTouched(this.itemForm);
     }
   }
 
+  // Helper function to mark all controls in the form group as touched
   markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach((control: any) => {
+    Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
 
       if (control instanceof FormGroup) {

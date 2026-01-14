@@ -46,10 +46,6 @@ public class UserService implements UserDetailsService{
  
     }
  
-    // public LoginResponse loginUser(LoginRequest loginRequest)
-    // {
-       
-    // }
  
 }
  

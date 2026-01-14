@@ -1,15 +1,75 @@
+<section class="page">
+  <div class="dashboard">
+
+    <h2 class="title">Dashboard</h2>
+    <p class="subtitle">Overview of events, resources, and team members</p>
+
+    <!-- EVENTS -->
+    <div class="card stack">
+      <h3>Events</h3>
+      <div *ngFor="let event of events" class="item-box">
+        {{ event.name }}
+      </div>
+    </div>
+
+    <!-- RESOURCES AVAILABLE -->
+    <div class="card stack">
+      <h3>Available Resources</h3>
+      <div *ngFor="let resource of availableResources" class="item-box">
+        {{ resource.name }}
+      </div>
+    </div>
+
+    <!-- RESOURCES ALLOCATED -->
+    <div class="card stack">
+      <h3>Allocated Resources</h3>
+      <div *ngFor="let resource of allocatedResources" class="item-box allocated">
+        {{ resource.name }} → {{ resource.event }}
+      </div>
+    </div>
+
+    <!-- STAFF -->
+    <div class="card stack">
+      <h3>Staff</h3>
+      <div *ngFor="let member of staff" class="item-box">
+        {{ member.name }}
+      </div>
+    </div>
+
+    <!-- PLANNERS -->
+    <div class="card stack">
+      <h3>Planners</h3>
+      <div *ngFor="let member of planners" class="item-box">
+        {{ member.name }}
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="card stack">
+      <h3>Clients</h3>
+      <div *ngFor="let client of clients" class="item-box">
+        {{ client.name }}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
 <!-- <div class="d-flex justify-content-center" *ngIf="roleName === 'PLANNER'">
   <app-landing-page></app-landing-page>
 
 </div>
 
-<!-- Staff -->
-<!-- <div *ngIf="roleName === 'STAFF'"> -->
-  <!-- <app-landing-page></app-landing-page> -->
-<!-- </div> -->
+Staff
+<div *ngIf="roleName === 'STAFF'">
+  <app-landing-page></app-landing-page>
+</div>
 
 
-<!-- <CLIENT> -->
-<!-- <div *ngIf="roleName === 'CLIENT'"> -->
-  <!-- <app-landing-page></app-landing-page> -->
-<!-- </div> --> -->
+<CLIENT>
+<div *ngIf="roleName === 'CLIENT'">
+  <app-landing-page></app-landing-page>
+</div> -->

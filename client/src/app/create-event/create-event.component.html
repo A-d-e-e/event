@@ -1,4 +1,173 @@
-<!DOCTYPE html>
+
+<section class="page">
+  <div class="card">
+    <div class="stack">
+      <h2 id="page-title">Manage Event</h2>
+      <p class="subtitle">Create a new event and manage your event list</p>
+
+      <!-- Alerts -->
+      <div *ngIf="showMessage" role="alert" class="alert success">
+        {{ responseMessage }}
+        <button type="button" class="alert-close" (click)="closeAlert()" aria-label="Close">×</button>
+      </div>
+      <div *ngIf="showError" role="alert" class="alert error">
+        {{ errorMessage }}
+        <button type="button" class="alert-close" (click)="closeAlert()" aria-label="Close">×</button>
+      </div>
+
+      <!-- Create Event Form -->
+      <div class="stack">
+        <h3>Create Event</h3>
+
+        <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="stack">
+          <!-- Title & Description -->
+          <div class="grid-2">
+            <div class="stack">
+              <label for="title">Title</label>
+              <input
+                type="text"
+                id="title"
+                formControlName="title"
+                placeholder="Title"
+                required
+              />
+              <div *ngIf="itemForm.get('title')?.hasError('required') && itemForm.get('title')?.touched" class="help">
+                Title is required
+              </div>
+            </div>
+
+            <div class="stack">
+              <label for="description">Description</label>
+              <input
+                type="text"
+                id="description"
+                formControlName="description"
+                placeholder="Description"
+                required
+              />
+              <div *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched" class="help">
+                Description is required
+              </div>
+            </div>
+          </div>
+
+          <!-- Date/Time & Location -->
+          <div class="grid-2">
+            <div class="stack">
+              <label for="dateTime">Date and Time</label>
+              <input
+                type="datetime-local"
+                id="dateTime"
+                formControlName="dateTime"
+                [min]="minDate"
+                placeholder="Date and Time"
+                required
+              />
+              <div *ngIf="itemForm.get('dateTime')?.hasError('required') && itemForm.get('dateTime')?.touched" class="help">
+                Date and Time is required
+              </div>
+              <div *ngIf="itemForm.get('dateTime')?.hasError('dateInPast') && itemForm.get('dateTime')?.touched" class="help">
+                Date must be tomorrow or later
+              </div>
+            </div>
+
+            <div class="stack">
+              <label for="location">Location</label>
+              <input
+                type="text"
+                id="location"
+                formControlName="location"
+                placeholder="Location"
+                required
+              />
+              <div *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched" class="help">
+                Location is required
+              </div>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="stack">
+            <label for="status">Status</label>
+            <select id="status" formControlName="status" required>
+              <option value="" disabled selected>Select status</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <div *ngIf="itemForm.get('status')?.hasError('required') && itemForm.get('status')?.touched" class="help">
+              Status is required
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="actions">
+            <button type="submit" [disabled]="itemForm.invalid">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="card">
+    <div class="stack">
+      <h3>Event List</h3>
+
+      <!-- Search -->
+      <div class="stack">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search by ID or Title"
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()"
+        />
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th style="width: 100px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let event of paginatedEvents">
+              <td>{{ event.eventID }}</td>
+              <td>{{ event.title }}</td>
+              <td>{{ event.description }}</td>
+              <td>{{ event.dateTime | date: 'medium' }}</td>
+              <td>{{ event.location }}</td>
+              <td>{{ event.status }}</td>
+              <td>
+                <button class="delete-btn" (click)="deleteEvent(event.eventID)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -42,7 +211,6 @@
                 </div>
                 <div class="card-body">
                     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-                        <!-- Form fields here -->
                         <div class="row mb-3">
                           <div class="col">
                             <label for="title" class="form-label">Title</label>
@@ -107,7 +275,6 @@
                     <input type="text" class="form-control" id="searchInput" placeholder="Search by ID or Title" [(ngModel)]="searchQuery" (input)="onSearch()">
                   </div>
                     <table class="table table-striped table-bordered animate__animated animate__fadeIn">
-                        <!-- Table content here -->
                         <thead>
                           <tr>
                             <th scope="col">ID</th>
@@ -147,4 +314,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </body>
-</html>
+</html> -->

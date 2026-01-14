@@ -1,4 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register</title>
+
+  <style>
+    /* --- Base reset & layout --- */
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: #1f2937;             /* neutral dark */
+      background: #f7fafc;        /* very light gray */
+    }
+
+    /* --- Page wrapper centers content --- */
+    .page {
+      flex: 1;
+      display: flex;
+      align-items: center;         /* vertical center */
+      justify-content: center;     /* horizontal center */
+      padding: 24px;
+    }
+
+    /* --- Card for the form --- */
+    .card {
+      width: 100%;
+      max-width: 520px;            /* slightly wider than login */
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+
+    /* --- Vertical rhythm helper: stacks children with gap --- */
+    .stack > * + * { margin-top: 12px; }
+
+    /* --- Headings --- */
+    h2, h3, h5 {
+      margin: 0;
+      line-height: 1.25;
+    }
+    .subtitle {
+      color: #6b7280;              /* muted gray */
+      font-size: 0.95rem;
+    }
+
+    /* --- Inputs, selects & button --- */
+    input, select, button {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 1rem;
+      background: #fff;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+    button {
+      background: #2563eb;         /* blue */
+      color: #fff;
+      border: 1px solid #1e40af;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* --- Validation/help text --- */
+    .help {
+      text-align: left;
+      font-size: 0.85rem;
+      color: #b91c1c;              /* red for errors */
+    }
+
+    /* --- Footer --- */
+    footer {
+      background: #111827;         /* near-black */
+      color: #e5e7eb;
+    }
+    .footer-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .footer-col h5 {
+      margin: 0 0 8px 0;
+      font-size: 1rem;
+      color: #f9fafb;
+    }
+    .footer-col p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #d1d5db;
+    }
+    .footer-note {
+      text-align: center;
+      border-top: 1px solid #1f2937;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    /* --- Links --- */
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+
 <body>
+  <section class="page">
+    <div class="card">
+      <div class="stack">
+        <h3>Create Account</h3>
+
+        <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="stack">
+          <!-- Username -->
+          <div class="stack">
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              placeholder="Username"
+              required
+            />
+            <div *ngIf="itemForm.get('username')?.touched && itemForm.get('username')?.invalid" class="help">
+              <span *ngIf="itemForm.get('username')?.hasError('required')">Username is required</span>
+              <span *ngIf="itemForm.get('username')?.hasError('pattern')">Username should only contain lowercase letters</span>
+              <span *ngIf="itemForm.get('username')?.hasError('notUnique')">Username already exists</span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="stack">
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              placeholder="Email"
+              required
+            />
+            <div *ngIf="itemForm.get('email')?.touched && itemForm.get('email')?.invalid" class="help">
+              <span *ngIf="itemForm.get('email')?.hasError('required')">Email is required</span>
+              <span *ngIf="itemForm.get('email')?.hasError('invalidEmailFormat')">Please enter a valid email address</span>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="stack">
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              placeholder="Password"
+              required
+            />
+            <div *ngIf="itemForm.get('password')?.touched && itemForm.get('password')?.invalid" class="help">
+              <span *ngIf="itemForm.get('password')?.hasError('required')">Password is required</span>
+              <span *ngIf="itemForm.get('password')?.hasError('pattern')">
+                Password must contain at least one number, one uppercase and lowercase letter,
+                one special character, and be 8–20 characters long
+              </span>
+            </div>
+          </div>
+
+          <!-- Role -->
+          <div class="stack">
+            <select id="role" formControlName="role">
+              <option value="">Select Role</option>
+              <option value="STAFF">Staff</option>
+              <option value="PLANNER">Planner</option>
+              <option value="CLIENT">Client</option>
+            </select>
+            <div *ngIf="itemForm.get('role')?.touched && itemForm.get('role')?.invalid" class="help">
+              Role is required
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" id="register-button" [disabled]="itemForm.invalid">Sign Up</button>
+        </form>
+
+        <div class="stack">
+          <div class="subtitle">OR</div>
+          <p>Already have an account? <a (click)="openModal()" [routerLink]="['/login']" routerLinkActive="router-link-active">Sign In</a></p>
+        </div>
+
+        <div *ngIf="showMessage" class="stack" role="alert" id="response-message">
+          {{responseMessage}}
+        </div>
+        <div *ngIf="showError" class="stack" role="alert" id="error-message">
+          {{errorMessage}}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (same style as Login) -->
+  <footer id="footer">
+    <div class="footer-wrap">
+      <div class="footer-col">
+        <h5>CONTACT US</h5>
+        <p>
+          123 Event Street, Event City, EV 12345<br />
+          Phone: (123) 456-7890<br />
+          Email: info@eliteevents.com
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h5>FOLLOW US</h5>
+        <p>Facebook • Twitter • Instagram • LinkedIn</p>
+      </div>
+
+      <div class="footer-col">
+        <h5>ABOUT US</h5>
+        <p>“Turning your moments into memories, and your dreams into timeless celebrations.”</p>
+      </div>
+    </div>
+    <div class="footer-note">© 2024 Elite Events. All rights reserved.</div>
+  </footer>
+</body>
+
+</html>
+
+
+
+<!-- <body>
     
     <div class="container">
 
@@ -107,7 +357,7 @@
               <p>
                “Turning your moments into memories, and your dreams into timeless celebrations.”
               </p>
-              <!-- <img src="/assets/Images/logo.png" alt="Elite Events Logo" class="img-fluid"> -->
+              <img src="/assets/Images/logo.png" alt="Elite Events Logo" class="img-fluid">
             </div>
           </div>
         </div>
@@ -116,4 +366,4 @@
           © 2024 Elite Events. All rights reserved.
         </div>
       </footer>
-</body>
+</body> -->

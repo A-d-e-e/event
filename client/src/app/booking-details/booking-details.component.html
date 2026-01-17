@@ -1,4 +1,119 @@
- <section class="background-radial-gradient overflow-hidden">
+<div class="booking-details-container">
+<div class="page-header">
+<h1>Event Management Search</h1>
+<p class="subtitle">Search for events by title or booking ID</p>
+</div>
+ 
+  <!-- Search Form -->
+<div class="search-section">
+<form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="search-form">
+<div class="form-group">
+<label for="searchTerm">Search Event</label>
+<div class="input-group">
+<input 
+            type="text" 
+            id="searchTerm"
+            formControlName="searchTerm" 
+            class="form-control"
+            placeholder="Enter event ID or title"
+            [class.is-invalid]="itemForm.get('searchTerm')?.invalid && itemForm.get('searchTerm')?.touched"
+          />
+<button type="submit" class="btn btn-primary" [disabled]="!itemForm.valid">
+<span class="search-icon">🔍</span>
+            Search
+</button>
+</div>
+<div class="error-message" *ngIf="itemForm.get('searchTerm')?.invalid && itemForm.get('searchTerm')?.touched">
+          Search term is required
+</div>
+</div>
+</form>
+</div>
+ 
+  <!-- Status Message -->
+<div *ngIf="message" class="alert" [ngClass]="message.type === 'success' ? 'alert-success' : 'alert-error'">
+<span class="alert-icon">{{ message.type === 'success' ? '✓' : '✕' }}</span>
+    {{ message.text }}
+</div>
+ 
+  <!-- No Results Message -->
+<div *ngIf="searchPerformed && eventObj.length === 0 && !message" class="no-results">
+<div class="no-results-icon">📭</div>
+<h3>No Events Found</h3>
+<p>No events found matching your search criteria</p>
+</div>
+ 
+  <!-- Results Table -->
+<div *ngIf="searchPerformed && eventObj.length > 0" class="results-section">
+<div class="table-card">
+<h3 class="table-title">Search Results</h3>
+<div class="table-responsive">
+<table class="events-table">
+<thead>
+<tr>
+<th>ID</th>
+<th>Title</th>
+<th>Description</th>
+<th>Date</th>
+<th>Location</th>
+<th>Status</th>
+<th>Allocations</th>
+</tr>
+</thead>
+<tbody>
+<tr *ngFor="let event of eventObj">
+<td>{{ event.eventID }}</td>
+<td>{{ event.title }}</td>
+<td>{{ event.description | slice:0:50 }}{{ event.description?.length > 50 ? '...' : '' }}</td>
+<td>{{ event.dateTime | date:'medium' }}</td>
+<td>{{ event.location }}</td>
+<td>
+<span class="badge" [ngClass]="getStatusClass(event.status)">
+                  {{ event.status }}
+</span>
+</td>
+<td>
+<span 
+                  class="allocation-info"
+                  (mouseenter)="showTooltip($event, event.allocations)"
+                  (mouseleave)="hideTooltip()"
+                  *ngIf="event.allocations && event.allocations.length > 0"
+>
+                  {{ event.allocations.length }} Allocation(s)
+<span class="info-icon">ⓘ</span>
+</span>
+<span *ngIf="!event.allocations || event.allocations.length === 0">
+                  No allocations
+</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+ 
+  <!-- Custom Tooltip -->
+<div 
+    *ngIf="tooltipVisible" 
+    class="custom-tooltip"
+    [style.left.px]="tooltipX"
+    [style.top.px]="tooltipY"
+>
+<div *ngFor="let allocation of tooltipContent; let last = last" class="allocation-item">
+<p><strong>Quantity:</strong> {{ allocation.quantity }}</p>
+<p><strong>Resource Name:</strong> {{ allocation.resource.name }}</p>
+<p><strong>Resource Type:</strong> {{ allocation.resource.type }}</p>
+<hr *ngIf="!last" class="allocation-divider">
+</div>
+</div>
+</div>
+
+
+
+
+
+<!-- <section class="background-radial-gradient overflow-hidden">
     <div class="bubble bubble-1"></div>
     <div class="bubble bubble-2"></div>
     <div class="bubble bubble-3"></div>
@@ -13,8 +128,8 @@
     <div class="container px-4 py-5 px-md-5 my-5">
       <h1 class="display-4 fw-bold text-center mb-4 animate__animated animate__fadeInDown">Event Management Search</h1>
   
-      <!-- Search Form -->
-      <div class="card bg-glass mx-auto mb-4">
+      Search Form -->
+      <!-- <div class="card bg-glass mx-auto mb-4">
         <div class="card-body">
           <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="mb-4">
             <div class="input-group">
@@ -28,13 +143,13 @@
       </div>
   
       <!-- Alert Messages -->
-      <div *ngIf="message" class="alert mt-3 animate__animated animate__fadeInDown animate__delay-1s"
+      <!-- <div *ngIf="message" class="alert mt-3 animate__animated animate__fadeInDown animate__delay-1s"
            [ngClass]="{'alert-success': message.type === 'success', 'alert-danger': message.type === 'error'}" role="alert">
         {{ message.text }}
-      </div>
+      </div> -->
   
       <!-- Events Table -->
-      <div *ngIf="searchPerformed" class="card bg-glass mx-auto animate__animated animate__fadeInUp">
+      <!-- <div *ngIf="searchPerformed" class="card bg-glass mx-auto animate__animated animate__fadeInUp">
         <div class="card-body">
           <h3 class="mb-3">Search Results</h3>
           <div class="table-responsive">
@@ -47,8 +162,8 @@
                   <th>Date</th>
                   <th>Location</th>
                   <th>Status</th>
-                  <th>Allocations</th>
-                </tr>
+                  <th>Allocations</th> -->
+                <!-- </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let event of eventObj">
@@ -63,7 +178,7 @@
                           (mouseenter)="showTooltip($event, event.allocations)"
                           (mouseleave)="hideTooltip()">
                       <!-- {{ event.allocations.length }}  -->
-                      Allocation(s)
+                      <!-- Allocation(s)
                     </span>
                   </td>
                 </tr>
@@ -71,21 +186,21 @@
             </table>
           </div>
         </div>
-      </div>
+      </div> -->
   
-      <div *ngIf="searchPerformed && eventObj.length === 0" class="mt-4 alert alert-info">
+      <!-- <div *ngIf="searchPerformed && eventObj.length === 0" class="mt-4 alert alert-info">
         No events found matching your search criteria.
       </div>
-    </div>
+    </div> --> -->
   
     <!-- Tooltip -->
-    <div *ngIf="tooltipVisible" class="custom-tooltip bg-glass" [style.left.px]="tooltipX" [style.top.px]="tooltipY">
+    <!-- <div *ngIf="tooltipVisible" class="custom-tooltip bg-glass" [style.left.px]="tooltipX" [style.top.px]="tooltipY">
       <div *ngFor="let allocation of tooltipContent; let last = last">
         <p><strong>Quantity:</strong> {{allocation.quantity}}</p>
         <p><strong>Resource Name:</strong> {{allocation.resource.name}}</p>
-        <p><strong>Resource Type:</strong> {{allocation.resource.type}}</p>
+        <p><strong>Resource Type:</strong> {{allocation.resource.type}}</p> -->
         <!-- <p><strong>Resource Availability:</strong> {{allocation.resource.availability}}</p> -->
-        <hr *ngIf="!last">
+        <!-- <hr *ngIf="!last">
       </div>
     </div>
-  </section>
+  </section> --> -->

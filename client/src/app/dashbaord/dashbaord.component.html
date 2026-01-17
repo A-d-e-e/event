@@ -1,15 +1,166 @@
-<!-- <div class="d-flex justify-content-center" *ngIf="roleName === 'PLANNER'">
-  <app-landing-page></app-landing-page>
+<!-- dashbaord.component.html (NO TS CHANGES NEEDED) -->
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="welcome-section">
+        <h1>Dashboard</h1>
+        <p class="subtitle">Welcome back, {{ roleName || 'User' }}!</p>
+      </div>
+      <!-- <div class="header-actions">
+        <button class="btn-logout" (click)="logout()">
+          <span class="logout-icon">🚪</span>
+          Logout
+        </button>
+      </div> -->
+    </div>
+  </div>
 
+  <!-- Error Message -->
+  <!-- <div class="alert alert-error" *ngIf="showError">
+    <span class="alert-icon">✕</span>
+    <span>{{ errorMessage }}</span>
+  </div> -->
+
+  <!-- Main Content -->
+  <div class="dashboard-content">
+    <!-- Quick Stats Card -->
+    <div class="stats-section">
+      <div class="section-header">
+        <h2>System Information</h2>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👤</div>
+          <div class="stat-content">
+            <p class="stat-label">Role</p>
+            <h3 class="stat-value">{{ roleName || 'Not Assigned' }}</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <p class="stat-label">Status</p>
+            <h3 class="stat-value">Active</h3>
+          </div>
+        </div>
+
+        <div class="stat-card" *ngIf="statename && statename.name">
+          <div class="stat-icon">📍</div>
+          <div class="stat-content">
+            <p class="stat-label">State</p>
+            <h3 class="stat-value">{{ statename.name }}</h3>
+          </div>
+        </div>
+
+        <div class="stat-card" *ngIf="statename && statename.id">
+          <div class="stat-icon">🔢</div>
+          <div class="stat-content">
+            <p class="stat-label">State ID</p>
+            <h3 class="stat-value">{{ statename.id }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- State Information Card - Simple Display -->
+    <div class="info-section" *ngIf="statename && statename.name">
+      <div class="section-header">
+        <h2>State Details</h2>
+      </div>
+      
+      <div class="info-card">
+        <div class="info-content">
+          <div class="info-row" *ngIf="statename.id">
+            <span class="info-label">ID:</span>
+            <span class="info-value">{{ statename.id }}</span>
+          </div>
+          <div class="info-row" *ngIf="statename.name">
+            <span class="info-label">Name:</span>
+            <span class="info-value">{{ statename.name }}</span>
+          </div>
+          <div class="info-row" *ngIf="statename.code">
+            <span class="info-label">Code:</span>
+            <span class="info-value">{{ statename.code }}</span>
+          </div>
+          <div class="info-row" *ngIf="statename.country">
+            <span class="info-label">Country:</span>
+            <span class="info-value">{{ statename.country }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="actions-section">
+      <div class="section-header">
+        <h2>Quick Actions</h2>
+      </div>
+      
+      <div class="actions-grid">
+        <button class="action-card" routerLink="/create-event" *ngIf="roleName === 'PLANNER'">
+          <div class="action-icon">➕</div>
+          <div class="action-content">
+            <h3>Create Event</h3>
+            <p>Add a new event</p>
+          </div>
+        </button>
+
+        <button class="action-card" routerLink="/view-events" *ngIf="roleName === 'STAFF'">
+          <div class="action-icon">📋</div>
+          <div class="action-content">
+            <h3>View Events</h3>
+            <p>Browse all events</p>
+          </div>
+        </button>
+
+        <button class="action-card" routerLink="/booking-details" *ngIf="roleName === 'CLIENT'">
+          <div class="action-icon">📋</div>
+          <div class="action-content">
+            <h3>Booking Details</h3>
+            <p>Browse all booking details</p>
+          </div>
+        </button>
+        <button class="action-card" routerLink="/add-resource" *ngIf="roleName === 'PLANNER'">
+          <div class="action-icon">🔧</div>
+          <div class="action-content">
+            <h3>Add Resources</h3>
+            <p>Manage resources</p>
+          </div>
+        </button>
+
+        <button class="action-card" routerLink="/allocate-resources" *ngIf="roleName === 'PLANNER'">
+          <div class="action-icon">🎯</div>
+          <div class="action-content">
+            <h3>Allocate Resources</h3>
+            <p>Assign to events</p>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Welcome Message -->
+    <div class="welcome-card">
+      <div class="welcome-content">
+        <div class="welcome-icon">👋</div>
+        <div class="welcome-text">
+          <h2>Welcome to Event Management System</h2>
+          <p *ngIf="roleName === 'PLANNER'">
+            Manage your events efficiently with our comprehensive platform. Create events, add resources, and allocate them seamlessly.
+          </p>
+          <p *ngIf="roleName === 'CLIENT'">
+            Manage your events efficiently with our comprehensive platform. Browse and explore events available for you.
+          </p>
+          <p *ngIf="roleName === 'STAFF'">
+            Manage your events efficiently with our comprehensive platform. Access event details and manage setups.
+          </p>
+          <p *ngIf="!roleName || (roleName !== 'PLANNER' && roleName !== 'CLIENT' && roleName !== 'STAFF')">
+            Manage your events efficiently with our comprehensive platform.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-<!-- Staff -->
-<!-- <div *ngIf="roleName === 'STAFF'"> -->
-  <!-- <app-landing-page></app-landing-page> -->
-<!-- </div> -->
-
-
-<!-- <CLIENT> -->
-<!-- <div *ngIf="roleName === 'CLIENT'"> -->
-  <!-- <app-landing-page></app-landing-page> -->
-<!-- </div> --> -->

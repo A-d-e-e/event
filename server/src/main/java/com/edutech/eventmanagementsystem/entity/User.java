@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "users") // do not change table name
  
 public class User {
-    // implement entity
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userID;

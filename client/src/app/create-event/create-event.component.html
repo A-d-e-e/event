@@ -1,4 +1,224 @@
-<!DOCTYPE html>
+<!-- create-event.component.html -->
+<div class="create-event-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>Create Event</h1>
+    <p>Plan and schedule your upcoming events</p>
+  </div>
+
+  <!-- Success Message -->
+  <div class="alert alert-success" *ngIf="showMessage">
+    <span class="alert-icon">✓</span>
+    <span>{{ responseMessage }}</span>
+    <button class="alert-close" (click)="closeAlert()">✕</button>
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-error" *ngIf="showError">
+    <span class="alert-icon">⚠</span>
+    <span>{{ errorMessage }}</span>
+    <button class="alert-close" (click)="closeAlert()">✕</button>
+  </div>
+
+  <!-- Create Event Form -->
+  <div class="form-section">
+    <div class="section-header">
+      <h2>Event Details</h2>
+      <p>Fill in the information below to create a new event</p>
+    </div>
+
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- Event Title -->
+        <div class="form-group">
+          <label for="title">Event Title <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="title" 
+            formControlName="title" 
+            placeholder="Enter event title"
+            [class.error-input]="itemForm.get('title')?.invalid && itemForm.get('title')?.touched">
+          <div class="error-text" *ngIf="itemForm.get('title')?.invalid && itemForm.get('title')?.touched">
+            Event title is required
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label for="location">Location <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="location" 
+            formControlName="location" 
+            placeholder="Enter event location"
+            [class.error-input]="itemForm.get('location')?.invalid && itemForm.get('location')?.touched">
+          <div class="error-text" *ngIf="itemForm.get('location')?.invalid && itemForm.get('location')?.touched">
+            Location is required
+          </div>
+        </div>
+
+        <!-- Date & Time -->
+        <div class="form-group">
+          <label for="dateTime">Date & Time <span class="required">*</span></label>
+          <input 
+            type="datetime-local" 
+            id="dateTime" 
+            formControlName="dateTime"
+            [min]="minDate"
+            [class.error-input]="itemForm.get('dateTime')?.invalid && itemForm.get('dateTime')?.touched">
+          <div class="error-text" *ngIf="itemForm.get('dateTime')?.invalid && itemForm.get('dateTime')?.touched">
+            Date and time is required
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label for="status">Event Status <span class="required">*</span></label>
+          <select 
+            id="status" 
+            formControlName="status"
+            [class.error-input]="itemForm.get('status')?.invalid && itemForm.get('status')?.touched">
+            <option value="" disabled selected>Select status</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="ongoing">Ongoing</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <div class="error-text" *ngIf="itemForm.get('status')?.invalid && itemForm.get('status')?.touched">
+            Status is required
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group full-width">
+          <label for="description">Description <span class="required">*</span></label>
+          <textarea 
+            id="description" 
+            formControlName="description" 
+            rows="4"
+            placeholder="Enter event description"
+            [class.error-input]="itemForm.get('description')?.invalid && itemForm.get('description')?.touched"></textarea>
+          <div class="error-text" *ngIf="itemForm.get('description')?.invalid && itemForm.get('description')?.touched">
+            Description is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">
+          <span>➕</span> Create Event
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="itemForm.reset()">
+          <span>🔄</span> Reset Form
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section">
+    <div class="section-header">
+      <h2>Manage Events</h2>
+      <p>Search and manage your created events</p>
+    </div>
+
+    <div class="search-bar">
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (keyup.enter)="onSearch()"
+        placeholder="Search by Event ID or Title..."
+        class="search-input">
+      <button class="btn btn-search" (click)="onSearch()">
+        <span>🔍</span> Search
+      </button>
+      <button class="btn btn-secondary" (click)="searchQuery = ''; loadEvents()">
+        <span>🔄</span> Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Events List -->
+  <div class="events-list-section">
+    <div class="section-header">
+      <h2>All Events ({{ events.length }})</h2>
+    </div>
+
+    <!-- Events Table -->
+    <div class="table-wrapper" *ngIf="paginatedEvents.length > 0">
+      <table class="events-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Date & Time</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of paginatedEvents">
+            <td class="event-id">{{ event.eventID }}</td>
+            <td class="event-title">{{ event.title }}</td>
+            <td class="event-description">{{ event.description }}</td>
+            <td class="event-datetime">{{ event.dateTime | date: 'medium' }}</td>
+            <td class="event-location">
+              <span class="location-badge">📍 {{ event.location }}</span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'status-upcoming': event.status === 'upcoming',
+                'status-ongoing': event.status === 'ongoing',
+                'status-completed': event.status === 'completed',
+                'status-cancelled': event.status === 'cancelled'
+              }">
+                {{ event.status | titlecase }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button class="btn-delete" (click)="deleteEvent(event.eventID)" title="Delete Event">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="paginatedEvents.length === 0">
+      <div class="empty-icon">📭</div>
+      <h3>No Events Found</h3>
+      <p>{{ searchQuery ? 'Try a different search term' : 'Start by creating your first event above' }}</p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="events.length > 0">
+      <button 
+        class="btn btn-pagination" 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1">
+        ← Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button 
+        class="btn btn-pagination" 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages">
+        Next →
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -29,9 +249,9 @@
             {{ errorMessage }}
             <button type="button" class="btn-close" aria-label="Close" (click)="closeAlert()"></button>
           </div>
-        </div>
+        </div> -->
         
-        <div class="container position-relative">
+        <!-- <div class="container position-relative">
             <h2 class="my-5 display-4 fw-bold text-center mb-4 animate__animated animate__fadeInDown animate__delay-1s" id="title">
                 Manage Event
             </h2>
@@ -42,7 +262,7 @@
                 </div>
                 <div class="card-body">
                     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-                        <!-- Form fields here -->
+                        Form fields here
                         <div class="row mb-3">
                           <div class="col">
                             <label for="title" class="form-label">Title</label>
@@ -69,9 +289,9 @@
                               class="text-danger">Date and Time is required</div>
                             <div *ngIf="itemForm.get('dateTime')?.hasError('dateInPast') && itemForm.get('dateTime')?.touched"
                               class="text-danger">Date must be tomorrow or later</div>
-                          </div>
+                          </div> -->
               
-                          <div class="col">
+                          <!-- <div class="col">
                             <label for="location" class="form-label">Location</label>
                             <input type="text" class="form-control" id="location" placeholder="Location" formControlName="location">
                             <div *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched"
@@ -108,7 +328,7 @@
                   </div>
                     <table class="table table-striped table-bordered animate__animated animate__fadeIn">
                         <!-- Table content here -->
-                        <thead>
+                        <!-- <thead>
                           <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Title</th>
@@ -118,8 +338,8 @@
                             <th scope="col">Status</th>
                             <th scope="col">Actions</th>
                           </tr>
-                        </thead>
-                        <tbody>
+                        </thead> -->
+                        <!-- <tbody>
                           <tr *ngFor="let event of paginatedEvents">
                             <td>{{ event.eventID }}</td>
                             <td>{{ event.title }}</td>
@@ -141,10 +361,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </body>
-</html>
+</html> --> -->

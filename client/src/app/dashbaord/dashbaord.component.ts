@@ -41,5 +41,10 @@ export class DashbaordComponent implements OnInit {
       console.error('Login error:', error);
     });;
   }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigateByUrl('/login');
+  }
   
 }

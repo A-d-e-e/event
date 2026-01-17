@@ -1,3 +1,207 @@
+<!-- view-events.component.html (CLIENT VERSION - PERFECT MATCH WITH YOUR TS FILE)
+<div class="events-container">
+  <!-- Page Header -->
+  <!-- <div class="page-header">
+    <h1>My Events</h1>
+    <p>View all event details created by event planners</p>
+  </div> -->
+
+  <!-- Success/Error Messages -->
+  <!-- <div class="alert alert-success" *ngIf="showMessage">
+    <span class="alert-icon">✓</span>
+    <span>{{ responseMessage }}</span>
+  </div> -->
+
+  <!-- <div class="alert alert-error" *ngIf="showError">
+    <span class="alert-icon">✕</span>
+    <span>{{ errorMessage }}</span>
+  </div> -->
+
+  <!-- <div class="alert" [class.alert-success]="message?.type === 'success'" [class.alert-error]="message?.type === 'error'" *ngIf="message">
+    <span class="alert-icon">{{ message.type === 'success' ? '✓' : '✕' }}</span>
+    <span>{{ message.text }}</span>
+  </div> -->
+
+  <!-- Search and Filters Section -->
+  <!-- <div class="controls-section">
+    <form [formGroup]="itemForm">
+      <div class="search-bar">
+        <input 
+          type="text" 
+          formControlName="searchTerm" 
+          placeholder="Search by Event ID or Title..."
+          class="search-input">
+        <button type="button" class="btn btn-search" (click)="searchEvent()">
+          <span>🔍</span> Search
+        </button> -->
+      <!-- </div>
+
+      <div class="filters-row">
+        <div class="filter-group">
+          <label for="filterEvents">Filter Events:</label>
+          <select id="filterEvents" class="filter-select" (change)="onFilterChange($event)">
+            <option value="all">All Events</option>
+            <option value="past">Past Events</option>
+            <option value="today">Today's Events</option>
+            <option value="future">Future Events</option>
+          </select> -->
+        <!-- </div>
+
+        <div class="filter-group">
+          <label for="sortEvents">Sort By:</label>
+          <select id="sortEvents" class="filter-select" (change)="onSortChange($event)">
+            <option value="">Select Sort</option>
+            <option value="id">Event ID</option>
+            <option value="title">Title</option>
+            <option value="date">Date</option>
+            <option value="location">Location</option>
+          </select>
+        </div> -->
+
+        <!-- <button type="button" class="btn btn-secondary" (click)="viewAllEvents()">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+    </form>
+  </div> -->
+
+  <!-- Events List Section -->
+  <!-- <div class="events-list-section">
+    <h2>Available Events ({{ eventList.length }} total)</h2>
+    
+    <div class="events-grid" *ngIf="paginatedEvents.length > 0">
+      <div class="event-card" *ngFor="let event of paginatedEvents"> -->
+        <!-- Event Header -->
+        <!-- <div class="event-header">
+          <div class="header-content">
+            <h3>{{ event.title }}</h3>
+            <span class="event-id">ID: {{ event.eventID }}</span>
+          </div>
+          <div class="status-container">
+            <span class="status-badge" 
+                  [ngClass]="{ -->
+                    <!-- 'status-upcoming': event.status?.toLowerCase() === 'upcoming',
+                    'status-ongoing': event.status?.toLowerCase() === 'ongoing',
+                    'status-completed': event.status?.toLowerCase() === 'completed',
+                    'status-cancelled': event.status?.toLowerCase() === 'cancelled',
+                    'status-scheduled': event.status?.toLowerCase() === 'scheduled'
+                  }">
+              {{ event.status | titlecase }}
+            </span>
+          </div>
+        </div> -->
+        
+        <!-- Event Body -->
+        <!-- <div class="event-body"> -->
+          <!-- Description Section -->
+          <!-- <div class="detail-section">
+            <h4 class="section-title">📝 Description</h4>
+            <p class="event-description">{{ event.description }}</p>
+          </div> -->
+
+          <!-- Date & Time Section -->
+          <!-- <div class="detail-section">
+            <h4 class="section-title">📅 Date & Time</h4>
+            <div class="detail-content">
+              <div class="detail-row">
+                <span class="detail-label">Full Date:</span>
+                <span class="detail-value">{{ event.dateTime | date: 'fullDate' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Time:</span>
+                <span class="detail-value">{{ event.dateTime | date: 'shortTime' }}</span>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- Location Section -->
+          <!-- <div class="detail-section">
+            <h4 class="section-title">📍 Location</h4>
+            <p class="location-text">{{ event.location }}</p>
+          </div> -->
+
+          <!-- Allocated Resources Section -->
+          <!-- <div class="detail-section resources-section" *ngIf="event.allocations && event.allocations.length > 0">
+            <h4 class="section-title">🎯 Allocated Resources ({{ event.allocations.length }})</h4>
+            <div class="resources-grid">
+              <div class="resource-item" *ngFor="let allocation of event.allocations">
+                <div class="resource-header">
+                  <span class="resource-icon">🔧</span>
+                  <span class="resource-name">{{ allocation.resource?.name || 'Unnamed Resource' }}</span>
+                </div>
+                <div class="resource-details">
+                  <div class="resource-row" *ngIf="allocation.resource?.type">
+                    <span class="resource-label">Type:</span>
+                    <span class="resource-value">{{ allocation.resource.type }}</span>
+                  </div>
+                  <div class="resource-row" *ngIf="allocation.quantity">
+                    <span class="resource-label">Quantity:</span>
+                    <span class="resource-value">{{ allocation.quantity }}</span>
+                  </div>
+                  <div class="resource-row" *ngIf="allocation.resource?.availability">
+                    <span class="resource-label">Status:</span>
+                    <span class="resource-value availability-badge" 
+                          [ngClass]="{
+                            'available': allocation.resource.availability?.toLowerCase() === 'available',
+                            'unavailable': allocation.resource.availability?.toLowerCase() !== 'available'
+                          }">
+                      {{ allocation.resource.availability | titlecase }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- No Resources Message -->
+          <!-- <div class="detail-section no-resources" *ngIf="!event.allocations || event.allocations.length === 0">
+            <p class="info-message">
+              <span class="info-icon">ℹ️</span>
+              No resources have been allocated to this event yet.
+            </p>
+          </div>
+        </div> -->
+
+        <!-- Event Footer -->
+        <!-- <div class="event-footer">
+          <div class="footer-info">
+            <span class="footer-item">
+              <strong>Event ID:</strong> {{ event.eventID }}
+            </span>
+            <span class="footer-item">
+              <strong>Status:</strong> {{ event.status | titlecase }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Empty State -->
+    <!-- <div class="empty-state" *ngIf="paginatedEvents.length === 0">
+      <div class="empty-icon">📭</div>
+      <h3>No Events Found</h3>
+      <p>{{ searchPerformed ? 'Try a different search term or filter' : 'No events are currently available. Event planners will add events soon!' }}</p>
+    </div> -->
+
+    <!-- Pagination -->
+    <!-- <div class="pagination" *ngIf="eventList.length > 0">
+      <button 
+        class="btn btn-pagination" 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1">
+        ← Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button 
+        class="btn btn-pagination" 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages">
+        Next →
+      </button>
+    </div>
+  </div> -->
+<!-- </div> --> -->
+
 <!DOCTYPE html>
 <html lang="en">
  
@@ -8,8 +212,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="view-events.component.scss">
-</head>
+    <link rel="stylesheet" href="view-events.component.scss"> 
+ </head>
  
 <body>
     <section class="background-radial-gradient overflow-hidden">
@@ -28,7 +232,7 @@
     <h1 class="display-4 fw-bold text-center mb-4 animate__animated animate__fadeInDown">Manage Events</h1>
  
             <!-- Search Form -->
-            <div class="card bg-glass mx-auto mb-4">
+             <div class="card bg-glass mx-auto mb-4">
                 <div class="card-body">
                     <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="mb-4">
                         <div class="input-group">
@@ -60,8 +264,8 @@
                                 <option value="location">Location</option>
                             </select>
                         </div>
-                        <div>
-                            <label for="filter" class="me-2">Filter Events:</label>
+                        <div> 
+                        <label for="filter" class="me-2">Filter Events:</label>
                             <select id="filter" (change)="onFilterChange($event)" class="form-select d-inline-block w-auto">
                                 <option value="all">All Events</option>
                                 <option value="past">Past Events</option>
@@ -70,7 +274,7 @@
                             </select>
                         </div>
                     </div>
-           
+         
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -107,10 +311,9 @@
                 </div>
             </div>
         </div>
-    </section>
- 
-    <!-- Update Modal -->
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    </section> 
+     <!-- Update Modal  -->
+ <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-glass">
                 <div class="modal-header">
@@ -177,10 +380,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
  
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
  
 </html>

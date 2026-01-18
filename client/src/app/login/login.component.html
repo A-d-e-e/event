@@ -1,4 +1,108 @@
-<!DOCTYPE html>
+<!-- login.component.html -->
+<div class="login-wrapper">
+  <div class="login-container">
+    <!-- Left Side - Branding -->
+    <div class="login-branding">
+      <div class="branding-content">
+        <h1 class="brand-logo">EventHub</h1>
+        <p class="brand-tagline">Manage your events with excellence</p>
+        <div class="brand-illustration">
+          <div class="floating-icon">🎉</div>
+          <div class="floating-icon delay-1">📅</div>
+          <div class="floating-icon delay-2">🎫</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="login-form-section">
+      <div class="form-container">
+        <!-- Alert Messages -->
+        <div class="alert alert-success" *ngIf="showMessage && !showError">
+          <span class="alert-icon">✓</span>
+          <span>{{ responseMessage }}</span>
+        </div>
+
+        <div class="alert alert-error" *ngIf="showMessage && showError">
+          <span class="alert-icon">✕</span>
+          <span>{{ responseMessage }}</span>
+        </div>
+
+        <!-- Form Header -->
+        <div class="form-header">
+          <h2>Welcome Back</h2>
+          <p>Please login to your account</p>
+        </div>
+
+        <!-- Login Form -->
+        <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
+          <!-- Username Field -->
+          <div class="form-group">
+            <label for="username">Username</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input 
+                type="text" 
+                id="username" 
+                formControlName="username" 
+                placeholder="Enter your username"
+                [class.error-input]="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
+            </div>
+            <div class="error-text" *ngIf="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
+              <span *ngIf="itemForm.get('username')?.errors?.['required']">Username is required</span>
+              <span *ngIf="itemForm.get('username')?.errors?.['pattern']">Username must contain only lowercase letters</span>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input 
+                type="password" 
+                id="password" 
+                formControlName="password" 
+                placeholder="Enter your password"
+                [class.error-input]="itemForm.get('password')?.invalid && itemForm.get('password')?.touched">
+            </div>
+            <div class="error-text" *ngIf="itemForm.get('password')?.invalid && itemForm.get('password')?.touched">
+              <span *ngIf="itemForm.get('password')?.errors?.['required']">Password is required</span>
+              <span *ngIf="itemForm.get('password')?.errors?.['pattern']">
+                Password must be 8-20 characters with uppercase, lowercase, number and special character
+              </span>
+            </div>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-link">Forgot Password?</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-login" [disabled]="itemForm.invalid">
+            <span>Login</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </form>
+
+        <!-- Sign Up Link -->
+        <div class="signup-prompt">
+          <p>Don't have an account? <a href="#" routerLink="/register">Sign up</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,7 +118,7 @@
     <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
       <div class="row gx-lg-5 align-items-center mb-5">
         <!-- Left column content remains the same -->
-        <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
+        <!-- <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
           <div>
             <img src="assets/Images/Logo.png" alt="Logo" id="logo">
           </div>
@@ -34,8 +138,8 @@
               <div class="header-text mb-7">
                 <h2 class="typing-effect">Hello, Again</h2>
                 <p class="typing-effect" style="animation-delay: 1s;">We are happy to have you back.</p>
-              </div>
-              <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
+              </div> -->
+              <!-- <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
                 <div class="form-group mb-3 position-relative">
                   <div class="col-12">
                     <input type="text" id="username" formControlName="username"
@@ -49,7 +153,7 @@
                     class="text-danger">Username is required</small>
                   <!-- <small *ngIf="itemForm.get('username')?.hasError('pattern') && itemForm.get('username')?.touched"
                     class="text-danger">Username should only contain lowercase letters</small> -->
-                </div>
+                <!-- </div>
                 <div class="form-group mb-3 position-relative">
                   <div class="col-12">
                     <input type="password" id="password" formControlName="password"
@@ -58,16 +162,16 @@
                       }">
                   </div>
                   <small *ngIf="itemForm.get('password')?.hasError('required') && itemForm.get('password')?.touched"
-                    class="text-danger">Password is required</small>
+                    class="text-danger">Password is required</small> -->
                   <!-- <small *ngIf="itemForm.get('password')?.hasError('pattern') && itemForm.get('password')?.touched"
                     class="text-danger">Password must contain at least one number, one uppercase and lowercase letter, one special character, and be 8-20 characters long</small> -->
-                </div>
+                <!-- </div>
                 <button id="login-button" type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">Log
                   In</button>
               </form>
 
-              <br>
-
+              <br> --> -->
+<!-- 
               <div class="footer-text">
                 <p>Don't have an account? <a [routerLink]="['/registration']">Sign up</a></p>
               </div>
@@ -92,9 +196,9 @@
             Phone: (+91) 9723456891<br>
             Email: info@yourstory.com
           </p>
-        </div>
+        </div> -->
 
-        <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+        <!-- <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
           <h5 class="text-uppercase">Follow Us</h5>
           <a class="me-3">
             <i class="bi bi-facebook"></i>
@@ -114,10 +218,10 @@
           <h5 class="text-uppercase">About Us</h5>
           <p>
            “Turning your moments into memories, and your dreams into timeless celebrations.”
-          </p>
+          </p> -->
           <!-- <img src="/assets/Images/logo.png" alt="Elite Events Logo" class="img-fluid"> -->
-        </div>
-      </div>
+        <!-- </div> -->
+      <!-- </div>
     </div>
 
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
@@ -129,4 +233,4 @@
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 
-</html>
+</html> --> -->

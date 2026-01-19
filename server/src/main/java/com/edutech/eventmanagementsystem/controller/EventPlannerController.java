@@ -70,4 +70,31 @@ public class EventPlannerController {
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @PutMapping("/api/planner/event/{eventId}")
+public ResponseEntity<Event> updateEvent(@PathVariable Long eventId, 
+                                        @RequestBody Event event) {
+    try {
+        Event updatedEvent = eventService.updateEventSetup(eventId, event);
+        return ResponseEntity.ok(updatedEvent); // 200 OK
+    } catch (EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404
+    } catch (Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500
+    }
+}
+
+@PutMapping("/api/planner/resource/{resourceId}")
+public ResponseEntity<Resource> updateResource(@PathVariable Long resourceId, 
+                                               @RequestBody Resource resource) {
+    try {
+        Resource updatedResource = resourceService.updateResource(resourceId, resource);
+        return ResponseEntity.ok(updatedResource); // 200 OK
+    } catch (EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404
+    } catch (Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500
+    }
+}
 }

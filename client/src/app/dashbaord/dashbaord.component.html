@@ -1,31 +1,251 @@
-<!-- dashbaord.component.html (NO TS CHANGES NEEDED) -->
 <div class="dashboard-container">
   <!-- Header Section -->
   <div class="dashboard-header">
     <div class="header-content">
       <div class="welcome-section">
-        <h1>Dashboard</h1>
-        <p class="subtitle">Welcome back, {{ roleName || 'User' }}!</p>
+        <h1 class="dashboard-title">Dashboard</h1>
+        <p class="dashboard-subtitle">Welcome back, <span class="user-name">{{ roleName || 'User' }}</span>!</p>
       </div>
-      <!-- <div class="header-actions">
-        <button class="btn-logout" (click)="logout()">
-          <span class="logout-icon">🚪</span>
-          Logout
-        </button>
-      </div> -->
+      <div class="header-status">
+        <div class="status-badge">
+          <span class="status-icon">✓</span>
+          <span class="status-text">System Active</span>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- Error Message -->
-  <!-- <div class="alert alert-error" *ngIf="showError">
-    <span class="alert-icon">✕</span>
-    <span>{{ errorMessage }}</span>
-  </div> -->
 
   <!-- Main Content -->
   <div class="dashboard-content">
     <!-- Quick Stats Card -->
     <div class="stats-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="title-icon">📊</span>
+          System Information
+        </h2>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card role-card">
+          <div class="stat-icon-wrapper">
+            <div class="stat-icon">👤</div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-label">Your Role</p>
+            <h3 class="stat-value">{{ roleName || 'Not Assigned' }}</h3>
+          </div>
+          <div class="stat-badge">Active</div>
+        </div>
+
+        <div class="stat-card status-card">
+          <div class="stat-icon-wrapper">
+            <div class="stat-icon">✓</div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-label">Account Status</p>
+            <h3 class="stat-value">Active</h3>
+          </div>
+          <div class="stat-badge success">Online</div>
+        </div>
+
+        <div class="stat-card location-card" *ngIf="statename && statename.name">
+          <div class="stat-icon-wrapper">
+            <div class="stat-icon">📍</div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-label">State</p>
+            <h3 class="stat-value">{{ statename.name }}</h3>
+          </div>
+          <div class="stat-badge info">Location</div>
+        </div>
+
+        <div class="stat-card id-card" *ngIf="statename && statename.id">
+          <div class="stat-icon-wrapper">
+            <div class="stat-icon">🔢</div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-label">State ID</p>
+            <h3 class="stat-value">{{ statename.id }}</h3>
+          </div>
+          <div class="stat-badge">Reference</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- State Information Card -->
+    <div class="info-section" *ngIf="statename && statename.name">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="title-icon">🗺️</span>
+          State Details
+        </h2>
+      </div>
+      
+      <div class="info-card">
+        <div class="info-grid">
+          <div class="info-item" *ngIf="statename.id">
+            <div class="info-icon">🆔</div>
+            <div class="info-text">
+              <span class="info-label">State ID</span>
+              <span class="info-value">{{ statename.id }}</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="statename.name">
+            <div class="info-icon">📌</div>
+            <div class="info-text">
+              <span class="info-label">State Name</span>
+              <span class="info-value">{{ statename.name }}</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="statename.code">
+            <div class="info-icon">🔤</div>
+            <div class="info-text">
+              <span class="info-label">State Code</span>
+              <span class="info-value">{{ statename.code }}</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="statename.country">
+            <div class="info-icon">🌍</div>
+            <div class="info-text">
+              <span class="info-label">Country</span>
+              <span class="info-value">{{ statename.country }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="actions-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="title-icon">⚡</span>
+          Quick Actions
+        </h2>
+        <p class="section-description">Get started with common tasks</p>
+      </div>
+      
+      <div class="actions-grid">
+        <button class="action-card create-event" routerLink="/create-event" *ngIf="roleName === 'PLANNER'">
+          <div class="action-icon-wrapper">
+            <div class="action-icon">➕</div>
+          </div>
+          <div class="action-content">
+            <h3 class="action-title">Create Event</h3>
+            <p class="action-description">Add a new event to the system</p>
+          </div>
+          <div class="action-arrow">→</div>
+        </button>
+
+        <button class="action-card view-events" routerLink="/view-events" *ngIf="roleName === 'STAFF'">
+          <div class="action-icon-wrapper">
+            <div class="action-icon">📋</div>
+          </div>
+          <div class="action-content">
+            <h3 class="action-title">View Events</h3>
+            <p class="action-description">Browse all available events</p>
+          </div>
+          <div class="action-arrow">→</div>
+        </button>
+
+        <button class="action-card booking-details" routerLink="/booking-details" *ngIf="roleName === 'CLIENT'">
+          <div class="action-icon-wrapper">
+            <div class="action-icon">📋</div>
+          </div>
+          <div class="action-content">
+            <h3 class="action-title">Booking Details</h3>
+            <p class="action-description">View your booking information</p>
+          </div>
+          <div class="action-arrow">→</div>
+        </button>
+
+        <button class="action-card add-resource" routerLink="/add-resource" *ngIf="roleName === 'PLANNER'">
+          <div class="action-icon-wrapper">
+            <div class="action-icon">🔧</div>
+          </div>
+          <div class="action-content">
+            <h3 class="action-title">Add Resources</h3>
+            <p class="action-description">Manage system resources</p>
+          </div>
+          <div class="action-arrow">→</div>
+        </button>
+
+        <button class="action-card allocate-resources" routerLink="/resource-allocate" *ngIf="roleName === 'PLANNER'">
+          <div class="action-icon-wrapper">
+            <div class="action-icon">🎯</div>
+          </div>
+          <div class="action-content">
+            <h3 class="action-title">Allocate Resources</h3>
+            <p class="action-description">Assign resources to events</p>
+          </div>
+          <div class="action-arrow">→</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Welcome Message -->
+    <div class="welcome-card">
+      <div class="welcome-background"></div>
+      <div class="welcome-content">
+        <div class="welcome-icon-large">👋</div>
+        <div class="welcome-text">
+          <h2 class="welcome-title">Welcome to Event Management System</h2>
+          <p class="welcome-description" *ngIf="roleName === 'PLANNER'">
+            Manage your events efficiently with our comprehensive platform. Create events, add resources, and allocate them seamlessly to deliver exceptional experiences.
+          </p>
+          <p class="welcome-description" *ngIf="roleName === 'CLIENT'">
+            Manage your events efficiently with our comprehensive platform. Browse and explore events available for you and make your bookings with ease.
+          </p>
+          <p class="welcome-description" *ngIf="roleName === 'STAFF'">
+            Manage your events efficiently with our comprehensive platform. Access event details and manage setups to ensure smooth operations.
+          </p>
+          <p class="welcome-description" *ngIf="!roleName || (roleName !== 'PLANNER' && roleName !== 'CLIENT' && roleName !== 'STAFF')">
+            Manage your events efficiently with our comprehensive platform. Your journey to exceptional event management starts here.
+          </p>
+          <div class="welcome-features">
+            <div class="feature-badge">
+              <span class="feature-icon">✓</span>
+              <span>Real-time Updates</span>
+            </div>
+            <div class="feature-badge">
+              <span class="feature-icon">✓</span>
+              <span>Easy Management</span>
+            </div>
+            <div class="feature-badge">
+              <span class="feature-icon">✓</span>
+              <span>Secure Platform</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- dashbaord.component.html (NO TS CHANGES NEEDED) -->
+<!-- <div class="dashboard-container"> -->
+  <!-- Header Section -->
+  <!-- <div class="dashboard-header">
+    <div class="header-content">
+      <div class="welcome-section">
+        <h1>Dashboard</h1>
+        <p class="subtitle">Welcome back, {{ roleName || 'User' }}!</p>
+      </div>
+    
+    </div>
+  </div> -->
+
+
+
+  <!-- Main Content -->
+  <!-- <div class="dashboard-content"> -->
+    <!-- Quick Stats Card -->
+    <!-- <div class="stats-section">
       <div class="section-header">
         <h2>System Information</h2>
       </div>
@@ -37,25 +257,25 @@
             <p class="stat-label">Role</p>
             <h3 class="stat-value">{{ roleName || 'Not Assigned' }}</h3>
           </div>
-        </div>
+        </div> -->
 
-        <div class="stat-card">
+        <!-- <div class="stat-card">
           <div class="stat-icon">📊</div>
           <div class="stat-content">
             <p class="stat-label">Status</p>
             <h3 class="stat-value">Active</h3>
           </div>
-        </div>
+        </div> -->
 
-        <div class="stat-card" *ngIf="statename && statename.name">
+        <!-- <div class="stat-card" *ngIf="statename && statename.name">
           <div class="stat-icon">📍</div>
           <div class="stat-content">
             <p class="stat-label">State</p>
             <h3 class="stat-value">{{ statename.name }}</h3>
           </div>
-        </div>
+        </div> -->
 
-        <div class="stat-card" *ngIf="statename && statename.id">
+        <!-- <div class="stat-card" *ngIf="statename && statename.id">
           <div class="stat-icon">🔢</div>
           <div class="stat-content">
             <p class="stat-label">State ID</p>
@@ -63,10 +283,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- State Information Card - Simple Display -->
-    <div class="info-section" *ngIf="statename && statename.name">
+    <!-- <div class="info-section" *ngIf="statename && statename.name">
       <div class="section-header">
         <h2>State Details</h2>
       </div>
@@ -80,8 +300,8 @@
           <div class="info-row" *ngIf="statename.name">
             <span class="info-label">Name:</span>
             <span class="info-value">{{ statename.name }}</span>
-          </div>
-          <div class="info-row" *ngIf="statename.code">
+          </div> -->
+          <!-- <div class="info-row" *ngIf="statename.code">
             <span class="info-label">Code:</span>
             <span class="info-value">{{ statename.code }}</span>
           </div>
@@ -91,10 +311,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Quick Actions Section -->
-    <div class="actions-section">
+    <!-- <div class="actions-section">
       <div class="section-header">
         <h2>Quick Actions</h2>
       </div>
@@ -129,9 +349,9 @@
             <h3>Add Resources</h3>
             <p>Manage resources</p>
           </div>
-        </button>
+        </button> -->
 
-        <button class="action-card" routerLink="/allocate-resources" *ngIf="roleName === 'PLANNER'">
+        <!-- <button class="action-card" routerLink="/allocate-resources" *ngIf="roleName === 'PLANNER'">
           <div class="action-icon">🎯</div>
           <div class="action-content">
             <h3>Allocate Resources</h3>
@@ -139,10 +359,10 @@
           </div>
         </button>
       </div>
-    </div>
+    </div> -->
 
     <!-- Welcome Message -->
-    <div class="welcome-card">
+    <!-- <div class="welcome-card">
       <div class="welcome-content">
         <div class="welcome-icon">👋</div>
         <div class="welcome-text">
@@ -163,4 +383,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

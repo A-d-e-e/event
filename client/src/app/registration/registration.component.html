@@ -1,7 +1,221 @@
-<div class="registration-container">
-  <div class="registration-card">
+<div class="registration-wrapper">
+  <div class="registration-container">
+    <!-- Left Side - Branding -->
+    <div class="branding-section">
+      <div class="branding-content">
+        <div class="brand-logo">
+          <div class="logo-icon">🎉</div>
+          <h1>EventHub</h1>
+        </div>
+        <h2 class="brand-heading">Start Your Journey</h2>
+        <p class="brand-description">Join thousands of event planners creating memorable experiences</p>
+        
+        <div class="features-list">
+          <div class="feature-item">
+            <span class="feature-check">✓</span>
+            <span>Easy Event Management</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-check">✓</span>
+            <span>Resource Allocation</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-check">✓</span>
+            <span>Real-time Collaboration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Registration Form -->
+    <div class="form-section">
+      <div class="form-container">
+        <div class="form-header">
+          <h2>Create Account</h2>
+          <p>Fill in your details to get started</p>
+        </div>
+
+        <!-- Success/Error Alerts -->
+        <div class="alert alert-success" *ngIf="showMessage">
+          <span class="alert-icon">✓</span>
+          <span>{{ responseMessage }}</span>
+        </div>
+
+        <div class="alert alert-error" *ngIf="showError">
+          <span class="alert-icon">✗</span>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Registration Form -->
+        <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="registration-form">
+          
+          <!-- Username Field -->
+          <div class="form-group">
+            <label for="username" class="form-label">
+              <span class="label-icon">👤</span>
+              Username
+            </label>
+            <input 
+              type="text" 
+              id="username" 
+              formControlName="username" 
+              class="form-input"
+              placeholder="Enter username (lowercase)"
+              [class.error]="itemForm.get('username')?.invalid && itemForm.get('username')?.touched"
+              [class.success]="itemForm.get('username')?.valid && itemForm.get('username')?.touched">
+            
+            <div class="error-text" *ngIf="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
+              <span *ngIf="itemForm.get('username')?.errors?.['required']">Username is required</span>
+              <span *ngIf="itemForm.get('username')?.errors?.['pattern']">Only lowercase letters allowed</span>
+              <span *ngIf="itemForm.get('username')?.errors?.['notUnique']">Username already exists</span>
+            </div>
+            <div class="success-text" *ngIf="itemForm.get('username')?.valid && itemForm.get('username')?.touched">
+              ✓ Username available
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email" class="form-label">
+              <span class="label-icon">📧</span>
+              Email Address
+            </label>
+            <div class="input-group">
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email" 
+                class="form-input"
+                placeholder="your@email.com"
+                [class.error]="itemForm.get('email')?.invalid && itemForm.get('email')?.touched"
+                [class.success]="emailVerified"
+                [disabled]="emailVerified">
+              <button 
+                type="button" 
+                class="verify-btn" 
+                (click)="onVerifyEmail()"
+                [disabled]="itemForm.get('email')?.invalid || emailVerified">
+                {{ emailVerified ? '✓ Verified' : 'Verify' }}
+              </button>
+            </div>
+            
+            <div class="error-text" *ngIf="itemForm.get('email')?.invalid && itemForm.get('email')?.touched">
+              <span *ngIf="itemForm.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="itemForm.get('email')?.errors?.['invalidEmailFormat']">Invalid email format</span>
+            </div>
+            <div class="success-text" *ngIf="emailVerified">
+              ✓ Email verified successfully
+            </div>
+          </div>
+
+          <!-- OTP Section -->
+          <div class="form-group" *ngIf="showOtpSection">
+            <label for="otp" class="form-label">
+              <span class="label-icon">🔐</span>
+              Verification Code
+            </label>
+            <div class="input-group">
+              <input 
+                type="text" 
+                id="otp" 
+                formControlName="otp" 
+                class="form-input"
+                placeholder="Enter 6-digit OTP"
+                maxlength="6">
+              <button 
+                type="button" 
+                class="verify-btn" 
+                (click)="verifyOtp()">
+                Verify
+              </button>
+            </div>
+            <p class="info-text">Check your email for the verification code</p>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password" class="form-label">
+              <span class="label-icon">🔒</span>
+              Password
+            </label>
+            <input 
+              type="password" 
+              id="password" 
+              formControlName="password" 
+              class="form-input"
+              placeholder="Create a strong password"
+              [class.error]="itemForm.get('password')?.invalid && itemForm.get('password')?.touched"
+              [class.success]="itemForm.get('password')?.valid && itemForm.get('password')?.touched">
+            
+            <div class="error-text" *ngIf="itemForm.get('password')?.invalid && itemForm.get('password')?.touched">
+              <span *ngIf="itemForm.get('password')?.errors?.['required']">Password is required</span>
+              <span *ngIf="itemForm.get('password')?.errors?.['pattern']">
+                Must be 8-20 chars with uppercase, lowercase, number & special char
+              </span>
+            </div>
+            <div class="success-text" *ngIf="itemForm.get('password')?.valid && itemForm.get('password')?.touched">
+              ✓ Strong password
+            </div>
+          </div>
+
+          <!-- Role Selection -->
+          <div class="form-group">
+            <label for="role" class="form-label">
+              <span class="label-icon">🎭</span>
+              Select Role
+            </label>
+            <select 
+              id="role" 
+              formControlName="role" 
+              class="form-select"
+              [class.error]="itemForm.get('role')?.invalid && itemForm.get('role')?.touched">
+              <option value="" disabled selected>Choose your role</option>
+              <option value="PLANNER">Event Planner</option>
+              <option value="CLIENT">Client</option>
+              <option value="STAFF">Staff Member</option>
+            </select>
+            
+            <div class="error-text" *ngIf="itemForm.get('role')?.invalid && itemForm.get('role')?.touched">
+              Please select a role
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            class="submit-btn"
+            [disabled]="itemForm.invalid || !emailVerified">
+            <span>Create Account</span>
+            <span class="btn-arrow">→</span>
+          </button>
+
+          <!-- Login Link -->
+          <div class="form-footer">
+            <p>Already have an account? <a routerLink="/login" class="login-link">Sign in</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="registration-container">
+  <div class="registration-card"> -->
     <!-- Header Section -->
-    <div class="card-header">
+    <!-- <div class="card-header">
       <div class="header-icon">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <circle cx="50" cy="50" r="45" fill="url(#regGradient)" opacity="0.2"/>
@@ -17,18 +231,18 @@
       </div>
       <h2 class="card-title">Create Account</h2>
       <p class="card-subtitle">Join EventHub and start planning amazing events</p>
-    </div>
+    </div> -->
 
     <!-- Registration Form -->
-    <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="registration-form">
+    <!-- <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="registration-form"> -->
       
       <!-- Username Field -->
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="username" class="form-label">
           <span class="label-icon">👤</span>
           Username
-        </label>
-        <input 
+        </label> -->
+        <!-- <input 
           type="text" 
           id="username" 
           formControlName="username" 
@@ -36,8 +250,8 @@
           placeholder="Enter username (lowercase only)"
           [class.error]="itemForm.get('username')?.invalid && itemForm.get('username')?.touched"
           [class.success]="itemForm.get('username')?.valid && itemForm.get('username')?.touched">
-        
-        <div class="validation-messages" *ngIf="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
+         -->
+        <!-- <div class="validation-messages" *ngIf="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
           <p class="error-message" *ngIf="itemForm.get('username')?.errors?.['required']">
             ⚠️ Username is required
           </p>
@@ -54,7 +268,7 @@
       </div>
 
       <!-- Email Field -->
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="email" class="form-label">
           <span class="label-icon">📧</span>
           Email Address
@@ -68,20 +282,20 @@
             placeholder="Enter your email"
             [class.error]="itemForm.get('email')?.invalid && itemForm.get('email')?.touched"
             [class.success]="emailVerified"
-            [disabled]="emailVerified">
-          <button 
-            type="button" 
-            class="verify-btn" 
+            [disabled]="emailVerified"> -->
+          <!-- <button 
+            <!-- type="button" 
+            <!-- class="verify-btn" 
             (click)="onVerifyEmail()"
-            [disabled]="itemForm.get('email')?.invalid || emailVerified">
-            {{ emailVerified ? '✓ Verified' : 'Verify' }}
-          </button>
+            [disabled]="itemForm.get('email')?.invalid || emailVerified">  --> -->
+            <!-- {{ emailVerified ? '✓ Verified' : 'Verify' }} --> -->
+          <!-- </button>
         </div>
         
         <div class="validation-messages" *ngIf="itemForm.get('email')?.invalid && itemForm.get('email')?.touched">
           <p class="error-message" *ngIf="itemForm.get('email')?.errors?.['required']">
-            ⚠️ Email is required
-          </p>
+            ⚠️ Email is required --> -->
+          <!-- </p>
           <p class="error-message" *ngIf="itemForm.get('email')?.errors?.['invalidEmailFormat']">
             ⚠️ Please enter a valid email address
           </p>
@@ -89,10 +303,10 @@
         <p class="success-message" *ngIf="emailVerified">
           ✓ Email verified successfully
         </p>
-      </div>
+      </div> -->
 
       <!-- OTP Section -->
-      <div class="form-group otp-section" *ngIf="showOtpSection">
+      <!-- <div class="form-group otp-section" *ngIf="showOtpSection">
         <label for="otp" class="form-label">
           <span class="label-icon">🔐</span>
           Enter OTP
@@ -116,22 +330,22 @@
       </div>
 
       <!-- Password Field -->
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="password" class="form-label">
           <span class="label-icon">🔒</span>
           Password
-        </label>
-        <input 
+        </label> -->
+        <!-- <input 
           type="password" 
           id="password" 
           formControlName="password" 
           class="form-control"
           placeholder="Create a strong password"
           [class.error]="itemForm.get('password')?.invalid && itemForm.get('password')?.touched"
-          [class.success]="itemForm.get('password')?.valid && itemForm.get('password')?.touched">
-        
-        <div class="validation-messages" *ngIf="itemForm.get('password')?.invalid && itemForm.get('password')?.touched">
-          <p class="error-message" *ngIf="itemForm.get('password')?.errors?.['required']">
+          <!-- [class.success]="itemForm.get('password')?.valid && itemForm.get('password')?.touched"> -->
+         --> -->
+        <!-- <div class="validation-messages" *ngIf="itemForm.get('password')?.invalid && itemForm.get('password')?.touched"> -->
+          <!-- <p class="error-message" *ngIf="itemForm.get('password')?.errors?.['required']">
             ⚠️ Password is required
           </p>
           <p class="error-message" *ngIf="itemForm.get('password')?.errors?.['pattern']">
@@ -141,10 +355,10 @@
         <p class="success-message" *ngIf="itemForm.get('password')?.valid && itemForm.get('password')?.touched">
           ✓ Strong password
         </p>
-      </div>
+      </div> -->
 
       <!-- Role Selection -->
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="role" class="form-label">
           <span class="label-icon">🎭</span>
           Select Role
@@ -165,160 +379,41 @@
             ⚠️ Please select a role
           </p>
         </div>
-      </div>
+      </div> -->
 
       <!-- Success Message -->
-      <div class="alert alert-success" *ngIf="showMessage">
+      <!-- <div class="alert alert-success" *ngIf="showMessage">
         <span class="alert-icon">✓</span>
         {{ responseMessage }}
-      </div>
+      </div> -->
 
       <!-- Error Message -->
-      <div class="alert alert-error" *ngIf="showError">
+      <!-- <div class="alert alert-error" *ngIf="showError">
         <span class="alert-icon">✗</span>
         {{ errorMessage }}
-      </div>
+      </div> -->
 
       <!-- Submit Button -->
-      <button 
+      <!-- <button 
         type="submit" 
         class="submit-btn"
         [disabled]="itemForm.invalid || !emailVerified">
         <span class="btn-text">Create Account</span>
         <span class="btn-icon">→</span>
-      </button>
+      </button> -->
 
       <!-- Login Link -->
-      <div class="form-footer">
+      <!-- <div class="form-footer">
         <p class="footer-text">
           Already have an account? 
           <a routerLink="/login" class="footer-link">Sign in here</a>
         </p>
       </div>
     </form>
-  </div>
+  </div> -->
 
   <!-- Decorative Elements -->
-  <div class="decoration decoration-1"></div>
+  <!-- <div class="decoration decoration-1"></div>
   <div class="decoration decoration-2"></div>
   <div class="decoration decoration-3"></div>
-</div>
-<!-- <body>
-    
-    <div class="container">
-
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-               
-                <div class="register-container">
-                    <div class="header-text mb-4">
-                        <h3 class="typing-effect">Create Account</h3>
-                    </div>
-
-                    <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="form">
-                        <div class="mb-3">
-                            <input type="text" id="username" formControlName="username" class="form-control"
-                                placeholder="Username" required>
-                            <div *ngIf="itemForm.get('username')?.invalid && itemForm.get('username')?.touched"
-                                class="invalid-feedback">
-                                <span *ngIf="itemForm.get('username')?.hasError('required')">Username is required</span>
-                                <span *ngIf="itemForm.get('username')?.hasError('pattern')">Username should only contain
-                                    lowercase letters</span>
-                                <span *ngIf="itemForm.get('username')?.hasError('notUnique')">Username already
-                                    exists</span>
-                            </div>
-                        </div>
-                       
-                        <div class="mb-3">
-                            <input type="email" id="email" formControlName="email" class="form-control"
-                                placeholder="Email" required>
-                            <div *ngIf="itemForm.get('email')?.invalid && itemForm.get('email')?.touched"
-                                class="invalid-feedback">
-                                <span *ngIf="itemForm.get('email')?.hasError('required')">Email is required</span>
-                                <span *ngIf="itemForm.get('email')?.hasError('invalidEmailFormat')">Please enter a valid
-                                    email address</span>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <input type="password" id="password" formControlName="password" class="form-control"
-                                placeholder="Password" required>
-                            <div *ngIf="itemForm.get('password')?.invalid && itemForm.get('password')?.touched"
-                                class="invalid-feedback">
-                                <span *ngIf="itemForm.get('password')?.hasError('required')">Password is required</span>
-                                <span *ngIf="itemForm.get('password')?.hasError('pattern')">Password must contain at
-                                    least one number, one uppercase and lowercase letter, one special character, and be
-                                    8-20 characters long</span>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <select id="role" formControlName="role" class="form-select">
-                                <option value="">Select Role</option>
-                                <option value="STAFF">Staff</option>
-                                <option value="PLANNER">Planner</option>
-                                <option value="CLIENT">Client</option>
-                            </select>
-                            <div *ngIf="itemForm.get('role')?.invalid && itemForm.get('role')?.touched"
-                                class="invalid-feedback">
-                                Role is required
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100" [disabled]="itemForm.invalid">Sign
-                            Up</button>
-                    </form>
-                    <div class="separator">OR</div>
-                    <div class="footer-text">
-                        <p>Already have an account? <a (click)="openModal()" [routerLink]="['/login']" routerLinkActive="router-link-active" >Sign In</a></p>
-                    </div>
-                    <div *ngIf="showMessage" class="alert alert-success mt-3 text-center">
-                        {{responseMessage}}
-                    </div>
-                    <div *ngIf="showError" class="alert alert-danger mt-3 text-center">
-                        {{errorMessage}}
-                    </div>
-                </div>
-            </div>
-        </div> -->
-    <!-- </div>
-    <footer class="bg-dark text-white text-center text-lg-start" id="footer" >
-        <div class="container p-8">
-          <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-              <h5 class="text-uppercase">Contact Us</h5>
-              <p>
-                123 Event Street, Event City, EV 12345<br>
-                Phone: (123) 456-7890<br>
-                Email: info@eliteevents.com
-              </p>
-            </div>
-    
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-              <h5 class="text-uppercase">Follow Us</h5>
-              <a class="me-3">
-                <i class="bi bi-facebook"></i>
-              </a>
-              <a class="me-3">
-                <i class="bi bi-twitter"></i>
-              </a>
-              <a class="me-3">
-                <i class="bi bi-instagram"></i>
-              </a>
-              <a class="me-3">
-                <i class="bi bi-linkedin"></i>
-              </a>
-            </div>
-    
-            <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
-              <h5 class="text-uppercase">About Us</h5>
-              <p>
-               “Turning your moments into memories, and your dreams into timeless celebrations.”
-              </p>
-              <!-- <img src="/assets/Images/logo.png" alt="Elite Events Logo" class="img-fluid"> -->
-            <!-- </div>
-          </div>
-        </div>
-    
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-          © 2024 Elite Events. All rights reserved.
-        </div>
-      </footer> -->
-<!-- </body> --> -->
+</div> -->

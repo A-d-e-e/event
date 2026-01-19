@@ -1,15 +1,28 @@
-<!-- login.component.html -->
 <div class="login-wrapper">
   <div class="login-container">
     <!-- Left Side - Branding -->
     <div class="login-branding">
       <div class="branding-content">
-        <h1 class="brand-logo">EventHub</h1>
-        <p class="brand-tagline">Manage your events with excellence</p>
-        <div class="brand-illustration">
-          <div class="floating-icon">🎉</div>
-          <div class="floating-icon delay-1">📅</div>
-          <div class="floating-icon delay-2">🎫</div>
+        <div class="logo-section">
+          <div class="logo-icon">📅</div>
+          <h1 class="brand-logo">EventHub</h1>
+        </div>
+        <p class="brand-tagline">Crafting Unforgettable Experiences</p>
+        <p class="brand-description">Event Management And Resource Allocations Application</p>
+        
+        <div class="brand-features">
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <span>Easy Event Management</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <span>Real-time Updates</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <span>Secure & Reliable</span>
+          </div>
         </div>
       </div>
     </div>
@@ -46,7 +59,9 @@
                 id="username" 
                 formControlName="username" 
                 placeholder="Enter your username"
-                [class.error-input]="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
+                [class.error-input]="itemForm.get('username')?.invalid && itemForm.get('username')?.touched"
+                [class.valid-input]="itemForm.get('username')?.valid && itemForm.get('username')?.touched">
+              <span class="validation-icon" *ngIf="itemForm.get('username')?.valid && itemForm.get('username')?.touched">✓</span>
             </div>
             <div class="error-text" *ngIf="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
               <span *ngIf="itemForm.get('username')?.errors?.['required']">Username is required</span>
@@ -64,7 +79,9 @@
                 id="password" 
                 formControlName="password" 
                 placeholder="Enter your password"
-                [class.error-input]="itemForm.get('password')?.invalid && itemForm.get('password')?.touched">
+                [class.error-input]="itemForm.get('password')?.invalid && itemForm.get('password')?.touched"
+                [class.valid-input]="itemForm.get('password')?.valid && itemForm.get('password')?.touched">
+              <span class="validation-icon" *ngIf="itemForm.get('password')?.valid && itemForm.get('password')?.touched">✓</span>
             </div>
             <div class="error-text" *ngIf="itemForm.get('password')?.invalid && itemForm.get('password')?.touched">
               <span *ngIf="itemForm.get('password')?.errors?.['required']">Password is required</span>
@@ -92,145 +109,155 @@
 
         <!-- Sign Up Link -->
         <div class="signup-prompt">
+          <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="login-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h5>Contact Us</h5>
+        <p>123 Event Street, Event City, EV 12345</p>
+        <p>Phone: (+91) 9723456891</p>
+        <p>Email: info@eventhub.com</p>
+      </div>
+      <div class="footer-section">
+        <h5>Follow Us</h5>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook">📘</a>
+          <a href="#" aria-label="Twitter">🐦</a>
+          <a href="#" aria-label="Instagram">📷</a>
+          <a href="#" aria-label="LinkedIn">💼</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h5>About Us</h5>
+        <p>Turning your moments into memories, and your dreams into timeless celebrations.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 EventHub. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- login.component.html
+<div class="login-wrapper">
+  <div class="login-container">
+    <!-- Left Side - Branding -->
+    <!-- <div class="login-branding">
+      <div class="branding-content">
+        <h1 class="brand-logo">EventHub</h1>
+        <p class="brand-tagline">Manage your events with excellence</p>
+        <div class="brand-illustration">
+          <div class="floating-icon">🎉</div>
+          <div class="floating-icon delay-1">📅</div>
+          <div class="floating-icon delay-2">🎫</div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Right Side - Login Form -->
+    <!-- <div class="login-form-section">
+      <div class="form-container"> -->
+        <!-- Alert Messages -->
+        <!-- <div class="alert alert-success" *ngIf="showMessage && !showError">
+          <span class="alert-icon">✓</span>
+          <span>{{ responseMessage }}</span>
+        </div>
+
+        <div class="alert alert-error" *ngIf="showMessage && showError">
+          <span class="alert-icon">✕</span>
+          <span>{{ responseMessage }}</span>
+        </div> -->
+
+        <!-- Form Header -->
+        <!-- <div class="form-header">
+          <h2>Welcome Back</h2>
+          <p>Please login to your account</p>
+        </div> -->
+
+        <!-- Login Form -->
+        <!-- <form [formGroup]="itemForm" (ngSubmit)="onLogin()"> -->
+          <!-- Username Field -->
+          <!-- <div class="form-group">
+            <label for="username">Username</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input 
+                type="text" 
+                id="username" 
+                formControlName="username" 
+                placeholder="Enter your username"
+                [class.error-input]="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
+            </div>
+            <div class="error-text" *ngIf="itemForm.get('username')?.invalid && itemForm.get('username')?.touched">
+              <span *ngIf="itemForm.get('username')?.errors?.['required']">Username is required</span>
+              <span *ngIf="itemForm.get('username')?.errors?.['pattern']">Username must contain only lowercase letters</span>
+            </div>
+          </div> -->
+
+          <!-- Password Field -->
+          <!-- <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span> -->
+              <!-- <input 
+                type="password" 
+                id="password" 
+                formControlName="password" 
+                placeholder="Enter your password"
+                <!-- [class.error-input]="itemForm.get('password')?.invalid && itemForm.get('password')?.touched"> -->
+            <!-- </div>
+            <div class="error-text" *ngIf="itemForm.get('password')?.invalid && itemForm.get('password')?.touched">
+              <span *ngIf="itemForm.get('password')?.errors?.['required']">Password is required</span>
+              <span *ngIf="itemForm.get('password')?.errors?.['pattern']">
+                Password must be 8-20 characters with uppercase, lowercase, number and special character
+              </span>
+            </div>
+          </div> --> -->
+
+          <!-- Remember Me & Forgot Password -->
+          <!-- <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-link">Forgot Password?</a>
+          </div> -->
+
+          <!-- Submit Button -->
+          <!-- <button type="submit" class="btn-login" [disabled]="itemForm.invalid">
+            <span>Login</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </form> -->
+
+        <!-- Sign Up Link -->
+        <!-- <div class="signup-prompt">
           <p>Don't have an account? <a href="#" routerLink="/register">Sign up</a></p>
         </div>
       </div>
     </div>
   </div>
 </div>
+ -->
 
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="login.component.scss">
-</head>
-
-<body>
-  <section class="background-radial-gradient overflow-hidden">
-    <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
-      <div class="row gx-lg-5 align-items-center mb-5">
-        <!-- Left column content remains the same -->
-        <!-- <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
-          <div>
-            <img src="assets/Images/Logo.png" alt="Logo" id="logo">
-          </div>
-          <h2 class="mb-7 opacity-70" style="color: hsl(0, 0%, 100%)" id="craft">
-                Crafting Unforgettable Experiences.
-          </h2>
-          <h5>
-            <span class="scanlines" id="app">Event Management And Resource Allocations Application</span>
-          </h5>
-        </div>
-        <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
-          <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
-          <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
-
-          <div class="card bg-glass" id="content">
-            <div class="card-body px-4 py-5 px-md-5">
-              <div class="header-text mb-7">
-                <h2 class="typing-effect">Hello, Again</h2>
-                <p class="typing-effect" style="animation-delay: 1s;">We are happy to have you back.</p>
-              </div> -->
-              <!-- <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
-                <div class="form-group mb-3 position-relative">
-                  <div class="col-12">
-                    <input type="text" id="username" formControlName="username"
-                      class="form-control form-control-lg bg-light fs-6" placeholder="Username" [ngClass]="{
-                        'is-invalid': itemForm.get('username')?.invalid && itemForm.get('username')?.touched,
-                        'is-valid': itemForm.get('username')?.valid
-                      }" required>
-                    <i *ngIf="itemForm.get('username')?.valid" class="fa fa-check tick"></i>
-                  </div>
-                  <small *ngIf="itemForm.get('username')?.hasError('required') && itemForm.get('username')?.touched"
-                    class="text-danger">Username is required</small>
-                  <!-- <small *ngIf="itemForm.get('username')?.hasError('pattern') && itemForm.get('username')?.touched"
-                    class="text-danger">Username should only contain lowercase letters</small> -->
-                <!-- </div>
-                <div class="form-group mb-3 position-relative">
-                  <div class="col-12">
-                    <input type="password" id="password" formControlName="password"
-                      class="form-control form-control-lg bg-light fs-6" placeholder="Password" [ngClass]="{
-                        'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched
-                      }">
-                  </div>
-                  <small *ngIf="itemForm.get('password')?.hasError('required') && itemForm.get('password')?.touched"
-                    class="text-danger">Password is required</small> -->
-                  <!-- <small *ngIf="itemForm.get('password')?.hasError('pattern') && itemForm.get('password')?.touched"
-                    class="text-danger">Password must contain at least one number, one uppercase and lowercase letter, one special character, and be 8-20 characters long</small> -->
-                <!-- </div>
-                <button id="login-button" type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">Log
-                  In</button>
-              </form>
-
-              <br> --> -->
-<!-- 
-              <div class="footer-text">
-                <p>Don't have an account? <a [routerLink]="['/registration']">Sign up</a></p>
-              </div>
-
-              <div *ngIf="showMessage" class="alert"
-                [ngClass]="{'alert-success': !showError, 'alert-danger': showError}" role="alert">
-                {{responseMessage}}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <footer class="bg-dark text-white text-center text-lg-start" id="footer"  >
-    <div class="container p-8">
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-          <h5 class="text-uppercase">Contact Us</h5>
-          <p>
-            123 Event Street, Event City, EV 12345<br>
-            Phone: (+91) 9723456891<br>
-            Email: info@yourstory.com
-          </p>
-        </div> -->
-
-        <!-- <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-          <h5 class="text-uppercase">Follow Us</h5>
-          <a class="me-3">
-            <i class="bi bi-facebook"></i>
-          </a>
-          <a class="me-3">
-            <i class="bi bi-twitter"></i>
-          </a>
-          <a class="me-3">
-            <i class="bi bi-instagram"></i>
-          </a>
-          <a class="me-3">
-            <i class="bi bi-linkedin"></i>
-          </a>
-        </div>
-
-        <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
-          <h5 class="text-uppercase">About Us</h5>
-          <p>
-           “Turning your moments into memories, and your dreams into timeless celebrations.”
-          </p> -->
-          <!-- <img src="/assets/Images/logo.png" alt="Elite Events Logo" class="img-fluid"> -->
-        <!-- </div> -->
-      <!-- </div>
-    </div>
-
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-      © 2026 Your Story. All rights reserved.
-    </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-</body>
-
-</html> --> -->
+ -->

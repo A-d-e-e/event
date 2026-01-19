@@ -45,7 +45,24 @@ public class ResourceService {
         // Update resource availability
         resource.setAvailability(false);
         resourceRepository.save(resource);
-        // ifiweuhfuwehfweuibf
+     
     }
+
+   public Resource updateResource(Long resourceId, Resource updatedResource) {
+    Resource existingResource = resourceRepository.findById(resourceId)
+        .orElseThrow(() -> new EntityNotFoundException("Resource not found with id: " + resourceId));
+    
+    // Update only non-null fields
+    if (updatedResource.getName() != null) {
+        existingResource.setName(updatedResource.getName());
+    }
+    if (updatedResource.getType() != null) {
+        existingResource.setType(updatedResource.getType());
+    }
+    // For boolean primitive, just update directly (no null check needed)
+    existingResource.setAvailability(updatedResource.isAvailability());
+    
+    return resourceRepository.save(existingResource);
+}
 
 }

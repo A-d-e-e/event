@@ -1,23 +1,268 @@
-<!-- add-resource.component.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resource Management</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="add-resource.component.scss">
+</head>
+
+<body>
+  <!-- Alert Container -->
+  <div class="alert-container">
+    <div *ngIf="showSuccess" class="alert alert-success animate__animated animate__slideInRight" role="alert">
+      <div class="alert-icon">✓</div>
+      <div class="alert-content">
+        <strong>Success!</strong>
+        <p>{{ successMessage }}</p>
+      </div>
+      <button type="button" class="btn-close" (click)="showSuccess = false"></button>
+    </div>
+
+    <div *ngIf="showError" class="alert alert-danger animate__animated animate__slideInRight" role="alert">
+      <div class="alert-icon">✕</div>
+      <div class="alert-content">
+        <strong>Error!</strong>
+        <p>{{ errorMessage }}</p>
+      </div>
+      <button type="button" class="btn-close" (click)="showError = false"></button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="main-wrapper">
+    <!-- Header Section -->
+    <div class="page-header">
+      <div class="container">
+        <div class="header-content animate__animated animate__fadeInDown">
+          <h1 class="page-title">
+            <span class="icon">📦</span>
+            Resource Management
+          </h1>
+          <p class="page-subtitle">Manage and organize your event resources efficiently</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="container py-5">
+      <div class="row g-4">
+        <!-- Add/Update Resource Form Card -->
+        <div class="col-lg-6">
+          <div class="resource-card animate__animated animate__fadeInLeft">
+            <div class="card-header-custom">
+              <div class="header-icon">
+                <span>{{ isUpdateMode ? '✏️' : '➕' }}</span>
+              </div>
+              <div class="header-text">
+                <h3>{{ isUpdateMode ? 'Update Resource' : 'Add New Resource' }}</h3>
+                <p>{{ isUpdateMode ? 'Modify existing resource details' : 'Fill in the details below to add a resource'
+                  }}</p>
+              </div>
+            </div>
+
+            <div class="card-body-custom">
+              <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+                <div class="form-group-custom">
+                  <label for="name" class="form-label-custom">
+                    <span class="label-icon">📝</span>
+                    Resource Name
+                    <span class="required">*</span>
+                  </label>
+                  <input type="text" class="form-control-custom" id="name"
+                    placeholder="Enter resource name (e.g., Projector, Sound System)" formControlName="name"
+                    [class.error]="itemForm.controls['name'].invalid && (itemForm.controls['name'].dirty || itemForm.controls['name'].touched)">
+                  <div class="validation-message"
+                    *ngIf="itemForm.controls['name'].invalid && (itemForm.controls['name'].dirty || itemForm.controls['name'].touched)">
+                    <span class="error-icon">⚠</span> Resource name is required
+                  </div>
+                </div>
+
+                <div class="form-group-custom">
+                  <label for="type" class="form-label-custom">
+                    <span class="label-icon">🏷️</span>
+                    Resource Type
+                    <span class="required">*</span>
+                  </label>
+                  <input type="text" class="form-control-custom" id="type"
+                    placeholder="Enter resource type (e.g., Equipment, Venue)" formControlName="type"
+                    [class.error]="itemForm.controls['type'].invalid && (itemForm.controls['type'].dirty || itemForm.controls['type'].touched)">
+                  <div class="validation-message"
+                    *ngIf="itemForm.controls['type'].invalid && (itemForm.controls['type'].dirty || itemForm.controls['type'].touched)">
+                    <span class="error-icon">⚠</span> Resource type is required
+                  </div>
+                </div>
+
+                <div class="form-group-custom">
+                  <label class="form-label-custom">
+                    <span class="label-icon">📊</span>
+                    Availability Status
+                    <span class="required">*</span>
+                  </label>
+                  <div class="radio-group">
+                    <label class="radio-option">
+                      <input class="radio-input" type="radio" id="available" formControlName="availability"
+                        [value]="true">
+                      <span class="radio-custom"></span>
+                      <span class="radio-label">
+                        <span class="status-badge available">✓ Available</span>
+                      </span>
+                    </label>
+                    <label class="radio-option">
+                      <input class="radio-input" type="radio" id="unavailable" formControlName="availability"
+                        [value]="false">
+                      <span class="radio-custom"></span>
+                      <span class="radio-label">
+                        <span class="status-badge unavailable">✕ Unavailable</span>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="validation-message"
+                    *ngIf="itemForm.controls['availability'].invalid && (itemForm.controls['availability'].dirty || itemForm.controls['availability'].touched)">
+                    <span class="error-icon">⚠</span> Please select availability status
+                  </div>
+                </div>
+
+                <div class="button-group">
+                  <button type="submit" class="btn-primary-custom">
+                    <span class="btn-icon">{{ isUpdateMode ? '✓' : '➕' }}</span>
+                    {{ isUpdateMode ? 'Update Resource' : 'Add Resource' }}
+                  </button>
+                  <button type="button" class="btn-secondary-custom"
+                    (click)="isUpdateMode ? cancelUpdate() : itemForm.reset({ availability: true })">
+                    <span class="btn-icon">{{ isUpdateMode ? '✕' : '↻' }}</span>
+                    {{ isUpdateMode ? 'Cancel' : 'Reset' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resource List Card -->
+        <div class="col-lg-6">
+          <div class="resource-card animate__animated animate__fadeInRight">
+            <div class="card-header-custom">
+              <div class="header-icon">
+                <span>📋</span>
+              </div>
+              <div class="header-text">
+                <h3>Resource Directory</h3>
+                <p>View and manage all your resources</p>
+              </div>
+            </div>
+
+            <div class="card-body-custom">
+              <!-- Search Bar -->
+              <div class="search-wrapper">
+                <div class="search-icon">🔍</div>
+                <input type="text" class="search-input" placeholder="Search by ID or resource name..."
+                  [(ngModel)]="searchQuery" (input)="onSearch()">
+              </div>
+
+              <!-- Resource List -->
+              <div class="resource-list">
+                <div *ngIf="paginatedResources && paginatedResources.length > 0">
+                  <div *ngFor="let resource of paginatedResources" class="resource-item">
+                    <div class="resource-info">
+                      <div class="resource-id">
+                        <span class="id-badge">#{{ resource.resourceID }}</span>
+                      </div>
+                      <div class="resource-details">
+                        <h4 class="resource-name">{{ resource.name }}</h4>
+                        <p class="resource-type">{{ resource.type }}</p>
+                      </div>
+                      <div class="resource-status">
+                        <span class="status-indicator" [class.active]="resource.availability"
+                          [class.inactive]="!resource.availability">
+                          {{ resource.availability ? 'Available' : 'Unavailable' }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="resource-actions">
+                      <button class="btn-edit" (click)="editResource(resource)" title="Edit Resource">
+                        <span class="edit-icon">✏️</span>
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="!paginatedResources || paginatedResources.length === 0" class="no-resources">
+                  <div class="empty-state">
+                    <span class="empty-icon">📭</span>
+                    <h4>No Resources Found</h4>
+                    <p>{{ searchQuery ? 'Try adjusting your search criteria' : 'Start by adding your first resource' }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pagination -->
+              <div class="pagination-wrapper" *ngIf="resourceList.length > 0">
+                <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+                  <span>←</span> Previous
+                </button>
+                <div class="page-info">
+                  <span class="current-page">{{ currentPage }}</span>
+                  <span class="separator">/</span>
+                  <span class="total-pages">{{ totalPages }}</span>
+                </div>
+                <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                  Next <span>→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- add-resource.component.html
 <div class="resource-container">
   <!-- Success Message -->
-  <div class="alert alert-success" *ngIf="showSuccess">
+<!-- <div class="alert alert-success" *ngIf="showSuccess">
     <span>{{ successMessage }}</span>
-  </div>
+  </div>  -->
 
-  <!-- Error Message -->
-  <div class="alert alert-error" *ngIf="showError">
+<!-- Error Message -->
+<!-- <div class="alert alert-error" *ngIf="showError">
     <span>{{ errorMessage }}</span>
-  </div>
+  </div> -->
 
-  <!-- Page Header -->
-  <div class="page-header">
+<!-- Page Header -->
+<!-- <div class="page-header">
     <h1>Resource Management</h1>
     <p>Add and manage your event resources</p>
-  </div>
+  </div> -->
 
-  <!-- Add Resource Form -->
-  <div class="form-section">
+<!-- Add Resource Form -->
+<!-- <div class="form-section">
     <h2>Add New Resource</h2>
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
       <div class="form-grid">
@@ -32,193 +277,13 @@
           <div class="error-text" *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
             Resource name is required
           </div>
-        </div>
+        </div> -->
 
-        <div class="form-group">
+<!-- <div class="form-group">
           <label for="type">Resource Type <span class="required">*</span></label>
           <input 
             type="text" 
-            id="type" 
-            formControlName="type" 
-            placeholder="Enter resource type"
-            [class.error-input]="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
-          <div class="error-text" *ngIf="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
-            Resource type is required
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="availability">Availability</label>
-          <select id="availability" formControlName="availability">
-            <option [value]="true">Available</option>
-            <option [value]="false">Not Available</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Add Resource</button>
-        <button type="button" class="btn btn-secondary" (click)="itemForm.reset({ availability: true })">Reset</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Search Section -->
-  <div class="search-section">
-    <h2>Resource List</h2>
-    <div class="search-bar">
-      <input 
-        type="text" 
-        [(ngModel)]="searchQuery" 
-        (input)="onSearch()" 
-        placeholder="Search by ID or name...">
-      <span class="search-icon">🔍</span>
-    </div>
-  </div>
-
-  <!-- Resources Table -->
-  <div class="table-section">
-    <div class="table-responsive">
-      <table class="resource-table">
-        <thead>
-          <tr>
-            <th>Resource ID</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Availability</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let resource of paginatedResources">
-            <td>{{ resource.resourceID }}</td>
-            <td>{{ resource.name }}</td>
-            <td>{{ resource.type }}</td>
-            <td>
-              <span class="status-badge" [class.available]="resource.availability" [class.unavailable]="!resource.availability">
-                {{ resource.availability ? 'Available' : 'Not Available' }}
-              </span>
-            </td>
-          </tr>
-          <tr *ngIf="paginatedResources.length === 0">
-            <td colspan="4" class="no-data">No resources found</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination" *ngIf="resourceList.length > 0">
-      <button 
-        class="btn btn-pagination" 
-        (click)="previousPage()" 
-        [disabled]="currentPage === 1">
-        Previous
-      </button>
-      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-      <button 
-        class="btn btn-pagination" 
-        (click)="nextPage()" 
-        [disabled]="currentPage === totalPages">
-        Next
-      </button>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
- 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Resource</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="add-resource.component.scss">
-</head>
- 
-<body>
-    <div class="bubble bubble-1"></div>
-    <div class="bubble bubble-2"></div>
-    <div class="bubble bubble-3"></div>
-    <div class="bubble bubble-4"></div>
-    <div class="bubble bubble-5"></div>
-    <div class="bubble bubble-6"></div>
-    <div class="bubble bubble-7"></div>
-    <div class="bubble bubble-8"></div>
-    <div class="bubble bubble-9"></div>
-    <div class="bubble bubble-10"></div>
-<div class="alert-container">
-    <div *ngIf="showSuccess" class="alert alert-success animate__animated animate__fadeInRight" role="alert">
-        {{ successMessage }}
-        <button type="button" class="btn-close" (click)="showSuccess = false"></button>
-    </div>
-
-    <div *ngIf="showError" class="alert alert-danger animate__animated animate__fadeInRight" role="alert">
-        {{ errorMessage }}
-        <button type="button" class="btn-close" (click)="showError = false"></button>
-    </div>
-</div>
-
-    <div class="container-fluid py-5">
-        <h1 class="text-center mb-5 animate__animated animate__fadeInDown animate__delay-1s">Manage Resources</h1>
- 
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="card animate__animated animate__zoomIn">
-                    <div class="card-header">
-                        <h4>Add Resource</h4>
-                    </div>
-                    <div class="card-body">
-                        <form [formGroup]="itemForm" (ngSu<!-- add-resource.component.html -->
-<!-- <div class="resource-container">
-  <!-- Success Message -->
-  <!-- <div class="alert alert-success" *ngIf="showSuccess">
-    <span>{{ successMessage }}</span>
-  </div> --> -->
-
-  <!-- Error Message -->
-  <!-- <div class="alert alert-error" *ngIf="showError">
-    <span>{{ errorMessage }}</span>
-  </div> -->
-
-  <!-- Page Header -->
-  <!-- <div class="page-header">
-    <h1>Resource Management</h1>
-    <p>Add and manage your event resources</p>
-  </div> -->
-
-  <!-- Add Resource Form -->
-  <!-- <div class="form-section">
-    <h2>Add New Resource</h2>
-    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="name">Resource Name <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="name" 
-            formControlName="name"  -->
-            <!-- placeholder="Enter resource name"
-            [class.error-input]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-          <div class="error-text" *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-            Resource name is required
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="type">Resource Type <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="type"  -->
+            <!-- id="type" 
             <!-- formControlName="type" 
             placeholder="Enter resource type"
             [class.error-input]="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
@@ -230,11 +295,11 @@
         <div class="form-group">
           <label for="availability">Availability</label>
           <select id="availability" formControlName="availability">
-            <option [value]="true">Available</option>
-            <option [value]="false">Not Available</option>
+            <option [value]="true">Available</option> --> --> -->
+<!-- <option [value]="false">Not Available</option>
           </select>
-        </div> -->
-      <!-- </div>
+        </div>
+      </div>
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Add Resource</button>
@@ -243,8 +308,8 @@
     </form>
   </div> -->
 
-  <!-- Search Section -->
-  <!-- <div class="search-section">
+<!-- Search Section -->
+<!-- <div class="search-section">
     <h2>Resource List</h2>
     <div class="search-bar">
       <input 
@@ -256,8 +321,8 @@
     </div>
   </div> -->
 
-  <!-- Resources Table -->
-  <!-- <div class="table-section">
+<!-- Resources Table -->
+<!-- <div class="table-section">
     <div class="table-responsive">
       <table class="resource-table">
         <thead>
@@ -269,132 +334,7 @@
           </tr>
         </thead>
         <tbody> -->
-          <!-- <tr *ngFor="let resource of paginatedResources">
-            <td>{{ resource.resourceID }}</td>
-            <td>{{ resource.name }}</td>
-            <td>{{ resource.type }}</td>
-            <td>
-              <span class="status-badge" [class.available]="resource.availability" [class.unavailable]="!resource.availability">
-                {{ resource.availability ? 'Available' : 'Not Available' }}
-              </span>
-            </td>
-          </tr>
-          <tr *ngIf="paginatedResources.length === 0">
-            <td colspan="4" class="no-data">No resources found</td>
-          </tr>
-        </tbody>
-      </table> -->
-    <!-- </div> -->
-
-    <!-- Pagination -->
-    <!-- <div class="pagination" *ngIf="resourceList.length > 0">
-      <button 
-        class="btn btn-pagination" 
-        (click)="previousPage()" 
-        [disabled]="currentPage === 1">
-        Previous
-      </button>
-      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-      <button 
-        class="btn btn-pagination" 
-        (click)="nextPage()" 
-        [disabled]="currentPage === totalPages">
-        Next
-      </button>
-    </div>
-  </div> -->
-<!-- </div>it)="onSuadd-resource.component.html -->
-<!-- <div class="resource-container"> -->
-  <!-- Success Message -->
-  <!-- <div class="alert alert-success" *ngIf="showSuccess">
-    <span>{{ successMessage }}</span>
-  </div> -->
-
-  <!-- Error Message -->
-  <!-- <div class="alert alert-error" *ngIf="showError">
-    <span>{{ errorMessage }}</span>
-  </div> -->
-
-  <!-- Page Header -->
-  <!-- <div class="page-header">
-    <h1>Resource Management</h1>
-    <p>Add and manage your event resources</p>
-  </div> -->
-
-  <!-- Add Resource Form -->
-  <!-- <div class="form-section">
-    <h2>Add New Resource</h2>
-    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="name">Resource Name <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="name" 
-            formControlName="name" 
-            placeholder="Enter resource name"
-            [class.error-input]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-          <div class="error-text" *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-            Resource name is required
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="type">Resource Type <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="type" 
-            formControlName="type" 
-            placeholder="Enter resource type"
-            [class.error-input]="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
-          <div class="error-text" *ngIf="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
-            Resource type is required
-          </div>
-        </div> -->
-
-        <!-- <div class="form-group">
-          <label for="availability">Availability</label>
-          <select id="availability" formControlName="availability">
-            <option [value]="true">Available</option>
-            <option [value]="false">Not Available</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Add Resource</button>
-        <button type="button" class="btn btn-secondary" (click)="itemForm.reset({ availability: true })">Reset</button>
-      </div>
-    </form>
-  </div> -->
-
-  <!-- Search Section -->
-  <!-- <div class="search-section">
-    <h2>Resource List</h2>
-    <div class="search-bar">
-      <input 
-        type="text" 
-        [(ngModel)]="searchQuery" 
-        (input)="onSearch()" 
-        placeholder="Search by ID or name...">
-      <span class="search-icon">🔍</span>
-    </div>
-  </div> -->
-
-  <!-- Resources Table -->
-  <!-- <div class="table-section">
-    <div class="table-responsive">
-      <table class="resource-table">
-        <thead>
-          <tr>
-            <th>Resource ID</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Availability</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let resource of paginatedResources">
+<!-- <tr *ngFor="let resource of paginatedResources">
             <td>{{ resource.resourceID }}</td>
             <td>{{ resource.name }}</td>
             <td>{{ resource.type }}</td>
@@ -411,173 +351,8 @@
       </table>
     </div> -->
 
-    <!-- Pagination -->
-    <!-- <div class="pagination" *ngIf="resourceList.length > 0">
-      <button 
-        class="btn btn-pagination" 
-        (click)="previousPage()" 
-        [disabled]="currentPage === 1">
-        Previous
-      </button>
-      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-      <button 
-        class="btn btn-pagination" 
-        (click)="nextPage()" 
-        [disabled]="currentPage === totalPages">
-        Next
-      </button>
-    </div>
-  </div> -->
-<!-- </div>it()">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Enter Resource Name"
-                                    formControlName="name">
-                                    <div *ngIf="itemForm.controls['name'].invalid && (itemForm.controls['name'].dirty || itemForm.controls['name'].touched)"class="validation-message">
-                                    Name is required.
-                                  </div>
-                            </div>
- 
-                            <div class="mb-3">
-                                <label for="type" class="form-label">Type</label>
-                                <input type="text" class="form-control" id="type" placeholder="Enter Resource Type"
-                                    formControlName="type">
-                                    <div *ngIf="itemForm.controls['type'].invalid && (itemForm.controls['type'].dirty || itemForm.controls['type'].touched)"class="validation-message">
-                                        Type is required.
-                                      </div>
-                            </div>
- 
-                            <div class="mb-3">
-                                <label class="form-label">Availability</label>
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="available"
-                                            formControlName="availability" [value]="true">
-                                        <label class="form-check-label" for="available">Available</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="unavailable"
-                                            formControlName="availability" [value]="false">
-                                        <label class="form-check-label" for="unavailable">Unavailable</label>
-                                    </div>
-                                    
-                                </div>
-                                <div *ngIf="itemForm.controls['availability'].invalid && (itemForm.controls['availability'].dirty || itemForm.controls['availability'].touched)" class="validation-message">
-                                    Availability is required.
-                                </div>
-                            </div> -->
-                           
-                            <!-- <div class="text-center">
-                                <button type="su<!-- add-resource.component.html -->
-<!-- <div class="resource-container"> --> -->
-  <!-- Success Message -->
-  <!-- <div class="alert alert-success" *ngIf="showSuccess">
-    <span>{{ successMessage }}</span>
-  </div> -->
-
-  <!-- Error Message -->
-  <!-- <div class="alert alert-error" *ngIf="showError">
-    <span>{{ errorMessage }}</span>
-  </div> -->
-
-  <!-- Page Header -->
-  <!-- <div class="page-header">
-    <h1>Resource Management</h1>
-    <p>Add and manage your event resources</p>
-  </div> -->
-
-  <!-- Add Resource Form -->
-  <!-- <div class="form-section">
-    <h2>Add New Resource</h2>
-    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="name">Resource Name <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="name" 
-            formControlName="name" 
-            placeholder="Enter resource name"
-            [class.error-input]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-          <div class="error-text" *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-            Resource name is required
-          </div>
-        </div> -->
-
-        <!-- <div class="form-group">
-          <label for="type">Resource Type <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="type" 
-            formControlName="type" 
-            placeholder="Enter resource type"
-            [class.error-input]="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
-          <div class="error-text" *ngIf="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
-            Resource type is required
-          </div>
-        </div> -->
-
-        <!-- <div class="form-group">
-          <label for="availability">Availability</label>
-          <select id="availability" formControlName="availability">
-            <option [value]="true">Available</option>
-            <option [value]="false">Not Available</option>
-          </select>
-        </div>
-      </div> -->
-
-      <!-- <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Add Resource</button>
-        <button type="button" class="btn btn-secondary" (click)="itemForm.reset({ availability: true })">Reset</button>
-      </div>
-    </form>
-  </div> -->
-
-  <!-- Search Section -->
-  <!-- <div class="search-section">
-    <h2>Resource List</h2>
-    <div class="search-bar">
-      <input 
-        type="text" 
-        [(ngModel)]="searchQuery" 
-        (input)="onSearch()" 
-        placeholder="Search by ID or name...">
-      <span class="search-icon">🔍</span>
-    </div>
-  </div> -->
-
-  <!-- Resources Table -->
-  <!-- <div class="table-section">
-    <div class="table-responsive">
-      <table class="resource-table">
-        <thead>
-          <tr>
-            <th>Resource ID</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Availability</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let resource of paginatedResources">
-            <td>{{ resource.resourceID }}</td>
-            <td>{{ resource.name }}</td>
-            <td>{{ resource.type }}</td>
-            <td>
-              <span class="status-badge" [class.available]="resource.availability" [class.unavailable]="!resource.availability">
-                {{ resource.availability ? 'Available' : 'Not Available' }}
-              </span>
-            </td>
-          </tr>
-          <tr *ngIf="paginatedResources.length === 0">
-            <td colspan="4" class="no-data">No resources found</td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
-
-    <!-- Pagination -->
-    <!-- <div class="pagination" *ngIf="resourceList.length > 0">
+<!-- Pagination -->
+<!-- <div class="pagination" *ngIf="resourceList.length > 0">
       <button 
         class="btn btn-pagination" 
         (click)="previousPage()" 
@@ -593,179 +368,13 @@
       </button>
     </div>
   </div>
-</div>it" class="btn btn-primary">Suadd-resource.component.html -->
-<!-- <div class="resource-container"> -->
-  <!-- Success Message -->
-  <!-- <div class="alert alert-success" *ngIf="showSuccess">
-    <span>{{ successMessage }}</span>
-  </div> -->
+</div> -->
 
-  <!-- Error Message -->
-  <!-- <div class="alert alert-error" *ngIf="showError">
-    <span>{{ errorMessage }}</span>
-  </div> -->
 
-  <!-- Page Header -->
-  <!-- <div class="page-header">
-    <h1>Resource Management</h1>
-    <p>Add and manage your event resources</p>
-  </div> -->
 
-  <!-- Add Resource Form -->
-  <!-- <div class="form-section">
-    <h2>Add New Resource</h2>
-    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="name">Resource Name <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="name" 
-            formControlName="name" 
-            placeholder="Enter resource name"
-            [class.error-input]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-          <div class="error-text" *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-            Resource name is required
-          </div>
-        </div> -->
 
-        <!-- <div class="form-group">
-          <label for="type">Resource Type <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="type" 
-            formControlName="type" 
-            placeholder="Enter resource type"
-            [class.error-input]="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
-          <div class="error-text" *ngIf="itemForm.get('type')?.invalid && itemForm.get('type')?.touched">
-            Resource type is required
-          </div>
-        </div> -->
 
-        <!-- <div class="form-group">
-          <label for="availability">Availability</label>
-          <select id="availability" formControlName="availability">
-            <option [value]="true">Available</option>
-            <option [value]="false">Not Available</option>
-          </select>
-        </div>
-      </div> -->
 
-      <!-- <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Add Resource</button>
-        <button type="button" class="btn btn-secondary" (click)="itemForm.reset({ availability: true })">Reset</button>
-      </div>
-    </form>
-  </div> -->
 
-  <!-- Search Section -->
-  <!-- <div class="search-section">
-    <h2>Resource List</h2>
-    <div class="search-bar">
-      <input 
-        type="text" 
-        [(ngModel)]="searchQuery" 
-        (input)="onSearch()" 
-        placeholder="Search by ID or name...">
-      <span class="search-icon">🔍</span>
-    </div>
-  </div> -->
 
-  <!-- Resources Table -->
-  <!-- <div class="table-section">
-    <div class="table-responsive">
-      <table class="resource-table">
-        <thead>
-          <tr>
-            <th>Resource ID</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Availability</th>
-          </tr>
-        </thead>
-        <tbody> -->
-          <!-- <tr *ngFor="let resource of paginatedResources">
-            <td>{{ resource.resourceID }}</td>
-            <td>{{ resource.name }}</td>
-            <td>{{ resource.type }}</td>
-            <td>
-              <span class="status-badge" [class.available]="resource.availability" [class.unavailable]="!resource.availability">
-                {{ resource.availability ? 'Available' : 'Not Available' }}
-              </span>
-            </td>
-          </tr> -->
-          <!-- <tr *ngIf="paginatedResources.length === 0">
-            <td colspan="4" class="no-data">No resources found</td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
-
-    <!-- Pagination -->
-    <!-- <div class="pagination" *ngIf="resourceList.length > 0">
-      <button 
-        class="btn btn-pagination" 
-        (click)="previousPage()" 
-        [disabled]="currentPage === 1">
-        Previous
-      </button>
-      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-      <button 
-        class="btn btn-pagination" 
-        (click)="nextPage()" 
-        [disabled]="currentPage === totalPages">
-        Next
-      </button>
-    </div>
-  </div>
-</div>it</button> -->
-                            <!-- </div>
-                        </form>
-                        
-                    </div>
-                </div>
- 
-            </div>
- 
-            <div class="col-md-5">
-                <div class="card animate__animated animate__fadeInRight">
-                    <div class="card-header">
-                        <h4>Resource Information</h4>
-                    </div>
-                    <div class="card-body"> -->
-                        <!-- <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Search by ID or Name"
-                                [(ngModel)]="searchQuery" (input)="onSearch()">
-                        </div>
-                        <ul class="list-group" *ngIf="paginatedResources && paginatedResources.length > 0">
-                            <li *ngFor="let resource of paginatedResources" class="list-group-item">
-                                {{ resource.resourceID }} - {{ resource.name }} - {{ resource.type }} - {{
-                                resource.availability ? 'Available' : 'Unavailable' }}
-                            </li>
-                        </ul>
-                        <div *ngIf="paginatedResources && paginatedResources.length === 0" class="text-center mt-3" style="color: red;">
-                            No resources found.
-                        </div>
-                    </div> -->
-                    <!-- <div class="card-footer">
-                        <div class="pagination-controls">
-                            <button class="btn btn-sm btn-secondary" (click)="previousPage()"
-                                [disabled]="currentPage === 1">Previous</button>
-                            <span class="mx-2">Page {{ currentPage }} of {{ totalPages }}</span>
-                            <button class="btn btn-sm btn-secondary" (click)="nextPage()"
-                                [disabled]="currentPage === totalPages">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
- 
-    </div>
- 
-  -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
- 
-</body> -->
- 
-<!-- </html> --> -->
+-->

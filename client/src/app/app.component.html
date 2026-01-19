@@ -1,4 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventra - Professional Event Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="app.component.scss">
+</head>
+
+<body>
+    <!-- Modern Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid px-4">
+            <!-- Logo Section -->
+            <a class="navbar-brand brand-logo" href="#" [routerLink]="['/dashboard']">
+                <div class="logo-container">
+                    <svg class="logo-svg" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="25" cy="25" r="23" fill="url(#logoGradient)" opacity="0.2"/>
+                        <path d="M25 10 L28 20 L38 20 L30 27 L33 37 L25 30 L17 37 L20 27 L12 20 L22 20 Z" 
+                              fill="url(#logoGradient)"/>
+                        <circle cx="25" cy="25" r="3" fill="white"/>
+                    </svg>
+                    <div class="brand-text">
+                        <span class="brand-name">Eventra</span>
+                        <span class="brand-tagline">Create. Manage. Celebrate.</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation Items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    <!-- Dashboard Link - Shown to all logged in users -->
+                    <li class="nav-item" *ngIf="IsLoggin">
+                        <a class="nav-link nav-link-custom" [routerLink]="['/dashboard']">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- User Role Badge -->
+                    <li class="nav-item" *ngIf="IsLoggin && roleName">
+                        <span class="role-badge">
+                            <i class="bi bi-person-badge"></i>
+                            {{ roleName }}
+                        </span>
+                    </li>
+
+                    <!-- Auth Buttons -->
+                    <li class="nav-item" *ngIf="!IsLoggin">
+                        <button class="btn btn-login" [routerLink]="['/login']">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            Login
+                        </button>
+                    </li>
+                    <li class="nav-item" *ngIf="!IsLoggin">
+                        <button class="btn btn-register" [routerLink]="['/registration']">
+                            <i class="bi bi-person-plus"></i>
+                            Register
+                        </button>
+                    </li>
+                    <li class="nav-item" *ngIf="IsLoggin">
+                        <button class="btn btn-logout" (click)="logout()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <router-outlet></router-outlet>
+    </div>
+
+    <!-- Modern Footer -->
+    <footer class="footer-custom" *ngIf="IsLoggin">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Company Info -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-section">
+                            <div class="footer-logo">
+                                <svg class="footer-logo-svg" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="footerLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M25 10 L28 20 L38 20 L30 27 L33 37 L25 30 L17 37 L20 27 L12 20 L22 20 Z" 
+                                          fill="url(#footerLogoGradient)"/>
+                                </svg>
+                                <span class="footer-brand-name">Eventra</span>
+                            </div>
+                            <p class="footer-description">
+                                Your premier event management platform. We transform your vision into unforgettable experiences 
+                                through innovative planning and seamless execution.
+                            </p>
+                            <div class="footer-social">
+                                <a href="#" class="social-link" aria-label="Facebook">
+                                    <i class="bi bi-facebook"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Twitter">
+                                    <i class="bi bi-twitter"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Instagram">
+                                    <i class="bi bi-instagram"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="LinkedIn">
+                                    <i class="bi bi-linkedin"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="col-lg-2 col-md-6">
+                        <div class="footer-section">
+                            <h5 class="footer-title">Quick Links</h5>
+                            <ul class="footer-links">
+                                <li><a href="#" [routerLink]="['/dashboard']">Dashboard</a></li>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Services -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-section">
+                            <h5 class="footer-title">Our Services</h5>
+                            <ul class="footer-links">
+                                <li><a href="#">Event Planning</a></li>
+                                <li><a href="#">Resource Management</a></li>
+                                <li><a href="#">Vendor Coordination</a></li>
+                                <li><a href="#">Budget Tracking</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-section">
+                            <h5 class="footer-title">Contact Us</h5>
+                            <ul class="footer-contact">
+                                <li>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>123 Event Street, Chennai<br>Tamil Nadu, India 600001</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-telephone-fill"></i>
+                                    <span>+91 9876543210</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-envelope-fill"></i>
+                                    <span>hello@eventra.com</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="footer-copyright">
+                            © 2026 Eventra. All rights reserved.
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <ul class="footer-bottom-links">
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -108,8 +332,8 @@
                         top-notch services to ensure your events are successful and memorable.
                     </p>
                      <img src="/https://dcassetcdn.com/design_img/3653390/432085/432085_20820830_3653390_d33147bb_image.jpg" alt="Elite Events Logo" class="img-fluid"> -->
-                 </div>
-            </div>
+                 <!-- </div> -->
+            <!-- </div>
         </div>
 
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
@@ -120,4 +344,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body> 
 
-</html> 
+</html>  --> -->

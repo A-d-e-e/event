@@ -279,5 +279,55 @@ export class HttpService {
     return this.http.get(`${this.serverName}/api/user/users`, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
  
   }
+
+updateResource(resourceId: number, resource: any): Observable<any> {
+  const url = `${this.serverName}/api/planner/resource/${resourceId}`;
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.authService.getToken()}`
+  });
+  return this.http.put(url, resource, { headers });
+}
+
+updateEventByPlanner(eventId: number, event: any): Observable<any> {
+    const url = `${this.serverName}/api/planner/event/${eventId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.put(url, event, { headers });
+  }
+
+
+
+  // Get all allocations
+GetAllAllocations(): Observable<any> {
+  const url = `${this.serverName}/api/planner/resource-allocate`;
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.authService.getToken()}`
+  });
+  return this.http.get(url, { headers });
+}
+
+// Update allocation
+updateAllocation(allocationId: number, eventId: any, resourceId: any, details: any): Observable<any> {
+  const url = `${this.serverName}/api/planner/resource-allocate/${allocationId}?eventId=${eventId}&resourceId=${resourceId}`;
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.authService.getToken()}`
+  });
+  return this.http.put(url, details, { headers });
+}
+
+// Delete allocation
+deleteAllocation(allocationId: number): Observable<any> {
+  const url = `${this.serverName}/api/planner/resource-allocate/${allocationId}`;
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.authService.getToken()}`
+  });
+  return this.http.delete(url, { headers });
+}
  
 }

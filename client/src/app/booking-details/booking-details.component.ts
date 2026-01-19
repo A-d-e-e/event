@@ -52,6 +52,23 @@ export class BookingDetailsComponent implements OnInit {
       this.itemForm.get('searchTerm')?.markAsTouched();
     }
   }
+
+  // Calculate total price for an event
+  calculateTotalPrice(allocations: any[]): number {
+    if (!allocations || allocations.length === 0) return 0;
+    return allocations.reduce((total, allocation) => {
+      const price = allocation.resource?.price || 0;
+      const quantity = allocation.quantity || 0;
+      return total + (price * quantity);
+    }, 0);
+  }
+
+  // Calculate total price for a single allocation
+  calculateAllocationPrice(allocation: any): number {
+    const price = allocation.resource?.price || 0;
+    const quantity = allocation.quantity || 0;
+    return price * quantity;
+  }
  
   showTooltip(event: MouseEvent, allocations: any[]): void {
     this.tooltipContent = allocations;
@@ -75,11 +92,15 @@ export class BookingDetailsComponent implements OnInit {
   getStatusClass(status: string): string {
     switch (status.toLowerCase()) {
       case 'active':
+      case 'upcoming':
         return 'badge-success';
       case 'cancelled':
         return 'badge-danger';
       case 'pending':
+      case 'ongoing':
         return 'badge-warning';
+      case 'completed':
+        return 'badge-info';
       default:
         return 'badge-secondary';
     }

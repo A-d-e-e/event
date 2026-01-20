@@ -1,0 +1,173 @@
+<div class="home-page">
+  
+  <!-- Hero Section - 5 Expanding Frames -->
+  <section class="hero-frames-section">
+    <div class="frames-container">
+      <div 
+        class="event-frame" 
+        *ngFor="let event of eventTypes; let i = index"
+        [style.background-image]="'url(' + event.image + ')'"
+        [class.expanded]="hoveredIndex === i"
+        (mouseenter)="hoveredIndex = i"
+        (mouseleave)="hoveredIndex = null">
+        <div class="frame-overlay"></div>
+        <div class="frame-content">
+          <h2 class="frame-title">{{ event.title }}</h2>
+          <p class="frame-subtitle">{{ event.subtitle }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section class="about-section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-badge">About Us</span>
+        <h2 class="section-title">Creating Memorable Experiences Since 2026</h2>
+      </div>
+
+      <div class="about-content">
+        <div class="about-text">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </p>
+          <p>
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
+            fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
+            culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde 
+            omnis iste natus error sit voluptatem accusantium doloremque laudantium.
+          </p>
+          <button class="btn-learn-more">
+            Learn More About Us
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Live Stats -->
+        <div class="stats-grid">
+          <div class="stat-card" *ngFor="let stat of stats">
+            <div class="stat-icon" [style.background]="stat.gradient">
+              <i [class]="stat.icon"></i>
+            </div>
+            <div class="stat-details">
+              <h3 class="stat-number">{{ stat.value }}</h3>
+              <p class="stat-label">{{ stat.label }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Team Section -->
+  <section class="team-section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-badge">Our Team</span>
+        <h2 class="section-title">Meet the People Behind the Magic</h2>
+        <p class="section-description">
+          A dedicated team of professionals committed to bringing your events to life
+        </p>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card" *ngFor="let member of teamMembers">
+          <div class="team-image-wrapper">
+            <img [src]="member.image" [alt]="member.name" class="team-image">
+            <div class="team-overlay">
+              <div class="social-links">
+                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fas fa-envelope"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="team-info">
+            <h3 class="team-name">{{ member.name }}</h3>
+            <p class="team-role">{{ member.role }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Carousel Section -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-badge">Testimonials</span>
+        <h2 class="section-title">What Our Clients Say</h2>
+        <p class="section-description">
+          Don't just take our word for it - hear from those who've experienced our services
+        </p>
+      </div>
+
+      <div class="testimonials-carousel-wrapper">
+        <!-- <button class="carousel-nav prev" (click)="previousTestimonial()" [disabled]="isAnimating">
+          <i class="fas fa-chevron-left"></i>
+        </button> -->
+
+        <div class="testimonials-track" #testimonialTrack>
+          <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+            <div class="quote-icon">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <p class="testimonial-text">{{ testimonial.text }}</p>
+            <div class="testimonial-author">
+              <div class="author-image">
+                <img [src]="testimonial.authorImage" [alt]="testimonial.authorName">
+              </div>
+              <div class="author-info">
+                <h4 class="author-name">{{ testimonial.authorName }}</h4>
+                <p class="author-title">{{ testimonial.authorTitle }}</p>
+              </div>
+            </div>
+            <div class="rating">
+              <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- <button class="carousel-nav next" (click)="nextTestimonial()" [disabled]="isAnimating">
+          <i class="fas fa-chevron-right"></i>
+        </button> -->
+      </div>
+
+      <!-- Carousel Indicators -->
+      <div class="carousel-indicators">
+        <button 
+          class="indicator" 
+          *ngFor="let testimonial of testimonials; let i = index"
+          [class.active]="currentTestimonialIndex === i"
+          (click)="goToTestimonial(i)">
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Create Your Next Unforgettable Event?</h2>
+      <p class="cta-description">
+        Let's bring your vision to life with our expert event management services
+      </p>
+      <div class="cta-buttons">
+        <button class="btn-cta-primary" routerLink="/register">
+          Get Started Today
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="btn-cta-secondary" routerLink="/create-event">
+          Browse Events
+          <i class="fas fa-calendar-alt"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Spacer -->
+  <div class="footer-spacer"></div>
+</div>

@@ -1,37 +1,53 @@
-<!-- resource-allocate.component.html -->
- <div class="resource-allocate-container"> -->
+<div class="allocate-container">
   <!-- Page Header -->
   <div class="page-header">
-    <h1>Resource Allocation</h1>
-    <p>Allocate resources to events efficiently</p>
+    <h1 class="page-title">
+      <span class="header-icon">🔗</span>
+      Allocate Resources to Event
+    </h1>
+    <p class="page-subtitle">Assign resources to your events and manage allocations</p>
   </div>
 
   <!-- Success Message -->
-  <div class="alert alert-success" *ngIf="showMessage && isSuccess">
+  <div class="alert alert-success" *ngIf="showMessage">
     <span class="alert-icon">✓</span>
-    <span>{{ responseMessage }}</span>
+    <span class="alert-text">{{ responseMessage }}</span>
+    <button class="alert-close" (click)="showMessage = false">✕</button>
   </div>
 
+  <!-- Error Message -->
+  <div class="alert alert-error" *ngIf="showError">
+    <span class="alert-icon">⚠</span>
+    <span class="alert-text">{{ errorMessage }}</span>
+    <button class="alert-close" (click)="showError = false">✕</button>
+  </div>
 
-  <!-- Allocation Form Section -->
+  <!-- Allocation Form -->
   <div class="form-section">
     <div class="section-header">
-      <h2>Allocate Resource</h2>
-      <p>Select an event and resource to allocate</p>
+      <h2 class="section-title">
+        <span class="section-icon">📋</span>
+        Allocation Details
+      </h2>
+      <p class="section-description">Select an event and resource to create an allocation</p>
     </div>
 
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
       <div class="form-grid">
         <!-- Event Selection -->
         <div class="form-group">
-          <label for="eventId">Select Event <span class="required">*</span></label>
+          <label for="eventId" class="form-label">
+            <span class="label-icon">📅</span>
+            Select Event <span class="required">*</span>
+          </label>
           <select 
             id="eventId" 
-            formControlName="eventId"
+            formControlName="eventId" 
+            class="form-select"
             [class.error-input]="itemForm.get('eventId')?.invalid && itemForm.get('eventId')?.touched">
             <option value="" disabled selected>Choose an event</option>
             <option *ngFor="let event of eventList" [value]="event.eventID">
-              {{ event.title }} - {{ event.dateTime | date: 'short' }}
+              {{ event.title }} - {{ event.dateTime | date:'short' }}
             </option>
           </select>
           <div class="error-text" *ngIf="itemForm.get('eventId')?.invalid && itemForm.get('eventId')?.touched">
@@ -41,14 +57,18 @@
 
         <!-- Resource Selection -->
         <div class="form-group">
-          <label for="resourceId">Select Resource <span class="required">*</span></label>
+          <label for="resourceId" class="form-label">
+            <span class="label-icon">📦</span>
+            Select Resource <span class="required">*</span>
+          </label>
           <select 
             id="resourceId" 
-            formControlName="resourceId"
+            formControlName="resourceId" 
+            class="form-select"
             [class.error-input]="itemForm.get('resourceId')?.invalid && itemForm.get('resourceId')?.touched">
             <option value="" disabled selected>Choose a resource</option>
             <option *ngFor="let resource of resourceList" [value]="resource.resourceID">
-              {{ resource.name }} ({{ resource.type }})
+              {{ resource.name }} ({{ resource.type }}) - ₹{{ resource.price | number:'1.2-2' }}
             </option>
           </select>
           <div class="error-text" *ngIf="itemForm.get('resourceId')?.invalid && itemForm.get('resourceId')?.touched">
@@ -58,11 +78,15 @@
 
         <!-- Quantity -->
         <div class="form-group">
-          <label for="quantity">Quantity <span class="required">*</span></label>
+          <label for="quantity" class="form-label">
+            <span class="label-icon">🔢</span>
+            Quantity <span class="required">*</span>
+          </label>
           <input 
             type="number" 
             id="quantity" 
             formControlName="quantity" 
+            class="form-input"
             placeholder="Enter quantity"
             min="1"
             [class.error-input]="itemForm.get('quantity')?.invalid && itemForm.get('quantity')?.touched">
@@ -71,78 +95,53 @@
             <span *ngIf="itemForm.get('quantity')?.errors?.['min']">Quantity must be at least 1</span>
           </div>
         </div>
+
+        <!-- Price Display -->
+        <div class="form-group price-display-group">
+          <div class="price-info-card">
+            <div class="price-row">
+              <span class="price-label">Unit Price:</span>
+              <span class="price-value">₹{{ selectedResourcePrice | number:'1.2-2' }}</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">Quantity:</span>
+              <span class="price-value">{{ itemForm.get('quantity')?.value || 0 }}</span>
+            </div>
+            <div class="price-divider"></div>
+            <div class="price-row total-row">
+              <span class="price-label-total">Total Cost:</span>
+              <span class="price-value-total">₹{{ calculatedTotal | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">
-          <span>📦</span> Allocate Resource
+          <span class="btn-icon">✓</span>
+          <span class="btn-text">Allocate Resource</span>
         </button>
-        <button type="button" class="btn btn-secondary" (click)="itemForm.reset()">
-          <span>🔄</span> Reset Form
+        <button type="button" class="btn btn-secondary" (click)="itemForm.reset(); selectedResourcePrice = 0; calculatedTotal = 0">
+          <span class="btn-icon">🔄</span>
+          <span class="btn-text">Reset Form</span>
         </button>
       </div>
     </form>
   </div>
 
-  <!-- Available Resources Section -->
-  <div class="resources-list-section">
-    <div class="section-header">
-      <h2>Available Resources ({{ resourceList.length }})</h2>
-      <p>View all resources that can be allocated</p>
-    </div>
-
-    <!-- Resources Grid -->
-    <div class="resources-grid" *ngIf="paginatedResources.length > 0">
-      <div class="resource-card" *ngFor="let resource of paginatedResources">
-        <div class="resource-header">
-          <div class="resource-icon">🔧</div>
-          <span class="resource-id">ID: {{ resource.resourceID }}</span>
-        </div>
-        
-        <div class="resource-body">
-          <h3>{{ resource.name }}</h3>
-          <div class="resource-details">
-            <div class="detail-item">
-              <span class="detail-label">Type:</span>
-              <span class="detail-value">{{ resource.type }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Status:</span>
-              <span class="availability-badge" [class.available]="resource.availability" [class.unavailable]="!resource.availability">
-                {{ resource.availability ? '✓ Available' : '✕ Unavailable' }}
-              </span>
-            </div>
-          </div>
-        </div>
+  <!-- Information Section -->
+  <div class="info-section">
+    <div class="info-card">
+      <div class="info-icon">💡</div>
+      <div class="info-content">
+        <h3>Allocation Tips</h3>
+        <ul>
+          <li>Select the event you want to allocate resources to</li>
+          <li>Choose the resource and specify the quantity needed</li>
+          <li>The total cost will be calculated automatically</li>
+          <li>Ensure the resource is available before allocation</li>
+        </ul>
       </div>
-    </div>
-
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="paginatedResources.length === 0">
-      <div class="empty-icon">📦</div>
-      <h3>No Resources Available</h3>
-      <p>Add resources first to allocate them to events</p>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination" *ngIf="resourceList.length > 0">
-      <button 
-        class="btn btn-pagination" 
-        (click)="previousPage()" 
-        [disabled]="currentPage === 1">
-        ← Previous
-      </button>
-      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-      <button 
-        class="btn btn-pagination" 
-        (click)="nextPage()" 
-        [disabled]="currentPage === totalPages">
-        Next →
-      </button>
     </div>
   </div>
 </div>
-
-
-
-

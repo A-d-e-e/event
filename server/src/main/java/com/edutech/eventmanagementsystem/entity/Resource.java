@@ -14,6 +14,7 @@ public class Resource {
     private String name;
     private String type;
     private boolean availability;
+    private Double price;
 
     public Resource() {
     }
@@ -56,7 +57,13 @@ public class Resource {
     public void setAvailability(boolean availability) {
         this.availability = availability;
     }
-
+    public Double getPrice() {
+        return price;
+    }
+    
+    public void setPrice(Double price) {
+        this.price = price;
+    }
     
     
 

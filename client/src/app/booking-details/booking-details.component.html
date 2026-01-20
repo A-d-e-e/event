@@ -1,9 +1,31 @@
+
+<!-- DEBUG HUD -->
+<!-- <div style="position: fixed; top: 10px; right: 10px; background: white; padding: 15px; border: 2px solid red; border-radius: 8px; z-index: 10000; font-size: 12px;">
+  <h4 style="margin: 0 0 10px 0; color: red;">🐛 DEBUG INFO</h4>
+  <div><strong>Payment Modal:</strong> {{ showPaymentModal ? '✅ OPEN' : '❌ CLOSED' }}</div>
+  <div><strong>UPI Modal:</strong> {{ showUpiModal ? '✅ OPEN' : '❌ CLOSED' }}</div>
+  <div><strong>Bill Summary:</strong> {{ showBillSummary ? '✅ OPEN' : '❌ CLOSED' }}</div>
+  <div><strong>Payment ID:</strong> {{ paymentId || 'NULL' }}</div>
+  <div><strong>Processing:</strong> {{ isProcessing ? 'YES' : 'NO' }}</div>
+  <hr style="margin: 10px 0;">
+  <div><strong>Customer Name:</strong> {{ paymentForm.get('customerName')?.value || 'EMPTY' }}</div>
+  <div><strong>Customer Email:</strong> {{ paymentForm.get('customerEmail')?.value || 'EMPTY' }}</div>
+  <div><strong>Customer Phone:</strong> {{ paymentForm.get('customerPhone')?.value || 'EMPTY' }}</div>
+  <div><strong>UPI ID:</strong> {{ paymentForm.get('upiId')?.value || 'EMPTY' }}</div>
+  <div><strong>Selected Event Paid:</strong> {{ selectedEvent?.paymentCompleted ? 'YES' : 'NO' }}</div>
+  <hr style="margin: 10px 0;">
+  <div><strong>Name Valid:</strong> {{ paymentForm.get('customerName')?.valid ? '✅' : '❌' }}</div>
+  <div><strong>Email Valid:</strong> {{ paymentForm.get('customerEmail')?.valid ? '✅' : '❌' }}</div>
+  <div><strong>Phone Valid:</strong> {{ paymentForm.get('customerPhone')?.valid ? '✅' : '❌' }}</div>
+  <div><strong>UPI Valid:</strong> {{ paymentForm.get('upiId')?.valid ? '✅' : '❌' }}</div>
+</div> -->
+
 <div class="booking-details-container">
   <div class="page-header">
-    <h1>Event Management Search</h1>
-    <p class="subtitle">Search for events by title or booking ID</p>
+    <h1>💳 Event Booking & Payment Portal</h1>
+    <p class="subtitle">Search for events and complete your booking</p>
   </div>
- 
+
   <!-- Search Form -->
   <div class="search-section">
     <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="search-form">
@@ -29,93 +51,382 @@
       </div>
     </form>
   </div>
- 
+
   <!-- Status Message -->
   <div *ngIf="message" class="alert" [ngClass]="message.type === 'success' ? 'alert-success' : 'alert-error'">
     <span class="alert-icon">{{ message.type === 'success' ? '✓' : '✕' }}</span>
     {{ message.text }}
   </div>
- 
+
   <!-- No Results Message -->
   <div *ngIf="searchPerformed && eventObj.length === 0 && !message" class="no-results">
     <div class="no-results-icon">📭</div>
     <h3>No Events Found</h3>
     <p>No events found matching your search criteria</p>
   </div>
- 
-  <!-- Results Table -->
+
+  <!-- Results Section -->
   <div *ngIf="searchPerformed && eventObj.length > 0" class="results-section">
-    <div class="table-card">
-      <h3 class="table-title">Search Results</h3>
-      <div class="table-responsive">
-        <table class="events-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Date</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th>Allocations</th>
-              <th>Total Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let event of eventObj">
-              <td>{{ event.eventID }}</td>
-              <td>{{ event.title }}</td>
-              <td>{{ event.description | slice:0:50 }}{{ event.description?.length > 50 ? '...' : '' }}</td>
-              <td>{{ event.dateTime | date:'medium' }}</td>
-              <td>{{ event.location }}</td>
-              <td>
-                <span class="badge" [ngClass]="getStatusClass(event.status)">
-                  {{ event.status }}
-                </span>
-              </td>
-              <td>
-                <span 
-                  class="allocation-info"
-                  (mouseenter)="showTooltip($event, event.allocations)"
-                  (mouseleave)="hideTooltip()"
-                  *ngIf="event.allocations && event.allocations.length > 0"
-                >
-                  {{ event.allocations.length }} Allocation(s)
-                  <span class="info-icon">ⓘ</span>
-                </span>
-                <span *ngIf="!event.allocations || event.allocations.length === 0">
-                  No allocations
-                </span>
-              </td>
-              <td>
-                <span class="price-badge">
-                  ₹{{ calculateTotalPrice(event.allocations) | number:'1.2-2' }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="event-card" *ngFor="let ev of eventObj">
+      <!-- Event Header -->
+      <div class="event-header">
+        <h2 class="event-title">{{ ev.title }}</h2>
+        <span class="badge" [ngClass]="getStatusClass(ev.status)">
+          {{ ev.status | titlecase }}
+        </span>
+        <!-- Paid chip -->
+        <span *ngIf="ev.paymentCompleted" class="badge badge-success" style="margin-left: 8px;">
+          ✅ Paid
+        </span>
+      </div>
+
+      <!-- Event Details -->
+      <div class="event-details">
+        <div class="detail-item">
+          <span class="detail-icon">🆔</span>
+          <span class="detail-label">Event ID:</span>
+          <span class="detail-value">{{ ev.eventID }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-icon">📝</span>
+          <span class="detail-label">Description:</span>
+          <span class="detail-value">{{ ev.description }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-icon">📅</span>
+          <span class="detail-label">Date & Time:</span>
+          <span class="detail-value">{{ ev.dateTime | date:'medium' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-icon">📍</span>
+          <span class="detail-label">Location:</span>
+          <span class="detail-value">{{ ev.location }}</span>
+        </div>
+      </div>
+
+      <!-- Allocations Table -->
+      <div class="allocations-section" *ngIf="ev.allocations && ev.allocations.length > 0">
+        <h3 class="section-title">📦 Resources Allocated</h3>
+        <div class="table-responsive">
+          <table class="allocations-table">
+            <thead>
+              <tr>
+                <th>Resource Name</th>
+                <th>Type</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let allocation of ev.allocations">
+                <td>{{ allocation.resource.name }}</td>
+                <td>{{ allocation.resource.type }}</td>
+                <td class="price-cell">₹{{ allocation.resource.price | number:'1.2-2' }}</td>
+                <td class="quantity-cell">{{ allocation.quantity }}</td>
+                <td class="subtotal-cell">₹{{ calculateAllocationPrice(allocation) | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td colspan="4"><strong>Total Amount</strong></td>
+                <td class="total-amount"><strong>₹{{ calculateTotalPrice(ev.allocations) | number:'1.2-2' }}</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- No Allocations Message -->
+      <div class="no-allocations" *ngIf="!ev.allocations || ev.allocations.length === 0">
+        <p>No resources allocated for this event</p>
+      </div>
+
+      <!-- Payment Action -->
+      <div class="payment-action" *ngIf="ev.allocations && ev.allocations.length > 0">
+        <!-- Show Pay button if not paid -->
+        <button class="btn btn-pay"
+                *ngIf="!ev.paymentCompleted"
+                (click)="openPaymentModal(ev)">
+          <span class="btn-icon">💰</span>
+          <span class="btn-text">Proceed to Payment - ₹{{ calculateTotalPrice(ev.allocations) | number:'1.2-2' }}</span>
+        </button>
+
+        <!-- Show Paid chip if already paid -->
+        <div *ngIf="ev.paymentCompleted"
+             class="btn"
+             style="background-color: #22c55e; color: #fff; cursor: default;">
+          <span class="btn-icon">✅</span>
+          <span class="btn-text">Paid</span>
+        </div>
       </div>
     </div>
   </div>
- 
-  <!-- Custom Tooltip with Price -->
-  <div 
-    *ngIf="tooltipVisible" 
-    class="custom-tooltip"
-    [style.left.px]="tooltipX"
-    [style.top.px]="tooltipY"
-  >
-    <div *ngFor="let allocation of tooltipContent; let last = last" class="allocation-item">
-      <p><strong>Resource:</strong> {{ allocation.resource.name }}</p>
-      <p><strong>Type:</strong> {{ allocation.resource.type }}</p>
-      <p><strong>Quantity:</strong> {{ allocation.quantity }}</p>
-      <p><strong>Unit Price:</strong> ₹{{ allocation.resource.price | number:'1.2-2' }}</p>
-      <p><strong>Subtotal:</strong> ₹{{ calculateAllocationPrice(allocation) | number:'1.2-2' }}</p>
-      <hr *ngIf="!last" class="allocation-divider">
+
+  <!-- STEP 1: Payment Modal - Customer Details -->
+  <div class="modal-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+    <div class="modal-content payment-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>💳 Enter Payment Details</h2>
+        <button class="modal-close" (click)="closePaymentModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="step-indicator">
+          <div class="step active">
+            <span class="step-number">1</span>
+            <span class="step-label">Customer Details</span>
+          </div>
+          <div class="step">
+            <span class="step-number">2</span>
+            <span class="step-label">UPI Payment</span>
+          </div>
+        </div>
+
+        <form [formGroup]="paymentForm">
+          <div class="form-group">
+            <label>Customer Name <span class="required">*</span></label>
+            <input type="text" formControlName="customerName" placeholder="Enter your full name" class="form-input"
+                   [class.error-input]="paymentForm.get('customerName')?.invalid && paymentForm.get('customerName')?.touched">
+            <div class="error-text" *ngIf="paymentForm.get('customerName')?.invalid && paymentForm.get('customerName')?.touched">
+              Name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" formControlName="customerEmail" placeholder="your.email@example.com" class="form-input"
+                   [class.error-input]="paymentForm.get('customerEmail')?.invalid && paymentForm.get('customerEmail')?.touched">
+            <div class="error-text" *ngIf="paymentForm.get('customerEmail')?.invalid && paymentForm.get('customerEmail')?.touched">
+              Valid email is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number <span class="required">*</span></label>
+            <input type="tel" formControlName="customerPhone" placeholder="10-digit phone number" class="form-input"
+                   [class.error-input]="paymentForm.get('customerPhone')?.invalid && paymentForm.get('customerPhone')?.touched">
+            <div class="error-text" *ngIf="paymentForm.get('customerPhone')?.invalid && paymentForm.get('customerPhone')?.touched">
+              Valid 10-digit phone number required
+            </div>
+          </div>
+
+          <div class="payment-summary">
+            <div class="summary-row">
+              <span>Event:</span>
+              <span class="value">{{ selectedEvent?.title }}</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total Amount:</span>
+              <span class="amount">₹{{ calculateTotalPrice(selectedEvent?.allocations) | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closePaymentModal()">Cancel</button>
+        <button class="btn btn-primary btn-next" (click)="proceedToUpi()" [disabled]="isProcessing">
+          <span *ngIf="!isProcessing">Continue to UPI Payment →</span>
+          <span *ngIf="isProcessing">Processing...</span>
+        </button>
+      </div>
     </div>
-    <div class="tooltip-total" *ngIf="tooltipContent.length > 0">
-      <strong>Total: ₹{{ calculateTotalPrice(tooltipContent) | number:'1.2-2' }}</strong>
+  </div>
+
+  <!-- STEP 2: UPI Payment Modal -->
+  <div class="modal-overlay" *ngIf="showUpiModal" (click)="closeUpiModal()">
+    <div class="modal-content upi-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header upi-header">
+        <h2>📱 UPI Payment</h2>
+        <button class="modal-close" (click)="closeUpiModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="step-indicator">
+          <div class="step completed">
+            <span class="step-number">✓</span>
+            <span class="step-label">Customer Details</span>
+          </div>
+          <div class="step active">
+            <span class="step-number">2</span>
+            <span class="step-label">UPI Payment</span>
+          </div>
+        </div>
+
+        <div class="upi-info">
+          <div class="upi-icon">📲</div>
+          <h3>Pay using UPI</h3>
+          <p class="upi-description">Enter your UPI ID to complete the payment</p>
+
+          <div class="amount-display">
+            <div class="amount-label">Amount to Pay</div>
+            <div class="amount-value">₹{{ calculateTotalPrice(selectedEvent?.allocations) | number:'1.2-2' }}</div>
+          </div>
+
+          <form [formGroup]="paymentForm">
+            <div class="form-group">
+              <label>UPI ID <span class="required">*</span></label>
+              <input
+                type="text"
+                formControlName="upiId"
+                placeholder="yourname@paytm"
+                class="form-input upi-input"
+                [class.error-input]="paymentForm.get('upiId')?.invalid && paymentForm.get('upiId')?.touched">
+              <div class="error-text" *ngIf="paymentForm.get('upiId')?.invalid && paymentForm.get('upiId')?.touched">
+                Valid UPI ID required (e.g., user@paytm)
+              </div>
+              <div class="input-hint">
+                Format: username@provider (e.g., john@paytm, user@phonepe)
+              </div>
+            </div>
+          </form>
+
+          <div class="upi-examples">
+            <p class="examples-label">Supported UPI Apps:</p>
+            <div class="upi-apps">
+              <span class="upi-app"><span class="app-icon">📱</span>Google Pay</span>
+              <span class="upi-app"><span class="app-icon">📱</span>PhonePe</span>
+              <span class="upi-app"><span class="app-icon">📱</span>Paytm</span>
+              <span class="upi-app"><span class="app-icon">📱</span>BHIM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeUpiModal()">← Back</button>
+        <button class="btn btn-success btn-pay-now" (click)="processUpiPayment()" [disabled]="isProcessing">
+          <span *ngIf="!isProcessing">
+            <span class="pay-icon">💰</span>
+            Pay ₹{{ calculateTotalPrice(selectedEvent?.allocations) | number:'1.2-2' }}
+          </span>
+          <span *ngIf="isProcessing">
+            <span class="spinner">⏳</span>
+            Processing Payment...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Bill Summary Modal -->
+  <div class="modal-overlay" *ngIf="showBillSummary">
+    <div class="modal-content bill-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header success-header">
+        <div class="success-animation">
+          <div class="checkmark">✓</div>
+        </div>
+        <h2>Payment Successful!</h2>
+        <p class="success-subtitle">Your payment has been processed successfully</p>
+        <button class="modal-close" (click)="closeBillSummary()">✕</button>
+      </div>
+
+      <div class="modal-body bill-body">
+        <!-- Transaction Details -->
+        <div class="transaction-details">
+          <h3>📄 Transaction Details</h3>
+          <div class="detail-item">
+            <span class="label">Transaction ID:</span>
+            <span class="value transaction-id">{{ transactionDetails?.transactionId }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Date & Time:</span>
+            <span class="value">{{ transactionDetails?.paymentDate | date: 'medium' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Payment Method:</span>
+            <span class="value">UPI ({{ transactionDetails?.upiId }})</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Status:</span>
+            <span class="value status-success">✅ PAID</span>
+          </div>
+        </div>
+
+        <!-- Customer Details -->
+        <div class="customer-details">
+          <h3>👤 Customer Information</h3>
+          <div class="detail-item">
+            <span class="label">Name:</span>
+            <span class="value">{{ transactionDetails?.customerName }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ transactionDetails?.customerEmail }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Phone:</span>
+            <span class="value">{{ transactionDetails?.customerPhone }}</span>
+          </div>
+        </div>
+
+        <!-- Event Details -->
+        <div class="bill-event-details">
+          <h3>📅 Event Information</h3>
+          <div class="detail-item">
+            <span class="label">Event Name:</span>
+            <span class="value">{{ selectedEvent?.title }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Location:</span>
+            <span class="value">{{ selectedEvent?.location }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Date:</span>
+            <span class="value">{{ selectedEvent?.dateTime | date: 'medium' }}</span>
+          </div>
+        </div>
+
+        <!-- Items Summary -->
+        <div class="items-summary">
+          <h3>📦 Items</h3>
+          <table class="bill-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let allocation of selectedEvent?.allocations">
+                <td>{{ allocation.resource.name }}</td>
+                <td>{{ allocation.quantity }}</td>
+                <td>₹{{ allocation.resource.price | number:'1.2-2' }}</td>
+                <td>₹{{ calculateAllocationPrice(allocation) | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td colspan="3"><strong>Total Paid</strong></td>
+                <td><strong>₹{{ calculateTotalPrice(selectedEvent?.allocations) | number:'1.2-2' }}</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="bill-footer-note">
+          <p>✅ Thank you for your payment! A confirmation email has been sent to <strong>{{ transactionDetails?.customerEmail }}</strong></p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="downloadBill()">
+          <span class="btn-icon">📥</span>
+          Download Receipt
+        </button>
+        <button class="btn btn-primary" (click)="shareBill()">
+          <span class="btn-icon">📤</span>
+          Share Receipt
+        </button>
+        <button class="btn btn-success" (click)="closeBillSummary()">
+          <span class="btn-icon">✓</span>
+          Done
+        </button>
+      </div>
     </div>
   </div>
 </div>
+``

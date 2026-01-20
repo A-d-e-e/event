@@ -12,47 +12,78 @@ export class HttpService {
   
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  // ==================== HELPER METHOD ====================
+  // Helper method to get headers with authentication
   private getHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
+      'Authorization': `Bearer ${token}`
     });
+  }
+
+  // ==================== PAYMENT METHODS ====================
+  
+  initiatePayment(eventId: number, paymentData: any): Observable<any> {
+    const url = `${this.serverName}/api/payment/initiate/${eventId}`;
+    console.log('Calling initiatePayment API:', url);
+    console.log('Payment data:', paymentData);
+    return this.http.post(url, paymentData, { headers: this.getHeaders() });
+  }
+
+  processUpiPayment(paymentId: number, upiData: any): Observable<any> {
+    const url = `${this.serverName}/api/payment/process-upi/${paymentId}`;
+    console.log('Calling processUpiPayment API:', url);
+    console.log('UPI data:', upiData);
+    return this.http.post(url, upiData, { headers: this.getHeaders() });
+  }
+
+  getPaymentById(paymentId: number): Observable<any> {
+    const url = `${this.serverName}/api/payment/${paymentId}`;
+    return this.http.get(url, { headers: this.getHeaders() });
+  }
+
+  getAllPayments(): Observable<any> {
+    const url = `${this.serverName}/api/payment/all`;
+    return this.http.get(url, { headers: this.getHeaders() });
+  }
+
+  getPaymentsByEventId(eventId: number): Observable<any> {
+    const url = `${this.serverName}/api/payment/event/${eventId}`;
+    return this.http.get(url, { headers: this.getHeaders() });
+  }
+
+  calculateEventAmount(eventId: number): Observable<any> {
+    const url = `${this.serverName}/api/payment/calculate/${eventId}`;
+    return this.http.get(url, { headers: this.getHeaders() });
   }
 
   // ==================== EVENT METHODS - PLANNER ====================
   
-  // Get Event by ID (Planner)
   getEventById(id: number): Observable<any> {
     const url = `${this.serverName}/api/planner/event-details/${id}`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Get Events by Title (Planner)
   getEventsByTitle(title: string): Observable<any[]> {
     const url = `${this.serverName}/api/planner/event-detail/${title}`;
     return this.http.get<any[]>(url, { headers: this.getHeaders() });
   }
 
-  // Get All Events (Planner)
   GetAllevents(): Observable<any> {
     const url = `${this.serverName}/api/planner/events`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Create Event (Planner)
   createEvent(details: any): Observable<any> {
     const url = `${this.serverName}/api/planner/event`;
     return this.http.post(url, details, { headers: this.getHeaders() });
   }
 
-  // Update Event (Planner)
   updateEventByPlanner(eventId: number, event: any): Observable<any> {
     const url = `${this.serverName}/api/planner/event/${eventId}`;
     return this.http.put(url, event, { headers: this.getHeaders() });
   }
 
-  // Delete Event (Planner)
   deleteEventDetailsByID(eventId: any): Observable<any> {
     const url = `${this.serverName}/api/planner/event/${eventId}`;
     return this.http.delete(url, { headers: this.getHeaders() });
@@ -60,25 +91,26 @@ export class HttpService {
 
   // ==================== EVENT METHODS - STAFF ====================
 
-  // Get Event Details (Staff)
   GetEventdetails(eventId: any): Observable<any> {
     const url = `${this.serverName}/api/staff/event-details/${eventId}`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Get Event Details by Title (Staff)
+  getEventDetails(eventId: any): Observable<any> {
+    const url = `${this.serverName}/api/staff/event-details/${eventId}`;
+    return this.http.get(url, { headers: this.getHeaders() });
+  }
+
   GetEventdetailsbyTitle(title: any): Observable<any> {
     const url = `${this.serverName}/api/staff/event-detailsbyTitle/${title}`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Get All Events (Staff)
   GetEvents(): Observable<any> {
     const url = `${this.serverName}/api/staff/allEvents`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Update Event (Staff)
   updateEvent(details: any, eventId: any): Observable<any> {
     const url = `${this.serverName}/api/staff/update-setup/${eventId}`;
     return this.http.put(url, details, { headers: this.getHeaders() });
@@ -86,19 +118,16 @@ export class HttpService {
 
   // ==================== EVENT METHODS - CLIENT ====================
 
-  // Get Booking Details by ID (Client)
   getBookingDetails(eventId: any): Observable<any> {
     const url = `${this.serverName}/api/client/booking-details/${eventId}`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Get Event Details by Title (Client) - NEW
   GetEventdetailsbyTitleforClient(title: any): Observable<any> {
     const url = `${this.serverName}/api/client/booking-details/search?title=${title}`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Get All Events (Client)
   GetAlleventsForClient(): Observable<any> {
     const url = `${this.serverName}/api/client/allEvents`;
     return this.http.get(url, { headers: this.getHeaders() });
@@ -106,19 +135,16 @@ export class HttpService {
 
   // ==================== RESOURCE METHODS ====================
 
-  // Get All Resources
   GetAllResources(): Observable<any> {
     const url = `${this.serverName}/api/planner/resources`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Add Resource
   addResource(details: any): Observable<any> {
     const url = `${this.serverName}/api/planner/resource`;
     return this.http.post(url, details, { headers: this.getHeaders() });
   }
 
-  // Update Resource
   updateResource(resourceId: number, resource: any): Observable<any> {
     const url = `${this.serverName}/api/planner/resource/${resourceId}`;
     return this.http.put(url, resource, { headers: this.getHeaders() });
@@ -126,47 +152,72 @@ export class HttpService {
 
   // ==================== ALLOCATION METHODS ====================
 
-  // Allocate Resources
   allocateResources(eventId: any, resourceId: any, details: any): Observable<any> {
     const url = `${this.serverName}/api/planner/allocate-resources?eventId=${eventId}&resourceId=${resourceId}`;
     return this.http.post(url, details, { headers: this.getHeaders() });
   }
 
-  // Get All Allocations
   GetAllAllocations(): Observable<any> {
     const url = `${this.serverName}/api/planner/resource-allocate`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
 
-  // Update Allocation
   updateAllocation(allocationId: number, eventId: any, resourceId: any, details: any): Observable<any> {
     const url = `${this.serverName}/api/planner/resource-allocate/${allocationId}?eventId=${eventId}&resourceId=${resourceId}`;
     return this.http.put(url, details, { headers: this.getHeaders() });
   }
 
-  // Delete Allocation
   deleteAllocation(allocationId: number): Observable<any> {
     const url = `${this.serverName}/api/planner/resource-allocate/${allocationId}`;
     return this.http.delete(url, { headers: this.getHeaders() });
   }
 
+  // ==================== MESSAGE METHODS ====================
+
+  // Planner message methods
+  sendMessageAsPlanner(eventId: any, message: any): Observable<any> {
+    const url = `${this.serverName}/api/planner/messages`;
+    const payload = {
+      eventID: eventId,
+      messageContent: message
+    };
+    return this.http.post(url, payload, { headers: this.getHeaders() });
+  }
+
+  getMessagesAsPlanner(eventId: any): Observable<any> {
+    const url = `${this.serverName}/api/planner/messages/${eventId}`;
+    return this.http.get(url, { headers: this.getHeaders() });
+  }
+
+  // Staff message methods
+  sendMessageAsStaff(eventId: any, message: any): Observable<any> {
+    const url = `${this.serverName}/api/staff/messages`;
+    const payload = {
+      eventID: eventId,
+      messageContent: message
+    };
+    return this.http.post(url, payload, { headers: this.getHeaders() });
+  }
+
+  getMessagesAsStaff(eventId: any): Observable<any> {
+    const url = `${this.serverName}/api/staff/messages/${eventId}`;
+    return this.http.get(url, { headers: this.getHeaders() });
+  }
+
   // ==================== AUTH METHODS ====================
 
-  // Login
   Login(details: any): Observable<any> {
     const url = `${this.serverName}/api/user/login`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(url, details, { headers });
   }
 
-  // Register User
   registerUser(details: any): Observable<any> {
     const url = `${this.serverName}/api/user/register`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(url, details, { headers });
   }
 
-  // Get All Users
   getAllUsers(): Observable<any> {
     return this.http.get(`${this.serverName}/api/user/users`, { 
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }) 
@@ -175,7 +226,6 @@ export class HttpService {
 
   // ==================== OTHER METHODS ====================
 
-  // Get State Name
   getStatename(): Observable<any> {
     const authToken = this.authService.getToken();
     let headers = new HttpHeaders();

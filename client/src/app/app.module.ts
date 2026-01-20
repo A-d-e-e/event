@@ -14,6 +14,8 @@ import { AddResourceComponent } from './add-resource/add-resource.component';
 import { ResourceAllocateComponent } from './resource-allocate/resource-allocate.component';
 import { ViewEventsComponent } from './view-events/view-events.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
+import { EventMessagesComponent } from './eventmessage/event-messages.component';
+import { StaffMessagesComponent } from './staffmessage/staff-messages.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { BookingDetailsComponent } from './booking-details/booking-details.compo
       AddResourceComponent,
       ResourceAllocateComponent,
       ViewEventsComponent,
-      BookingDetailsComponent
+      BookingDetailsComponent,
+      EventMessagesComponent,
+    StaffMessagesComponent
   ],
   imports: [
     BrowserModule,

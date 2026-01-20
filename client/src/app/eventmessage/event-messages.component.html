@@ -1,0 +1,200 @@
+
+<div class="messages-container">
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-title-wrap">
+      <div class="header-icon" aria-hidden="true">🗓️</div>
+      <div>
+        <h1 class="page-title">Planner Messages</h1>
+        <p class="page-subtitle">Chat with staff about selected events</p>
+      </div>
+    </div>
+    <div class="header-accent"></div>
+  </header>
+
+  <!-- Alerts -->
+  <div class="alert alert-success" role="status" *ngIf="showSuccess">
+    <span class="alert-icon" aria-hidden="true">✓</span>
+    <span class="alert-text">{{ successMessage }}</span>
+    <button
+      type="button"
+      class="alert-close"
+      (click)="showSuccess = false"
+      aria-label="Dismiss success message"
+      title="Dismiss"
+    >
+      ✕
+    </button>
+  </div>
+
+  <div class="alert alert-error" role="alert" *ngIf="showError">
+    <span class="alert-icon" aria-hidden="true">⚠</span>
+    <span class="alert-text">{{ errorMessage }}</span>
+    <button
+      type="button"
+      class="alert-close"
+      (click)="showError = false"
+      aria-label="Dismiss error message"
+      title="Dismiss"
+    >
+      ✕
+    </button>
+  </div>
+
+  <!-- Event Selection -->
+  <section class="event-selection-section card">
+    <form [formGroup]="searchForm" class="search-form" novalidate>
+      <div class="form-group">
+        <label for="eventId" class="form-label">
+          <span class="label-icon" aria-hidden="true">🎯</span>
+          Select Event
+        </label>
+
+        <div class="input-group">
+          <!-- Using select to match your TS validation: 'Please select an event' -->
+          <select
+            id="eventId"
+            formControlName="eventId"
+            class="form-input select-input"
+            [attr.aria-invalid]="searchForm.invalid ? 'true' : 'false'"
+          >
+            <option value="" disabled selected>Select an event</option>
+            <option
+              *ngFor="let ev of eventList"
+              [value]="ev?.eventID"
+            >
+              #{{ ev?.eventID }} — {{ ev?.title || ev?.eventTitle || 'Untitled' }}
+            </option>
+          </select>
+
+          <button
+            type="button"
+            class="btn btn-search"
+            (click)="loadMessages()"
+            [disabled]="searchForm.invalid"
+            title="Load messages for selected event"
+          >
+            <span class="btn-icon" aria-hidden="true">📥</span>
+            Load Messages
+          </button>
+        </div>
+
+        <div class="hint" *ngIf="searchForm.invalid">
+          Please select an event to load messages.
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <!-- Chat Section -->
+  <section class="chat-section card" *ngIf="searchForm.valid">
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="event-info" *ngIf="selectedEvent; else loadingHeader">
+        <div class="event-title-line">
+          <h3 class="event-title" [title]="selectedEvent?.title || selectedEvent?.eventTitle">
+            {{ selectedEvent?.title || selectedEvent?.eventTitle || ('Event #' + (searchForm.get('eventId')?.value || '')) }}
+          </h3>
+          <span class="event-badge">Event #{{ selectedEvent?.eventID || searchForm.get('eventId')?.value }}</span>
+        </div>
+        <p class="event-meta">
+          <span class="dot"></span>
+          {{ selectedEvent?.location || 'Location TBA' }}
+          <span class="separator">•</span>
+          {{ (selectedEvent?.dateTime || selectedEvent?.eventDateTime) | date:'medium' }}
+        </p>
+      </div>
+
+      <ng-template #loadingHeader>
+        <div class="event-info skeleton">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40 mt-6"></div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-wrapper">
+      <div class="loading-messages" *ngIf="loading">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Loading messages...</p>
+      </div>
+
+      <div class="messages-list" *ngIf="!loading">
+        <div class="no-messages" *ngIf="messages.length === 0">
+          <div class="no-messages-icon" aria-hidden="true">💬</div>
+          <p>No messages for this event yet. Start the conversation!</p>
+        </div>
+
+        <div
+          *ngFor="let message of messages"
+          class="message-item"
+          [ngClass]="{
+            'message-sent': message.senderRole === 'PLANNER',
+            'message-received': message.senderRole === 'STAFF'
+          }"
+        >
+          <div class="avatar" [ngClass]="message.senderRole === 'PLANNER' ? 'avatar-planner' : 'avatar-staff'">
+            {{ message.senderRole === 'PLANNER' ? 'P' : 'S' }}
+          </div>
+
+          <div class="message-bubble">
+            <div class="message-header">
+              <span
+                class="sender-badge"
+                [ngClass]="message.senderRole === 'PLANNER' ? 'badge-planner' : 'badge-staff'"
+              >
+                {{ message.senderRole === 'PLANNER' ? '👨‍💼 You (Planner)' : '👷 Staff' }}
+              </span>
+              <span class="message-time">{{ message.sentAt | date:'short' }}</span>
+            </div>
+
+            <div class="message-content">
+              {{ message.messageContent }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="message-input-section">
+      <form
+        [formGroup]="messageForm"
+        (ngSubmit)="sendMessage()"
+        class="message-form"
+        novalidate
+      >
+        <div class="input-wrapper">
+          <textarea
+            formControlName="messageContent"
+            class="message-textarea"
+            placeholder="Type your message to staff..."
+            rows="3"
+            [disabled]="sendingMessage || !selectedEvent"
+            [attr.aria-invalid]="messageForm.invalid ? 'true' : 'false'"
+          ></textarea>
+        </div>
+
+        <div class="actions">
+          <button
+            type="submit"
+            class="btn btn-send"
+            [disabled]="messageForm.invalid || sendingMessage || !selectedEvent"
+            [class.loading]="sendingMessage"
+            title="Send message"
+          >
+            <ng-container *ngIf="!sendingMessage">
+              <span class="btn-icon" aria-hidden="true">📤</span>
+              Send Message
+            </ng-container>
+            <ng-container *ngIf="sendingMessage">
+              <span class="spinner small" aria-hidden="true"></span>
+              Sending...
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

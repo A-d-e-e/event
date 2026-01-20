@@ -1,0 +1,200 @@
+
+<div class="messages-container">
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-title-wrap">
+      <div class="header-icon" aria-hidden="true">💬</div>
+      <div>
+        <h1 class="page-title">Event Messages</h1>
+        <p class="page-subtitle">Communicate with planner about events</p>
+      </div>
+    </div>
+    <div class="header-accent"></div>
+  </header>
+
+  <!-- Alerts -->
+  <div
+    class="alert alert-success"
+    role="status"
+    *ngIf="showSuccess"
+    @fadeInOut
+  >
+    <span class="alert-icon" aria-hidden="true">✓</span>
+    <span class="alert-text">{{ successMessage }}</span>
+    <button
+      type="button"
+      class="alert-close"
+      (click)="showSuccess = false"
+      aria-label="Dismiss success message"
+      title="Dismiss"
+    >
+      ✕
+    </button>
+  </div>
+
+  <div class="alert alert-error" role="alert" *ngIf="showError" @shake>
+    <span class="alert-icon" aria-hidden="true">⚠</span>
+    <span class="alert-text">{{ errorMessage }}</span>
+    <button
+      type="button"
+      class="alert-close"
+      (click)="showError = false"
+      aria-label="Dismiss error message"
+      title="Dismiss"
+    >
+      ✕
+    </button>
+  </div>
+
+  <!-- Event ID Search -->
+  <section class="event-selection-section card">
+    <form [formGroup]="searchForm" class="search-form" novalidate>
+      <div class="form-group">
+        <label for="eventId" class="form-label">
+          <span class="label-icon" aria-hidden="true">🔍</span>
+          Enter Event ID
+        </label>
+
+        <div class="input-group">
+          <input
+            type="number"
+            id="eventId"
+            formControlName="eventId"
+            class="form-input"
+            placeholder="e.g., 1024"
+            inputmode="numeric"
+            min="1"
+            [attr.aria-invalid]="searchForm.invalid ? 'true' : 'false'"
+          />
+          <button
+            type="button"
+            class="btn btn-search"
+            (click)="loadMessages()"
+            [disabled]="searchForm.invalid"
+            title="Load messages for the given Event ID"
+          >
+            <span class="btn-icon" aria-hidden="true">📥</span>
+            Load Messages
+          </button>
+        </div>
+
+        <div class="hint" *ngIf="searchForm.invalid">
+          Please enter a valid Event ID to load messages.
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <!-- Chat Section -->
+  <section class="chat-section card" *ngIf="selectedEventId">
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="event-info" *ngIf="eventDetails; else loadingHeader">
+        <div class="event-title-line">
+          <h3 class="event-title" [title]="eventDetails?.title">
+            {{ eventDetails.title }}
+          </h3>
+          <span class="event-badge">Event #{{ selectedEventId }}</span>
+        </div>
+        <p class="event-meta">
+          <span class="dot"></span>
+          {{ eventDetails.location }}
+          <span class="separator">•</span>
+          {{ eventDetails.dateTime | date: 'medium' }}
+        </p>
+      </div>
+      <ng-template #loadingHeader>
+        <div class="event-info skeleton">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40 mt-6"></div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Messages List -->
+    <div class="messages-wrapper">
+      <div class="loading-messages" *ngIf="loading">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Loading messages...</p>
+      </div>
+
+      <div class="messages-list" *ngIf="!loading">
+        <div class="no-messages" *ngIf="messages.length === 0">
+          <div class="no-messages-icon" aria-hidden="true">💭</div>
+          <p>No messages yet. Start the conversation!</p>
+        </div>
+
+        <div
+          *ngFor="let message of messages"
+          class="message-item"
+          [ngClass]="{
+            'message-sent': message.senderRole === 'STAFF',
+            'message-received': message.senderRole === 'PLANNER'
+          }"
+        >
+          <div class="avatar" [ngClass]="message.senderRole === 'STAFF' ? 'avatar-staff' : 'avatar-planner'">
+            {{ message.senderRole === 'STAFF' ? 'S' : 'P' }}
+          </div>
+
+          <div class="message-bubble">
+            <div class="message-header">
+              <span
+                class="sender-badge"
+                [ngClass]="
+                  message.senderRole === 'STAFF' ? 'badge-staff' : 'badge-planner'
+                "
+              >
+                {{ message.senderRole === 'STAFF' ? '👷 You (Staff)' : '👨‍💼 Planner' }}
+              </span>
+              <span class="message-time">{{ message.sentAt | date: 'short' }}</span>
+            </div>
+
+            <div class="message-content">
+              {{ message.messageContent }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="message-input-section">
+      <form
+        [formGroup]="messageForm"
+        (ngSubmit)="sendMessage()"
+        class="message-form"
+        novalidate
+      >
+        <div class="input-wrapper">
+          <textarea
+            formControlName="messageContent"
+            class="message-textarea"
+            placeholder="Type your message to planner..."
+            rows="3"
+            [disabled]="sendingMessage"
+            [attr.aria-invalid]="messageForm.invalid ? 'true' : 'false'"
+          ></textarea>
+        </div>
+
+        <div class="actions">
+          <button
+            type="submit"
+            class="btn btn-send"
+            [disabled]="messageForm.invalid || sendingMessage"
+            [class.loading]="sendingMessage"
+            title="Send message"
+          >
+            <ng-container *ngIf="!sendingMessage">
+              <span class="btn-icon" aria-hidden="true">📤</span>
+              Send Message
+            </ng-container>
+            <ng-container *ngIf="sendingMessage">
+              <span class="spinner small" aria-hidden="true"></span>
+              Sending...
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

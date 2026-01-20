@@ -1,386 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Eventra Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* ─── Header ─── */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 2rem 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.18) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.1rem;
+            margin: 0.4rem 0 0.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .dashboard-subtitle {
+            opacity: 0.9;
+            font-size: 1.05rem;
+        }
+
+        .header-status-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .status-badge, .date-badge {
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            border-radius: 999px;
+            padding: 0.6rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        .status-icon {
+            font-size: 1.3rem;
+            color: var(--success);
+        }
+
+        /* ─── Stats Grid ─── */
+        .stats-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.22s ease;
+            position: relative;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-header {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: linear-gradient(to bottom, var(--gray-50), white);
+        }
+
+        .stat-icon-wrapper {
+            width: 56px;
+            height: 56px;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .stat-badge-top {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            background: var(--gray-200);
+        }
+
+        .stat-badge-top.success { background: #d1fae5; color: #065f46; }
+        .stat-badge-top.info { background: #dbeafe; color: #1e40af; }
+
+        .stat-body {
+            padding: 1.25rem 1.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.92rem;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.85rem;
+            font-weight: 700;
+            margin: 0.35rem 0;
+        }
+
+        .stat-description {
+            color: var(--gray-600);
+            font-size: 0.92rem;
+        }
+
+        .stat-footer {
+            padding: 0.9rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.88rem;
+            color: var(--gray-600);
+        }
+
+        .stat-status {
+            font-weight: 600;
+        }
+
+        .stat-status.online::before { content: "● "; color: var(--success); }
+
+        /* ─── Quick Actions ─── */
+        .actions-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid var(--gray-200);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .action-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            background: var(--primary);
+            color: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            position: relative;
+        }
+
+        .action-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .action-badge.notification {
+            background: #f87171;
+        }
+
+        .action-content h3 {
+            font-size: 1.28rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .action-description {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+
+        .action-meta {
+            margin-top: 0.8rem;
+            font-size: 0.88rem;
+            color: var(--gray-600);
+        }
+
+        .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-right: 1.2rem;
+        }
+
+        .action-arrow {
+            margin-top: auto;
+            align-self: flex-end;
+            font-size: 1.4rem;
+            color: var(--primary);
+            opacity: 0.7;
+            transition: all 0.2s;
+        }
+
+        .action-card:hover .action-arrow {
+            transform: translateX(6px);
+            opacity: 1;
+        }
+
+        /* ─── Welcome Card ─── */
+        .welcome-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin: 2.5rem 0;
+        }
+
+        .welcome-background .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            pointer-events: none;
+        }
+
+        .shape-1 { width: 320px; height: 320px; top: -140px; right: -140px; }
+        .shape-2 { width: 220px; height: 220px; bottom: -100px; left: -80px; }
+        .shape-3 { width: 180px; height: 180px; top: 40%; left: 15%; }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .welcome-icon-large {
+            font-size: 7rem;
+            opacity: 0.18;
+            flex-shrink: 0;
+        }
+
+        .welcome-title {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .welcome-description {
+            font-size: 1.08rem;
+            opacity: 0.92;
+            max-width: 620px;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin-bottom: 2.2rem;
+        }
+
+        .feature-badge {
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 12px;
+            padding: 1rem 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .feature-desc {
+            font-size: 0.88rem;
+            opacity: 0.85;
+        }
+
+        .welcome-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary, .cta-secondary {
+            padding: 0.95rem 1.8rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            transition: all 0.22s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cta-primary {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.45);
+            color: white;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* ─── Footer Info ─── */
+        .system-info-footer {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .info-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .info-label {
+            font-size: 0.88rem;
+            color: var(--gray-600);
+            display: block;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 1.15rem;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .welcome-icon-large {
+                font-size: 5.5rem;
+            }
+            .header-content, .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Change this value according to the logged-in user -->
+<script>
+    const userRole = "planner"; // ← Change to: "planner" | "client" | "staff"
+    // In real app: const userRole = window.user?.role || localStorage.getItem("role") || "guest";
+</script>
+
 <div class="dashboard-container">
-  <!-- Header Section -->
-  <div class="dashboard-header">
-    <div class="header-content">
-      <div class="welcome-section">
-        <h1 class="dashboard-title">Dashboard</h1>
-        <p class="dashboard-subtitle">Welcome back, <span class="user-name">{{ roleName || 'User' }}</span>!</p>
-      </div>
-      <div class="header-status">
-        <div class="status-badge">
-          <span class="status-icon">✓</span>
-          <span class="status-text">System Active</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Main Content -->
-  <div class="dashboard-content">
-    <!-- Quick Stats Card -->
-    <div class="stats-section">
-      <div class="section-header">
-        <h2 class="section-title">
-          <span class="title-icon">📊</span>
-          System Information
-        </h2>
-      </div>
-      
-      <div class="stats-grid">
-        <div class="stat-card role-card">
-          <div class="stat-icon-wrapper">
-            <div class="stat-icon">👤</div>
-          </div>
-          <div class="stat-content">
-            <p class="stat-label">Your Role</p>
-            <h3 class="stat-value">{{ roleName || 'Not Assigned' }}</h3>
-          </div>
-          <div class="stat-badge">Active</div>
-        </div>
-
-        <div class="stat-card status-card">
-          <div class="stat-icon-wrapper">
-            <div class="stat-icon">✓</div>
-          </div>
-          <div class="stat-content">
-            <p class="stat-label">Account Status</p>
-            <h3 class="stat-value">Active</h3>
-          </div>
-          <div class="stat-badge success">Online</div>
-        </div>
-
-        <div class="stat-card location-card" *ngIf="statename && statename.name">
-          <div class="stat-icon-wrapper">
-            <div class="stat-icon">📍</div>
-          </div>
-          <div class="stat-content">
-            <p class="stat-label">State</p>
-            <h3 class="stat-value">{{ statename.name }}</h3>
-          </div>
-          <div class="stat-badge info">Location</div>
-        </div>
-
-        <div class="stat-card id-card" *ngIf="statename && statename.id">
-          <div class="stat-icon-wrapper">
-            <div class="stat-icon">🔢</div>
-          </div>
-          <div class="stat-content">
-            <p class="stat-label">State ID</p>
-            <h3 class="stat-value">{{ statename.id }}</h3>
-          </div>
-          <div class="stat-badge">Reference</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- State Information Card -->
-    <div class="info-section" *ngIf="statename && statename.name">
-      <div class="section-header">
-        <h2 class="section-title">
-          <span class="title-icon">🗺️</span>
-          State Details
-        </h2>
-      </div>
-      
-      <div class="info-card">
-        <div class="info-grid">
-          <div class="info-item" *ngIf="statename.id">
-            <div class="info-icon">🆔</div>
-            <div class="info-text">
-              <span class="info-label">State ID</span>
-              <span class="info-value">{{ statename.id }}</span>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="welcome-section">
+                <div style="font-size:2.2rem; margin-bottom:0.4rem;">👋 Good Afternoon</div>
+                <h1>Planner Dashboard</h1>
+                <p class="dashboard-subtitle">Monitor your activities and manage your tasks efficiently</p>
             </div>
-          </div>
-
-          <div class="info-item" *ngIf="statename.name">
-            <div class="info-icon">📌</div>
-            <div class="info-text">
-              <span class="info-label">State Name</span>
-              <span class="info-value">{{ statename.name }}</span>
+            <div class="header-status-group">
+                <div class="status-badge">
+                    <span class="status-icon">✓</span>
+                    <div>
+                        <div style="font-weight:600; font-size:0.9rem;">System Status</div>
+                        <div style="font-size:0.85rem; opacity:0.9;">Operational</div>
+                    </div>
+                </div>
+                <div class="date-badge">
+                    <span style="font-size:1.4rem;">📅</span>
+                    <div>
+                        <div style="font-size:0.9rem; font-weight:500;">Today</div>
+                        <div style="font-size:0.95rem;">January 20, 2026</div>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <div class="info-item" *ngIf="statename.code">
-            <div class="info-icon">🔤</div>
-            <div class="info-text">
-              <span class="info-label">State Code</span>
-              <span class="info-value">{{ statename.code }}</span>
-            </div>
-          </div>
-
-          <div class="info-item" *ngIf="statename.country">
-            <div class="info-icon">🌍</div>
-            <div class="info-text">
-              <span class="info-label">Country</span>
-              <span class="info-value">{{ statename.country }}</span>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
+    </header>
 
-    <!-- Quick Actions Section -->
-    <div class="actions-section">
-      <div class="section-header">
-        <h2 class="section-title">
-          <span class="title-icon">⚡</span>
-          Quick Actions
-        </h2>
-        <p class="section-description">Get started with common tasks</p>
-      </div>
-      
-      <div class="actions-grid">
-        <button class="action-card create-event" routerLink="/create-event" *ngIf="roleName === 'PLANNER'">
-          <div class="action-icon-wrapper">
-            <div class="action-icon">➕</div>
-          </div>
-          <div class="action-content">
-            <h3 class="action-title">Create Event</h3>
-            <p class="action-description">Add a new event to the system</p>
-          </div>
-          <div class="action-arrow">→</div>
-        </button>
-
-        <button class="action-card view-events" routerLink="/view-events" *ngIf="roleName === 'STAFF'">
-          <div class="action-icon-wrapper">
-            <div class="action-icon">📋</div>
-          </div>
-          <div class="action-content">
-            <h3 class="action-title">View Events</h3>
-            <p class="action-description">Browse all available events</p>
-          </div>
-          <div class="action-arrow">→</div>
-        </button>
-
-        <button class="action-card booking-details" routerLink="/booking-details" *ngIf="roleName === 'CLIENT'">
-          <div class="action-icon-wrapper">
-            <div class="action-icon">📋</div>
-          </div>
-          <div class="action-content">
-            <h3 class="action-title">Booking Details</h3>
-            <p class="action-description">View your booking information</p>
-          </div>
-          <div class="action-arrow">→</div>
-        </button>
-
-        <button class="action-card add-resource" routerLink="/add-resource" *ngIf="roleName === 'PLANNER'">
-          <div class="action-icon-wrapper">
-            <div class="action-icon">🔧</div>
-          </div>
-          <div class="action-content">
-            <h3 class="action-title">Add Resources</h3>
-            <p class="action-description">Manage system resources</p>
-          </div>
-          <div class="action-arrow">→</div>
-        </button>
-
-        <button class="action-card allocate-resources" routerLink="/resource-allocate" *ngIf="roleName === 'PLANNER'">
-          <div class="action-icon-wrapper">
-            <div class="action-icon">🎯</div>
-          </div>
-          <div class="action-content">
-            <h3 class="action-title">Allocate Resources</h3>
-            <p class="action-description">Assign resources to events</p>
-          </div>
-          <div class="action-arrow">→</div>
-        </button>
-      </div>
-    </div>
-
-    <!-- Welcome Message -->
-    <div class="welcome-card">
-      <div class="welcome-background"></div>
-      <div class="welcome-content">
-        <div class="welcome-icon-large">👋</div>
-        <div class="welcome-text">
-          <h2 class="welcome-title">Welcome to Event Management System</h2>
-          <p class="welcome-description" *ngIf="roleName === 'PLANNER'">
-            Manage your events efficiently with our comprehensive platform. Create events, add resources, and allocate them seamlessly to deliver exceptional experiences.
-          </p>
-          <p class="welcome-description" *ngIf="roleName === 'CLIENT'">
-            Manage your events efficiently with our comprehensive platform. Browse and explore events available for you and make your bookings with ease.
-          </p>
-          <p class="welcome-description" *ngIf="roleName === 'STAFF'">
-            Manage your events efficiently with our comprehensive platform. Access event details and manage setups to ensure smooth operations.
-          </p>
-          <p class="welcome-description" *ngIf="!roleName || (roleName !== 'PLANNER' && roleName !== 'CLIENT' && roleName !== 'STAFF')">
-            Manage your events efficiently with our comprehensive platform. Your journey to exceptional event management starts here.
-          </p>
-          <div class="welcome-features">
-            <div class="feature-badge">
-              <span class="feature-icon">✓</span>
-              <span>Real-time Updates</span>
-            </div>
-            <div class="feature-badge">
-              <span class="feature-icon">✓</span>
-              <span>Easy Management</span>
-            </div>
-            <div class="feature-badge">
-              <span class="feature-icon">✓</span>
-              <span>Secure Platform</span>
-            </div>
-          </div>
+    <!-- Stats (visible for all roles - you may hide some cards per role later) -->
+    <section class="stats-section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-chart-line"></i> Account Overview</h2>
         </div>
-      </div>
-    </div>
-  </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon-wrapper" style="background:#a78bfa;">👑</div>
+                    <div class="stat-badge-top">Primary</div>
+                </div>
+                <div class="stat-body">
+                    <div class="stat-label">Your Role</div>
+                    <h3 class="stat-value" id="user-role-display">PLANNER</h3>
+                    <div class="stat-description">Access Level: Full Management</div>
+                </div>
+                <div class="stat-footer">
+                    <span class="stat-status online">● Active</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon-wrapper" style="background:#34d399;">✓</div>
+                    <div class="stat-badge-top success">Verified</div>
+                </div>
+                <div class="stat-body">
+                    <div class="stat-label">Account Status</div>
+                    <h3 class="stat-value">Active</h3>
+                    <div class="stat-description">Last login: 1:05 PM</div>
+                </div>
+                <div class="stat-footer">
+                    <span class="stat-status online">● Online</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon-wrapper" style="background:#60a5fa;">📍</div>
+                    <div class="stat-badge-top info">Location</div>
+                </div>
+                <div class="stat-body">
+                    <div class="stat-label">State</div>
+                    <h3 class="stat-value">Telangana</h3>
+                    <div class="stat-description">Code: TS</div>
+                </div>
+                <div class="stat-footer">
+                    <span class="stat-status">🌍 India</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions – role-based -->
+    <section class="actions-section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-bolt"></i> Quick Actions</h2>
+        </div>
+
+        <div class="actions-grid" id="actions-container">
+            <!-- Cards will be inserted here by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Welcome Hero -->
+    <section class="welcome-card">
+        <div class="welcome-background">
+            <div class="bg-shape shape-1"></div>
+            <div class="bg-shape shape-2"></div>
+            <div class="bg-shape shape-3"></div>
+        </div>
+        <div class="welcome-content">
+            <div class="welcome-icon-large">👑</div>
+            <div class="welcome-text">
+                <h2 class="welcome-title">Welcome to Eventra</h2>
+                <p class="welcome-description">
+                    Your comprehensive event management platform. Create exceptional events, manage resources efficiently,
+                    allocate seamlessly, and collaborate with your team in real-time to deliver unforgettable experiences.
+                </p>
+                <div class="welcome-features">
+                    <div class="feature-badge">
+                        <span class="feature-icon">⚡</span>
+                        <div>
+                            <div class="feature-title">Real-time Updates</div>
+                            <div class="feature-desc">Instant notifications</div>
+                        </div>
+                    </div>
+                    <div class="feature-badge">
+                        <span class="feature-icon">🔒</span>
+                        <div>
+                            <div class="feature-title">Secure Platform</div>
+                            <div class="feature-desc">Bank-level security</div>
+                        </div>
+                    </div>
+                    <div class="feature-badge">
+                        <span class="feature-icon">📱</span>
+                        <div>
+                            <div class="feature-title">Easy Management</div>
+                            <div class="feature-desc">Intuitive interface</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="welcome-cta">
+                    <button class="cta-primary">🚀 Get Started</button>
+                    <button class="cta-secondary">📚 Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </div>
 
+<script>
+    // Update role display
+    const roleDisplay = document.getElementById('user-role-display');
+    const actionsContainer = document.getElementById('actions-container');
 
-<!-- dashbaord.component.html (NO TS CHANGES NEEDED) -->
-<!-- <div class="dashboard-container"> -->
-  <!-- Header Section -->
-  <!-- <div class="dashboard-header">
-    <div class="header-content">
-      <div class="welcome-section">
-        <h1>Dashboard</h1>
-        <p class="subtitle">Welcome back, {{ roleName || 'User' }}!</p>
-      </div>
-    
-    </div>
-  </div> -->
+    let displayRole = "PLANNER";
+    let actionsHTML = "";
 
+    if (userRole === "planner") {
+        displayRole = "PLANNER";
+        actionsHTML = `
+            <a href="create-event.html" class="action-card">
+                <div class="action-icon-wrapper">📅</div>
+                <div class="action-content">
+                    <h3>Create Event</h3>
+                    <p class="action-description">Plan and schedule a new event</p>
+                    <div class="action-meta">
+                        <span class="meta-item"><i class="far fa-clock"></i> 5 min setup</span>
+                    </div>
+                </div>
+                <div class="action-arrow">→</div>
+            </a>
 
+            <a href="add-resource.html" class="action-card">
+                <div class="action-icon-wrapper" style="background:#8b5cf6;">🔧</div>
+                <div class="action-content">
+                    <h3>Add Resources</h3>
+                    <p class="action-description">Manage and organize resources</p>
+                    <div class="action-meta">
+                        <span class="meta-item"><i class="fas fa-box"></i> Inventory</span>
+                    </div>
+                </div>
+                <div class="action-arrow">→</div>
+            </a>
 
-  <!-- Main Content -->
-  <!-- <div class="dashboard-content"> -->
-    <!-- Quick Stats Card -->
-    <!-- <div class="stats-section">
-      <div class="section-header">
-        <h2>System Information</h2>
-      </div>
-      
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">👤</div>
-          <div class="stat-content">
-            <p class="stat-label">Role</p>
-            <h3 class="stat-value">{{ roleName || 'Not Assigned' }}</h3>
-          </div>
-        </div> -->
+            <a href="resource-allocate.html" class="action-card">
+                <div class="action-icon-wrapper" style="background:#f59e0b;">🎯</div>
+                <div class="action-content">
+                    <h3>Allocate Resources</h3>
+                    <p class="action-description">Assign resources to events</p>
+                    <div class="action-meta">
+                        <span class="meta-item"><i class="fas fa-link"></i> Link & Assign</span>
+                    </div>
+                </div>
+                <div class="action-arrow">→</div>
+            </a>
 
-        <!-- <div class="stat-card">
-          <div class="stat-icon">📊</div>
-          <div class="stat-content">
-            <p class="stat-label">Status</p>
-            <h3 class="stat-value">Active</h3>
-          </div>
-        </div> -->
+            <a href="staff-messages.html" class="action-card">
+                <div class="action-icon-wrapper" style="background:#ec4899; position:relative;">
+                    💬
+                    <div class="action-badge notification">3</div>
+                </div>
+                <div class="action-content">
+                    <h3>Message Staff</h3>
+                    <p class="action-description">Communicate with your team</p>
+                    <div class="action-meta">
+                        <span class="meta-item"><i class="fas fa-users"></i> Team Chat</span>
+                    </div>
+                </div>
+                <div class="action-arrow">→</div>
+            </a>
+        `;
+    } 
+    else if (userRole === "client") {
+        displayRole = "CLIENT";
+        actionsHTML = `
+            <a href="booking-details.html" class="action-card">
+                <div class="action-icon-wrapper" style="background:#10b981;">📋</div>
+                <div class="action-content">
+                    <h3>Booking Details</h3>
+                    <p class="action-description">View your event bookings and status</p>
+                    <div class="action-meta">
+                        <span class="meta-item"><i class="far fa-calendar-check"></i> My Bookings</span>
+                    </div>
+                </div>
+                <div class="action-arrow">→</div>
+            </a>
+        `;
+    } 
+    else if (userRole === "staff") {
+        displayRole = "STAFF";
+        actionsHTML = `
+            <a href="view-events.html" class="action-card">
+                <div class="action-icon-wrapper" style="background:#3b82f6;">👀</div>
+                <div class="action-content">
+                    <h3>View Events</h3>
+                    <p class="action-description">See assigned events and schedule</p>
+                    <div class="action-meta">
+                        <span class="meta-item"><i class="far fa-eye"></i> Assigned Tasks</span>
+                    </div>
+                </div>
+                <div class="action-arrow">→</div>
+            </a>
 
-        <!-- <div class="stat-card" *ngIf="statename && statename.name">
-          <div class="stat-icon">📍</div>
-          <div class="stat-content">
-            <p class="stat-label">State</p>
-            <h3 class="stat-value">{{ statename.name }}</h3>
-          </div>
-        </div> -->
+            <a href="event-messages.html" class="action-card">
+                <div class="action-icon-wrapper" style="background:#ec4899; position:relative;">
+                    💬
+                    <div class="action-badge notification">2</div>
+                </div>
+                <div class="action-content">
+                    <h3>Messages</h3>
+                    <p class="action-description">Team communication & updates</p>
+                    <div class="action-meta">
+                        <span class="meta-item"><i class="fas fa-comment-dots"></i> Chat</span>
+                    </div>
+                </div>
+                <div class="action-arrow">→</div>
+            </a>
+        `;
+    } 
+    else {
+        displayRole = "GUEST";
+        actionsHTML = `<p style="grid-column: 1 / -1; text-align:center; padding:2rem; color:var(--gray-600);">Please log in to see available actions.</p>`;
+    }
 
-        <!-- <div class="stat-card" *ngIf="statename && statename.id">
-          <div class="stat-icon">🔢</div>
-          <div class="stat-content">
-            <p class="stat-label">State ID</p>
-            <h3 class="stat-value">{{ statename.id }}</h3>
-          </div>
-        </div>
-      </div>
-    </div> -->
+    // Apply values
+    roleDisplay.textContent = displayRole;
+    actionsContainer.innerHTML = actionsHTML;
 
-    <!-- State Information Card - Simple Display -->
-    <!-- <div class="info-section" *ngIf="statename && statename.name">
-      <div class="section-header">
-        <h2>State Details</h2>
-      </div>
-      
-      <div class="info-card">
-        <div class="info-content">
-          <div class="info-row" *ngIf="statename.id">
-            <span class="info-label">ID:</span>
-            <span class="info-value">{{ statename.id }}</span>
-          </div>
-          <div class="info-row" *ngIf="statename.name">
-            <span class="info-label">Name:</span>
-            <span class="info-value">{{ statename.name }}</span>
-          </div> -->
-          <!-- <div class="info-row" *ngIf="statename.code">
-            <span class="info-label">Code:</span>
-            <span class="info-value">{{ statename.code }}</span>
-          </div>
-          <div class="info-row" *ngIf="statename.country">
-            <span class="info-label">Country:</span>
-            <span class="info-value">{{ statename.country }}</span>
-          </div>
-        </div>
-      </div>
-    </div> -->
+    // Optional: Update header title according to role
+    document.querySelector('.welcome-section h1').textContent = `${displayRole} Dashboard`;
+</script>
 
-    <!-- Quick Actions Section -->
-    <!-- <div class="actions-section">
-      <div class="section-header">
-        <h2>Quick Actions</h2>
-      </div>
-      
-      <div class="actions-grid">
-        <button class="action-card" routerLink="/create-event" *ngIf="roleName === 'PLANNER'">
-          <div class="action-icon">➕</div>
-          <div class="action-content">
-            <h3>Create Event</h3>
-            <p>Add a new event</p>
-          </div>
-        </button>
-
-        <button class="action-card" routerLink="/view-events" *ngIf="roleName === 'STAFF'">
-          <div class="action-icon">📋</div>
-          <div class="action-content">
-            <h3>View Events</h3>
-            <p>Browse all events</p>
-          </div>
-        </button>
-
-        <button class="action-card" routerLink="/booking-details" *ngIf="roleName === 'CLIENT'">
-          <div class="action-icon">📋</div>
-          <div class="action-content">
-            <h3>Booking Details</h3>
-            <p>Browse all booking details</p>
-          </div>
-        </button>
-        <button class="action-card" routerLink="/add-resource" *ngIf="roleName === 'PLANNER'">
-          <div class="action-icon">🔧</div>
-          <div class="action-content">
-            <h3>Add Resources</h3>
-            <p>Manage resources</p>
-          </div>
-        </button> -->
-
-        <!-- <button class="action-card" routerLink="/allocate-resources" *ngIf="roleName === 'PLANNER'">
-          <div class="action-icon">🎯</div>
-          <div class="action-content">
-            <h3>Allocate Resources</h3>
-            <p>Assign to events</p>
-          </div>
-        </button>
-      </div>
-    </div> -->
-
-    <!-- Welcome Message -->
-    <!-- <div class="welcome-card">
-      <div class="welcome-content">
-        <div class="welcome-icon">👋</div>
-        <div class="welcome-text">
-          <h2>Welcome to Event Management System</h2>
-          <p *ngIf="roleName === 'PLANNER'">
-            Manage your events efficiently with our comprehensive platform. Create events, add resources, and allocate them seamlessly.
-          </p>
-          <p *ngIf="roleName === 'CLIENT'">
-            Manage your events efficiently with our comprehensive platform. Browse and explore events available for you.
-          </p>
-          <p *ngIf="roleName === 'STAFF'">
-            Manage your events efficiently with our comprehensive platform. Access event details and manage setups.
-          </p>
-          <p *ngIf="!roleName || (roleName !== 'PLANNER' && roleName !== 'CLIENT' && roleName !== 'STAFF')">
-            Manage your events efficiently with our comprehensive platform.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
+</body>
+</html>

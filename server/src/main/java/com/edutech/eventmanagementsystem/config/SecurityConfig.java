@@ -76,7 +76,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
 
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/planner/messages").hasAuthority("PLANNER")
+.antMatchers(HttpMethod.GET, "/api/planner/messages/**").hasAuthority("PLANNER")
 
+// For STAFF
+.antMatchers(HttpMethod.POST, "/api/staff/messages").hasAuthority("STAFF")
+.antMatchers(HttpMethod.GET, "/api/staff/messages/**").hasAuthority("STAFF")
                 .antMatchers("/api/otp/send","/api/otp/verify").permitAll()
 
                 .antMatchers(HttpMethod.POST, "/api/user/register").permitAll()

@@ -1,0 +1,703 @@
+.payment-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.page-title {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.header-icon {
+  font-size: 3rem;
+}
+
+.page-subtitle {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+// Alert
+.alert {
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border: 2px solid #28a745;
+  color: #155724;
+}
+
+.alert-error {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  border: 2px solid #dc3545;
+  color: #721c24;
+}
+
+.alert-icon {
+  font-size: 1.5rem;
+}
+
+// Search Section
+.search-section {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-icon {
+  font-size: 1.8rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 15px 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+}
+
+// Buttons
+.btn {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-search {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  }
+}
+
+.btn-pay {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  font-size: 1.2rem;
+  padding: 20px 40px;
+  box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(40, 167, 69, 0.6);
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+
+// Event Payment Section
+.event-payment-section {
+  display: grid;
+  gap: 20px;
+}
+
+.event-card,
+.resources-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e9ecef;
+
+  h3 {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin: 0;
+  }
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f8f9fa;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.detail-value {
+  color: #2c3e50;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  &.status-upcoming {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  &.status-ongoing {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  &.status-completed {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+}
+
+// Resources Table
+.resources-table {
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #e9ecef;
+
+        &:hover {
+          background: #f8f9fa;
+        }
+
+        td {
+          padding: 15px;
+          color: #2c3e50;
+        }
+      }
+    }
+
+    tfoot {
+      background: #f8f9fa;
+      font-size: 1.1rem;
+
+      td {
+        padding: 20px 15px;
+      }
+    }
+  }
+}
+
+.subtotal {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.total-amount {
+  color: #28a745;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.payment-action {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+// Modals
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s;
+}
+
+.bill-modal {
+  max-width: 800px;
+}
+
+.modal-header {
+  padding: 30px;
+  border-bottom: 2px solid #e9ecef;
+  position: relative;
+
+  h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.8rem;
+  }
+}
+
+.success-header {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  text-align: center;
+
+  h2 {
+    color: white;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #6c757d;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #dc3545;
+  }
+}
+
+.success-header .modal-close {
+  color: white;
+}
+
+.modal-body {
+  padding: 30px;
+}
+
+.modal-footer {
+  padding: 20px 30px;
+  border-top: 2px solid #e9ecef;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+// Form Groups
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.required {
+  color: #dc3545;
+}
+
+// Payment Summary
+.payment-summary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  color: white;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.amount {
+  font-size: 1.5rem;
+  color: #ffd700;
+}
+
+// UPI Modal
+.upi-info {
+  text-align: center;
+}
+
+.upi-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+}
+
+.upi-description {
+  color: #7f8c8d;
+  margin-bottom: 20px;
+}
+
+.amount-display {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+  color: white;
+}
+
+.amount-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.amount-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.upi-input {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.upi-examples {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.examples-label {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.upi-apps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.upi-app {
+  background: #e9ecef;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+// Success Animation
+.success-animation {
+  margin: 20px 0;
+}
+
+.checkmark {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #28a745;
+  animation: scaleIn 0.5s;
+}
+
+// Bill Body
+.bill-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.transaction-details,
+.customer-details,
+.bill-event-details,
+.items-summary {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #2c3e50;
+  }
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e9ecef;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  .value {
+    color: #2c3e50;
+    font-weight: 600;
+  }
+}
+
+.transaction-id {
+  color: #667eea;
+  font-family: monospace;
+}
+
+.status-success {
+  color: #28a745;
+  text-transform: uppercase;
+}
+
+.bill-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+
+  thead {
+    background: #667eea;
+    color: white;
+
+    th {
+      padding: 12px;
+      text-align: left;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #e9ecef;
+
+      td {
+        padding: 12px;
+      }
+    }
+  }
+
+  tfoot {
+    background: #28a745;
+    color: white;
+    font-size: 1.1rem;
+
+    td {
+      padding: 15px 12px;
+    }
+  }
+}
+
+.bill-footer-note {
+  text-align: center;
+  padding: 20px;
+  background: #e7f3ff;
+  border-radius: 8px;
+  color: #004085;
+  font-style: italic;
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .resources-table table {
+    font-size: 0.9rem;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// Print Styles
+@media print {
+  .modal-overlay {
+    background: white;
+  }
+
+  .modal-close,
+  .modal-footer {
+    display: none;
+  }
+}

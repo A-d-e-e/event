@@ -28,6 +28,16 @@ export class OtpService {
  
   }
 
+  // Check email exists
+  checkEmailExists(email: string) {
+    return this.http.get(`${this.baseUrl}/api/user/check-email?email=${email}`);
+  }
+  
+  // Reset password
+  resetPassword(email: string, newPassword: string) {
+    return this.http.post(`${this.baseUrl}/api/user/reset-password`, { email, newPassword });
+  }
+
   verifyOtp(email: string, otp: string) {
  
     return this.http.post(

@@ -21,6 +21,7 @@ import { NotificationService } from '../services/notification.service';
 import { NotificationComponent } from './notification/notification.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { OtpService } from '../services/OtpService';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +47,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     HttpClientModule,
     BrowserAnimationsModule
   ],
-  providers: [HttpService,HttpClientModule, NotificationService ],
+  providers: [HttpService,HttpClientModule, NotificationService, OtpService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

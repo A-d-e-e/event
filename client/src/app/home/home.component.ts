@@ -238,28 +238,32 @@ export class HomeComponent implements OnInit, OnDestroy {
     {
       title: 'Weddings',
       subtitle: 'Dream Ceremonies',
-      image: 'https://www.focuzstudios.in/wp-content/uploads/2017/11/tamil-wedding-photography-in-bangalore-1-9.jpg'
-      // image: 'assets/events/wedding.jpg'
+      // image: 'https://www.focuzstudios.in/wp-content/uploads/2017/11/tamil-wedding-photography-in-bangalore-1-9.jpg'
+       image: 'assets/events/wedding.jpg'
     },
     {
       title: 'Private Get-Togethers',
       subtitle: 'Intimate Celebrations',
-      image: 'https://media.istockphoto.com/id/868935172/photo/heres-to-tonight.jpg?s=612x612&w=0&k=20&c=v1ceJ9aZwI43rPaQeceEx5L6ODyWFVwqxqpadC2ljG0='
+      // image: 'https://media.istockphoto.com/id/868935172/photo/heres-to-tonight.jpg?s=612x612&w=0&k=20&c=v1ceJ9aZwI43rPaQeceEx5L6ODyWFVwqxqpadC2ljG0='
+      image: 'assets/events/get_together.avif'
     },
     {
       title: 'Festivals & Cultural',
       subtitle: 'Cultural Excellence',
-      image: 'https://img.freepik.com/free-photo/portrait-holi-powder-colors-celebration_23-2151960850.jpg?semt=ais_hybrid&w=740&q=80'
+      // image: 'https://img.freepik.com/free-photo/portrait-holi-powder-colors-celebration_23-2151960850.jpg?semt=ais_hybrid&w=740&q=80'
+      image: 'assets/events/festival.avif'
     },
     {
-      title: 'Ceremonies & Expos',
+      title: 'Concerts',
       subtitle: 'Grand Exhibitions',
-      image: 'https://cdn.i-scmp.com/sites/default/files/styles/1020x680/public/d8/images/methode/2019/11/10/92a6b3ca-039a-11ea-ab68-c2fa11fa07a6_image_hires_201823.JPG?itok=SjBqvmYT&v=1573388310'
+      // image: 'https://cdn.i-scmp.com/sites/default/files/styles/1020x680/public/d8/images/methode/2019/11/10/92a6b3ca-039a-11ea-ab68-c2fa11fa07a6_image_hires_201823.JPG?itok=SjBqvmYT&v=1573388310'
+      image:'assets/events/concert.avif'
     },
     {
       title: 'Corporate Events',
       subtitle: 'Professional Excellence',
-      image: 'https://pbs.twimg.com/media/G8dEhDmbQAE3tZU.jpg'
+      // image: 'https://pbs.twimg.com/media/G8dEhDmbQAE3tZU.jpg'
+      image:'assets/events/corporate.avif'
     }
   ];
 
@@ -389,7 +393,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error => {
         console.error('Error loading events:', error);
-        this.stats[0].value = 2; // Fallback based on your database
+        this.stats[0].value = 0; // Fallback based on your database
       }
     );
 
@@ -401,7 +405,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       error => {
         console.error('Error loading planners:', error);
         // Fallback to manual count from your database
-        this.stats[1].value = 4; // Based on your user table
+        this.stats[1].value = 0; // Based on your user table
       }
     );
 
@@ -413,7 +417,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       error => {
         console.error('Error loading staff:', error);
         // Fallback
-        this.stats[2].value = 1; // Based on your user table
+        this.stats[2].value = 0; // Based on your user table
       }
     );
 
@@ -424,7 +428,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       error => {
         console.error('Error loading staff:', error);
         // Fallback
-        this.stats[3].value = 404; // Based on your user table
+        this.stats[3].value = 0; // Based on your user table
       }
     );
   }

@@ -1,20 +1,20 @@
-<div class="login-wrapper">
+  <div class="login-wrapper">
 <div class="login-container">
-<!-- Left Side - Branding -->
+<!-- Left Side - Branding --> 
 <div class="login-branding">
 <div class="branding-content">
 <div class="logo-section">
 <div class="logo-icon">📅</div>
 <h1 class="brand-logo">EventHub</h1>
-</div>
-<p class="brand-tagline">Crafting Unforgettable Experiences</p>
+</div> 
+ <p class="brand-tagline">Crafting Unforgettable Experiences</p>
 <p class="brand-description">Event Management And Resource Allocations Application</p>
 <div class="brand-features">
 <div class="feature-item">
 <span class="feature-icon">✓</span>
 <span>Easy Event Management</span>
-</div>
-<div class="feature-item">
+</div> 
+ <div class="feature-item">
 <span class="feature-icon">✓</span>
 <span>Real-time Updates</span>
 </div>
@@ -23,14 +23,14 @@
 <span>Secure & Reliable</span>
 </div>
 </div>
-</div>
-</div>
+</div> 
+ </div> 
  
     <!-- Right Side - Login Form -->
-<div class="login-form-section">
-<div class="form-container">
+ <div class="login-form-section">
+<div class="form-container"> 
 <!-- Alert Messages -->
-<div class="alert alert-success" *ngIf="showMessage && !showError">
+ <div class="alert alert-success" *ngIf="showMessage && !showError">
 <span class="alert-icon">✓</span>
 <span>{{ responseMessage }}</span>
 </div>
@@ -38,24 +38,24 @@
         <div class="alert alert-error" *ngIf="showMessage && showError">
 <span class="alert-icon">✕</span>
 <span>{{ responseMessage }}</span>
-</div>
+</div> 
  
         <!-- Form Header -->
-<div class="form-header">
+ <div class="form-header">
 <h2>Welcome Back</h2>
 <p>Please login to your account</p>
-</div>
+</div> 
  
         <!-- Login Form -->
-<form [formGroup]="itemForm" (ngSubmit)="onLogin()">
+ <form [formGroup]="itemForm" (ngSubmit)="onLogin()"> -->
 <!-- Username Field -->
-<div class="form-group">
+ <div class="form-group">
 <label for="username">Username</label>
 <div class="input-wrapper">
 <span class="input-icon">👤</span>
-<input 
+<input  
 
-                type="text" 
+                 type="text" 
 
                 id="username" 
 
@@ -72,10 +72,10 @@
 <span *ngIf="itemForm.get('username')?.errors?.['required']">Username is required</span>
 <span *ngIf="itemForm.get('username')?.errors?.['pattern']">Username must contain only lowercase letters</span>
 </div>
-</div>
+</div> 
  
           <!-- Password Field -->
-<div class="form-group">
+ <div class="form-group">
 <label for="password">Password</label>
 <div class="input-wrapper">
 <span class="input-icon">🔒</span>
@@ -100,11 +100,11 @@
 
                 Password must be 8-20 characters with uppercase, lowercase, number and special character
 </span>
-</div>
-</div>
+</div> 
+ </div> 
  
           <!-- Math Captcha -->
-<div class="form-group captcha-section">
+ <div class="form-group captcha-section">
 <label>Security Verification</label>
 <div class="captcha-container">
 <div class="captcha-question">
@@ -112,9 +112,9 @@
 <span class="captcha-text">What is <strong>{{ captchaNum1 }} + {{ captchaNum2 }}</strong>?</span>
 </div>
 <div class="captcha-input-group">
-<input 
+<input  
 
-                  type="number" 
+                   type="number" 
 
                   formControlName="captchaInput" 
 
@@ -136,10 +136,10 @@
                   [disabled]="captchaVerified || !itemForm.get('captchaInput')?.value"
 
                   [class.verified]="captchaVerified">
-<span *ngIf="!captchaVerified">Verify</span>
-<span *ngIf="captchaVerified">✓ Verified</span>
+<span *ngIf="!captchaVerified">Verify</span> 
+ <span *ngIf="captchaVerified">✓ Verified</span>
 </button>
-<button 
+<button  
 
                   type="button" 
 
@@ -158,16 +158,16 @@
 </div>
  
           <!-- Remember Me & Forgot Password -->
-<div class="form-options">
+ <div class="form-options">
 <label class="checkbox-label">
 <input type="checkbox">
 <span>Remember me</span>
 </label>
 <a routerLink="/forgot-password" routerLinkActive="active" class="forgot-link">Forgot Password?</a>
-</div>
+</div> 
  
           <!-- Submit Button -->
-<button 
+ <button 
 
             type="submit" 
 
@@ -177,25 +177,25 @@
 <span>Login</span>
 <span class="btn-arrow">→</span>
 </button>
-</form>
+</form> 
  
         <!-- Sign Up Link -->
-<div class="signup-prompt">
+ <div class="signup-prompt">
 <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
 </div>
 </div>
 </div>
-</div>
+</div> 
  
   <!-- Footer -->
-<footer class="login-footer">
+ <footer class="login-footer">
 <div class="footer-content">
 <div class="footer-section">
 <h5>Contact Us</h5>
 <p>123 Event Street, Event City, EV 12345</p>
 <p>Phone: (+91) 9723456891</p>
 <p>Email: info@eventhub.com</p>
-</div>
+ </div>
 <div class="footer-section">
 <h5>Follow Us</h5>
 <div class="social-links">
@@ -204,7 +204,7 @@
 <a href="#" aria-label="Instagram">📷</a>
 <a href="#" aria-label="LinkedIn">💼</a>
 </div>
-</div>
+</div> 
 <div class="footer-section">
 <h5>About Us</h5>
 <p>Turning your moments into memories, and your dreams into timeless celebrations.</p>
@@ -215,4 +215,11 @@
 </div>
 </footer>
 </div>
- 
+  
+
+
+
+
+
+
+

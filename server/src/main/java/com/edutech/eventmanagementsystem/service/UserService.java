@@ -13,6 +13,7 @@ import com.edutech.eventmanagementsystem.entity.User;
 import com.edutech.eventmanagementsystem.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.List;
  
 @Service
 public class UserService implements UserDetailsService{
@@ -44,6 +45,14 @@ public class UserService implements UserDetailsService{
             user.getPassword(),
             new ArrayList<>());
  
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public List<User> getUsersByRole(String role) {
+        return userRepository.findByRole(role);
     }
  
  

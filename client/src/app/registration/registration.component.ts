@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { HttpService } from '../../services/http.service';
 import { OtpService } from '../../services/OtpService';
+import { NotificationService } from '../../services/notification.service';
 declare var bootstrap: any;
 @Component({
   selector: 'app-registration',
@@ -25,7 +26,8 @@ export class RegistrationComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private httpService: HttpService,
-    private otpService:OtpService
+    private otpService:OtpService,
+    private notificationService: NotificationService
   ) {
     this.itemForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.pattern(this.usernamePattern)], [this.uniqueValidator.bind(this)]],
@@ -99,15 +101,18 @@ export class RegistrationComponent implements OnInit {
   onVerifyEmail(): void {
   const email = this.itemForm.get('email')?.value;
   if (!email) {
-    alert('Please enter email');
+    // alert('Please enter email');
+    this.notificationService.warning('Please enter email')
     return;
   }
   this.otpService.sendOtp(email).subscribe({
     next: () => {
       this.showOtpSection = true;
-      alert('OTP sent to your email');
+      // alert('OTP sent to your email');
+      this.notificationService.success('OTP sent to your email');
     },
-    error: () => alert('Failed to send OTP')
+    error: () => //alert('Failed to send OTP')
+    this.notificationService.error('Failed to send OTP')
   });
 }
 verifyOtp(): void {
@@ -118,9 +123,11 @@ verifyOtp(): void {
       this.emailVerified = true;
       this.showOtpSection = false;
       // this.itemForm.get('email')?.disable(); // optional UX improvement
-      alert('Email verified successfully');
+      // alert('Email verified successfully');
+      this.notificationService.success('Email verified successfully');
     },
-    error: () => alert('Invalid OTP')
+    error: () => //alert('Invalid OTP')
+    this.notificationService.error('Invalid OTP')
   });
 }
  

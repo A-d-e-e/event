@@ -14,8 +14,11 @@ import { ViewEventsComponent } from './view-events/view-events.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
 import { EventMessagesComponent } from './eventmessage/event-messages.component';
 import { StaffMessagesComponent } from './staffmessage/staff-messages.component';
+import { HomeComponent } from './home/home.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 const routes: Routes = [
+  { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'dashboard', component: DashbaordComponent },
@@ -26,9 +29,10 @@ const routes: Routes = [
   { path: 'booking-details', component: BookingDetailsComponent },   
   { path: 'event-messages', component: EventMessagesComponent },      // For Planner
   { path: 'staff-messages', component: StaffMessagesComponent },  
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'forgot-password', component: ForgotPasswordComponent},
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
 
-  { path: '**', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '**', redirectTo: '/home', pathMatch: 'full' },
 ];
 
 @NgModule({

@@ -16,12 +16,19 @@ import { ViewEventsComponent } from './view-events/view-events.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
 import { EventMessagesComponent } from './eventmessage/event-messages.component';
 import { StaffMessagesComponent } from './staffmessage/staff-messages.component';
-
+import { HomeComponent } from './home/home.component';
+import { NotificationService } from '../services/notification.service';
+import { NotificationComponent } from './notification/notification.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { OtpService } from '../services/OtpService';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    HomeComponent,
       RegistrationComponent,
+      NotificationComponent,
       DashbaordComponent,    
       CreateEventComponent,
       AddResourceComponent,
@@ -29,6 +36,7 @@ import { StaffMessagesComponent } from './staffmessage/staff-messages.component'
       ViewEventsComponent,
       BookingDetailsComponent,
       EventMessagesComponent,
+      ForgotPasswordComponent,
     StaffMessagesComponent
   ],
   imports: [
@@ -36,9 +44,10 @@ import { StaffMessagesComponent } from './staffmessage/staff-messages.component'
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule 
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
-  providers: [HttpService,HttpClientModule ],
+  providers: [HttpService,HttpClientModule, NotificationService, OtpService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

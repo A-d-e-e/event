@@ -224,6 +224,10 @@ export class HttpService {
     });
   }
 
+  getUsersByRole(role: string) {
+    return this.http.get(`${this.serverName}/api/users/role/${role}`);
+  }
+
   // ==================== OTHER METHODS ====================
 
   getStatename(): Observable<any> {
@@ -233,4 +237,15 @@ export class HttpService {
     headers = headers.set('Authorization', `Bearer ${authToken}`);
     return this.http.get(this.serverName + `/api/state/`, { headers: headers });
   }
+
+  // sendOTP(email: string) {
+  //   return this.http.post(`${this.serverName}/api/otp/send?email=${email}`, {});
+  // }
+  
+  // // Verify OTP
+  // verifyOTP(email: string, otp: string) {
+  //   return this.http.post(`${this.serverName}/api/otp/verify?email=${email}&otp=${otp}`, {});
+  // }
+  
+  
 }

@@ -1,0 +1,32 @@
+<div class="notification-overlay" *ngIf="isVisible" [@fadeInOut]>
+  <div class="notification-backdrop" (click)="closeNotification()"></div>
+  
+  <div class="notification-dialog"
+       [class.success]="currentNotification?.type === 'success'"
+       [class.error]="currentNotification?.type === 'error'"
+       [class.info]="currentNotification?.type === 'info'"
+       [class.warning]="currentNotification?.type === 'warning'"
+       [@slideIn]>
+    
+    <!-- Icon -->
+    <div class="notification-icon">
+      <i *ngIf="currentNotification?.type === 'success'" class="fas fa-check-circle"></i>
+      <i *ngIf="currentNotification?.type === 'error'" class="fas fa-times-circle"></i>
+      <i *ngIf="currentNotification?.type === 'info'" class="fas fa-info-circle"></i>
+      <i *ngIf="currentNotification?.type === 'warning'" class="fas fa-exclamation-triangle"></i>
+    </div>
+ 
+    <!-- Message -->
+    <div class="notification-content">
+      <p class="notification-message">{{ currentNotification?.message }}</p>
+    </div>
+ 
+    <!-- Close Button -->
+    <button class="notification-close" (click)="closeNotification()" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+ 
+    <!-- Progress Bar -->
+    <div class="notification-progress" [style.animation-duration.ms]="currentNotification?.duration"></div>
+  </div>
+</div>

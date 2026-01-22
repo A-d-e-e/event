@@ -20,6 +20,7 @@
 /home/coder/app/server/src/main/java/com/edutech/eventmanagementsystem/repository/EventRepository.java
 /home/coder/app/server/src/main/java/com/edutech/eventmanagementsystem/service/OtpService.java
 /home/coder/app/server/src/main/java/com/edutech/eventmanagementsystem/entity/Allocation.java
+/home/coder/app/server/src/main/java/com/edutech/eventmanagementsystem/controller/GetMappingg.java
 /home/coder/app/server/src/main/java/com/edutech/eventmanagementsystem/controller/RegisterAndLoginController.java
 /home/coder/app/server/src/main/java/com/edutech/eventmanagementsystem/repository/UserRepository.java
 /home/coder/app/server/src/main/java/com/edutech/eventmanagementsystem/controller/ClientController.java

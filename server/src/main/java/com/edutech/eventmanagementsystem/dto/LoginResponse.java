@@ -28,8 +28,11 @@ public class LoginResponse {
         this.username = username;
         this.email = email;
         this.role = role;
+        // 2201
+        this.userId = userId;
     }
 
+    
     public String getToken() {
         return token;
     }
@@ -60,5 +63,13 @@ public class LoginResponse {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

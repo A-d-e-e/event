@@ -1,5 +1,3 @@
-
-
 <div class="booking-details-container">
   <div class="page-header">
     <h1>💳 Event Booking & Payment Portal</h1>
@@ -54,10 +52,29 @@
         <span class="badge" [ngClass]="getStatusClass(ev.status)">
           {{ ev.status | titlecase }}
         </span>
-        <!-- Paid chip -->
         <span *ngIf="ev.paymentCompleted" class="badge badge-success" style="margin-left: 8px;">
           ✅ Paid
         </span>
+      </div>
+
+      <!-- Feedback Summary Banner -->
+      <div class="feedback-banner" *ngIf="feedbackStats && feedbackStats.totalFeedbacks > 0">
+        <div class="feedback-rating-summary">
+          <div class="avg-rating">
+            <span class="rating-number">{{ feedbackStats.averageRating | number:'1.1-1' }}</span>
+            <div class="stars-display">
+              <span *ngFor="let star of getStarArray(5)" class="star" 
+                    [class.filled]="star <= feedbackStats.averageRating">★</span>
+            </div>
+          </div>
+          <div class="feedback-count">
+            <span>{{ feedbackStats.totalFeedbacks }} {{ feedbackStats.totalFeedbacks === 1 ? 'Review' : 'Reviews' }}</span>
+          </div>
+        </div>
+        <button class="btn btn-view-feedbacks" (click)="viewEventFeedbacks(ev)">
+          <span class="btn-icon">💬</span>
+          View All Reviews
+        </button>
       </div>
 
       <!-- Event Details -->
@@ -122,9 +139,9 @@
         <p>No resources allocated for this event</p>
       </div>
 
-      <!-- Payment Action -->
-      <div class="payment-action" *ngIf="ev.allocations && ev.allocations.length > 0">
-        <!-- Show Pay button if not paid -->
+      <!-- Action Buttons -->
+      <div class="action-buttons" *ngIf="ev.allocations && ev.allocations.length > 0">
+        <!-- Payment Button -->
         <button class="btn btn-pay"
                 *ngIf="!ev.paymentCompleted"
                 (click)="openPaymentModal(ev)">
@@ -132,18 +149,162 @@
           <span class="btn-text">Proceed to Payment - ₹{{ calculateTotalPrice(ev.allocations) | number:'1.2-2' }}</span>
         </button>
 
-        <!-- Show Paid chip if already paid -->
         <div *ngIf="ev.paymentCompleted"
-             class="btn"
-             style="background-color: #22c55e; color: #fff; cursor: default;">
+             class="btn btn-paid">
           <span class="btn-icon">✅</span>
           <span class="btn-text">Paid</span>
         </div>
+
+        <!-- Feedback Button -->
+        <button class="btn btn-feedback" (click)="openFeedbackModal(ev)">
+          <span class="btn-icon">✍️</span>
+          <span class="btn-text">Write a Review</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- STEP 1: Payment Modal - Customer Details -->
+  <!-- ==================== FEEDBACK MODAL ==================== -->
+  <div class="modal-overlay" *ngIf="showFeedbackModal" (click)="closeFeedbackModal()">
+    <div class="modal-content feedback-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>✍️ Write Your Review</h2>
+        <button class="modal-close" (click)="closeFeedbackModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="feedbackForm">
+          <!-- Rating Section -->
+          <div class="rating-section">
+            <label class="rating-label">How would you rate this event? <span class="required">*</span></label>
+            <div class="star-rating">
+              <span *ngFor="let star of getStarArray(5)" 
+                    class="star-input"
+                    [class.filled]="star <= (hoverRating || selectedRating)"
+                    (click)="setRating(star)"
+                    (mouseenter)="setHoverRating(star)"
+                    (mouseleave)="clearHoverRating()">
+                ★
+              </span>
+            </div>
+            <div class="rating-text" *ngIf="selectedRating > 0">
+              {{ selectedRating }} {{ selectedRating === 1 ? 'Star' : 'Stars' }}
+            </div>
+          </div>
+
+          <!-- Customer Details -->
+          <div class="form-group">
+            <label>Your Name <span class="required">*</span></label>
+            <input type="text" formControlName="customerName" placeholder="Enter your name" class="form-input"
+                   [class.error-input]="feedbackForm.get('customerName')?.invalid && feedbackForm.get('customerName')?.touched">
+            <div class="error-text" *ngIf="feedbackForm.get('customerName')?.invalid && feedbackForm.get('customerName')?.touched">
+              Name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" formControlName="customerEmail" placeholder="your.email@example.com" class="form-input"
+                   [class.error-input]="feedbackForm.get('customerEmail')?.invalid && feedbackForm.get('customerEmail')?.touched">
+            <div class="error-text" *ngIf="feedbackForm.get('customerEmail')?.invalid && feedbackForm.get('customerEmail')?.touched">
+              Valid email is required
+            </div>
+          </div>
+
+          <!-- Feedback Text -->
+          <div class="form-group">
+            <label>Your Review <span class="required">*</span></label>
+            <textarea formControlName="feedbackText" 
+                      placeholder="Share your experience with this event... (minimum 10 characters)"
+                      class="form-textarea"
+                      rows="5"
+                      [class.error-input]="feedbackForm.get('feedbackText')?.invalid && feedbackForm.get('feedbackText')?.touched"></textarea>
+            <div class="char-count">
+              {{ feedbackForm.get('feedbackText')?.value?.length || 0 }} / 1000 characters
+            </div>
+            <div class="error-text" *ngIf="feedbackForm.get('feedbackText')?.invalid && feedbackForm.get('feedbackText')?.touched">
+              Please enter at least 10 characters
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeFeedbackModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="submitFeedback()" [disabled]="isProcessing">
+          <span *ngIf="!isProcessing">Submit Review</span>
+          <span *ngIf="isProcessing">Submitting...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FEEDBACKS VIEW MODAL ==================== -->
+  <div class="modal-overlay" *ngIf="showFeedbacksView" (click)="closeFeedbacksView()">
+    <div class="modal-content feedbacks-view-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>💬 Customer Reviews</h2>
+        <button class="modal-close" (click)="closeFeedbacksView()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Statistics Section -->
+        <div class="feedback-stats" *ngIf="feedbackStats && feedbackStats.totalFeedbacks > 0">
+          <div class="stats-summary">
+            <div class="overall-rating">
+              <div class="rating-number-large">{{ feedbackStats.averageRating | number:'1.1-1' }}</div>
+              <div class="stars-large">
+                <span *ngFor="let star of getStarArray(5)" class="star" 
+                      [class.filled]="star <= feedbackStats.averageRating">★</span>
+              </div>
+              <div class="total-reviews">{{ feedbackStats.totalFeedbacks }} Reviews</div>
+            </div>
+
+            <div class="rating-breakdown">
+              <div class="breakdown-item" *ngFor="let stars of [5,4,3,2,1]">
+                <span class="stars-label">{{ stars }} ★</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" [style.width.%]="getRatingPercentage(stars)"></div>
+                </div>
+                <span class="percentage">{{ getRatingPercentage(stars) | number:'1.0-0' }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="feedbacks-list">
+          <div class="feedback-item" *ngFor="let feedback of feedbacksList">
+            <div class="feedback-header">
+              <div class="customer-info">
+                <div class="customer-avatar">{{ feedback.customerName.charAt(0).toUpperCase() }}</div>
+                <div class="customer-details">
+                  <div class="customer-name">{{ feedback.customerName }}</div>
+                  <div class="feedback-date">{{ feedback.feedbackDate | date:'medium' }}</div>
+                </div>
+              </div>
+              <div class="feedback-rating">
+                <span *ngFor="let star of getStarArray(5)" class="star" 
+                      [class.filled]="star <= feedback.rating">★</span>
+              </div>
+            </div>
+            <div class="feedback-text">{{ feedback.feedbackText }}</div>
+          </div>
+
+          <div class="no-feedbacks" *ngIf="feedbacksList.length === 0">
+            <div class="no-feedbacks-icon">💭</div>
+            <p>No reviews yet. Be the first to share your experience!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="closeFeedbacksView()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAYMENT MODAL - STEP 1: Customer Details ==================== -->
   <div class="modal-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
     <div class="modal-content payment-modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -214,7 +375,7 @@
     </div>
   </div>
 
-  <!-- STEP 2: UPI Payment Modal -->
+  <!-- ==================== PAYMENT MODAL - STEP 2: UPI Payment ==================== -->
   <div class="modal-overlay" *ngIf="showUpiModal" (click)="closeUpiModal()">
     <div class="modal-content upi-modal" (click)="$event.stopPropagation()">
       <div class="modal-header upi-header">
@@ -290,7 +451,7 @@
     </div>
   </div>
 
-  <!-- STEP 3: Bill Summary Modal -->
+  <!-- ==================== PAYMENT MODAL - STEP 3: Bill Summary ==================== -->
   <div class="modal-overlay" *ngIf="showBillSummary">
     <div class="modal-content bill-modal" (click)="$event.stopPropagation()">
       <div class="modal-header success-header">
@@ -409,3 +570,4 @@
     </div>
   </div>
 </div>
+

@@ -1,70 +1,88 @@
 
-// Color Variables
-$primary: #667eea;
-$primary-dark: #5568d3;
-$secondary: #764ba2;
-$dark: #1f2937;
-$text-light: #6b7280;
+// Professional App Component Styling
+
+// Luxury Color Variables - Black & Gold Theme
+$primary: #d4af37;           // Luxury Gold
+$primary-dark: #b8941f;      // Dark Gold
+$secondary: #f4e5c2;         // Champagne Gold
+$accent: #ffd700;            // Bright Gold
+$dark: #0a0a0a;              // Deep Black
+$dark-secondary: #1a1a1a;    // Rich Black
+$text-light: #a8a8a8;        // Light Gray
 $white: #ffffff;
-$bg-light: #f9fafb;
+$bg-light: #0f0f0f;          // Dark Background
+
+// Professional Font Imports
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap');
 
 // Global Body Styling
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: $bg-light;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  color: $white;
 }
 
 // ============================================
-// NAVBAR STYLING WITH BLUR EFFECT
+// NAVBAR STYLING WITH LUXURY GLASS EFFECT
 // ============================================
 
 .navbar-custom {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 30px rgba(212, 175, 55, 0.1),
+              0 1px 0 rgba(212, 175, 55, 0.2);
   padding: 12px 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
   
   .container-fluid {
     max-width: 1400px;
   }
 
-  // SCROLLED STATE - Solid White
+  // SCROLLED STATE - Enhanced Luxury Effect
   &.scrolled {
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    box-shadow: 0 8px 40px rgba(212, 175, 55, 0.15),
+                0 2px 0 rgba(212, 175, 55, 0.25);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
   }
 }
 
-// Logo Styling
+// Logo Styling - Luxury Gold Design
 .brand-logo {
   text-decoration: none;
+  transition: all 0.3s ease;
   
   &:hover {
-    opacity: 0.9;
+    transform: translateY(-2px);
+    filter: drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4));
   }
   
   .logo-container {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     
     .logo-svg {
-      width: 45px;
-      height: 45px;
+      width: 50px;
+      height: 50px;
+      filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
+      transition: all 0.3s ease;
+      
+      &:hover {
+        filter: drop-shadow(0 4px 16px rgba(212, 175, 55, 0.5));
+      }
     }
     
     .brand-text {
@@ -72,94 +90,162 @@ body {
       flex-direction: column;
       
       .brand-name {
-        font-size: 1.5rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.75rem;
         font-weight: 800;
-        background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+        background: linear-gradient(135deg, $accent 0%, $primary 50%, $secondary 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         line-height: 1.2;
-        letter-spacing: -0.5px;
+        letter-spacing: 1px;
+        text-shadow: 0 2px 20px rgba(212, 175, 55, 0.3);
       }
       
       .brand-tagline {
+        font-family: 'Montserrat', sans-serif;
         font-size: 0.7rem;
-        color: $text-light;
-        font-weight: 500;
-        letter-spacing: 0.5px;
+        color: $secondary;
+        font-weight: 400;
+        letter-spacing: 2px;
+        text-transform: uppercase;
       }
     }
   }
 }
 
-// Navigation Links
+// Navigation Links - Luxury Style
 .navbar-nav {
   gap: 8px;
   
   .nav-link-custom {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: 10px;
-    color: $dark;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    color: $secondary;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     font-size: 0.95rem;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    &:hover::before {
+      left: 100%;
+    }
     
     i {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
+      transition: transform 0.3s ease;
     }
     
     &:hover {
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-      color: $primary;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(244, 229, 194, 0.1) 100%);
+      color: $accent;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+      
+      i {
+        transform: scale(1.1);
+      }
     }
     
     &.active {
-      background: linear-gradient(135deg, $primary 0%, $secondary 100%);
-      color: $white;
+      background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+      color: $dark;
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      font-weight: 700;
     }
   }
 }
 
-// Role Badge
+// Role Badge - Luxury Gold Badge
 .role-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
-  color: $primary;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(244, 229, 194, 0.15) 100%);
+  color: $accent;
   border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 0.85rem;
   margin-left: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
   
   i {
     font-size: 1rem;
   }
 }
 
-// Auth Buttons
+// Auth Buttons - Luxury Design
 .btn-login,
 .btn-register,
 .btn-logout {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 24px;
-  border-radius: 10px;
+  gap: 10px;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   margin-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+  }
+  
+  &:hover::before {
+    width: 300px;
+    height: 300px;
+  }
   
   i {
     font-size: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  
+  span {
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -167,46 +253,56 @@ body {
   background: transparent;
   color: $primary;
   border: 2px solid $primary;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
   
   &:hover {
-    background: $primary;
-    color: $white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+    color: $dark;
+    box-shadow: 0 6px 25px rgba(212, 175, 55, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
   }
 }
 
 .btn-register {
-  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
-  color: $white;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  color: $dark;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
   
   &:hover {
-    background: linear-gradient(135deg, $primary-dark 0%, #6d28d9 100%);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, $accent 0%, $primary 100%);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
   }
 }
 
 .btn-logout {
-  background: #ef4444;
+  background: linear-gradient(135deg, #8b0000 0%, #660000 100%);
   color: $white;
+  box-shadow: 0 4px 20px rgba(139, 0, 0, 0.3);
   
   &:hover {
-    background: #dc2626;
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    background: linear-gradient(135deg, #a00000 0%, #7a0000 100%);
+    box-shadow: 0 6px 25px rgba(139, 0, 0, 0.5);
+    transform: translateY(-3px);
   }
 }
 
-// Mobile Toggle
+// Mobile Toggle - Luxury Gold
 .navbar-toggler {
   border: 2px solid $primary;
-  padding: 8px 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.05);
   
   &:focus {
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.25);
   }
   
   .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23d4af37' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.5' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
   }
 }
 
@@ -217,20 +313,23 @@ body {
 .main-content {
   flex: 1;
   min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
 // ============================================
-// FOOTER STYLING
+// FOOTER STYLING - LUXURY BLACK & GOLD
 // ============================================
 
 .footer-custom {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-  color: $white;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  color: $secondary;
   margin-top: auto;
+  border-top: 2px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 -4px 30px rgba(212, 175, 55, 0.1);
 }
 
 .footer-top {
-  padding: 60px 0 40px;
+  padding: 70px 0 50px;
   
   .container {
     max-width: 1400px;
@@ -241,61 +340,83 @@ body {
   .footer-logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 15px;
+    margin-bottom: 25px;
     
     .footer-logo-svg {
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
+      filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.4));
     }
     
     .footer-brand-name {
-      font-size: 1.6rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
       font-weight: 800;
-      background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+      background: linear-gradient(135deg, $accent 0%, $primary 50%, $secondary 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      letter-spacing: 1px;
     }
   }
   
   .footer-description {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(244, 229, 194, 0.7);
+    font-family: 'Montserrat', sans-serif;
     font-size: 0.95rem;
-    line-height: 1.7;
-    margin-bottom: 25px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    font-weight: 300;
   }
   
   .footer-social {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     
     .social-link {
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.1);
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(244, 229, 194, 0.1) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.3);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: $white;
-      font-size: 1.2rem;
+      color: $primary;
+      font-size: 1.3rem;
       text-decoration: none;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       
       &:hover {
-        background: linear-gradient(135deg, $primary 0%, $secondary 100%);
-        transform: translateY(-3px);
+        background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+        color: $dark;
+        transform: translateY(-5px) scale(1.1);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        border-color: $primary;
       }
     }
   }
 }
 
 .footer-title {
-  font-size: 1.2rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 20px;
-  color: $white;
+  margin-bottom: 25px;
+  color: $primary;
+  position: relative;
+  padding-bottom: 12px;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, $primary 0%, transparent 100%);
+  }
 }
 
 .footer-links {
@@ -304,18 +425,35 @@ body {
   margin: 0;
   
   li {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     
     a {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(244, 229, 194, 0.7);
       text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
       font-size: 0.95rem;
+      font-weight: 400;
       transition: all 0.3s ease;
       display: inline-block;
+      position: relative;
+      
+      &::before {
+        content: '›';
+        position: absolute;
+        left: -15px;
+        opacity: 0;
+        color: $primary;
+        transition: all 0.3s ease;
+      }
       
       &:hover {
-        color: $white;
-        padding-left: 5px;
+        color: $accent;
+        padding-left: 20px;
+        
+        &::before {
+          left: 0;
+          opacity: 1;
+        }
       }
     }
   }
@@ -328,32 +466,38 @@ body {
   
   li {
     display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    color: rgba(255, 255, 255, 0.7);
+    gap: 15px;
+    margin-bottom: 18px;
+    color: rgba(244, 229, 194, 0.7);
+    font-family: 'Montserrat', sans-serif;
     font-size: 0.95rem;
+    font-weight: 400;
     
     i {
       color: $primary;
-      font-size: 1.1rem;
-      margin-top: 2px;
+      font-size: 1.2rem;
+      margin-top: 3px;
+      filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
     }
     
     span {
       flex: 1;
-      line-height: 1.6;
+      line-height: 1.7;
     }
   }
 }
 
 .footer-bottom {
-  padding: 25px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 30px 0;
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+  background: rgba(0, 0, 0, 0.3);
   
   .footer-copyright {
     margin: 0;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(244, 229, 194, 0.6);
+    font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
+    font-weight: 300;
   }
   
   .footer-bottom-links {
@@ -361,18 +505,36 @@ body {
     padding: 0;
     margin: 0;
     display: flex;
-    gap: 20px;
+    gap: 25px;
     justify-content: flex-end;
     
     li {
       a {
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(244, 229, 194, 0.6);
         text-decoration: none;
+        font-family: 'Montserrat', sans-serif;
         font-size: 0.9rem;
-        transition: color 0.3s ease;
+        font-weight: 400;
+        transition: all 0.3s ease;
+        position: relative;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -3px;
+          left: 0;
+          width: 0;
+          height: 1px;
+          background: $primary;
+          transition: width 0.3s ease;
+        }
         
         &:hover {
-          color: $white;
+          color: $primary;
+          
+          &::after {
+            width: 100%;
+          }
         }
       }
     }
@@ -386,13 +548,17 @@ body {
 @media (max-width: 991px) {
   .navbar-custom {
     .navbar-collapse {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      background: rgba(10, 10, 10, 0.95);
+      border-radius: 12px;
+      padding: 20px;
       margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
     }
     
     .navbar-nav {
-      gap: 10px;
+      gap: 12px;
       
       .nav-item {
         width: 100%;
@@ -402,6 +568,7 @@ body {
       .role-badge {
         width: 100%;
         margin-left: 0;
+        justify-content: center;
       }
       
       .btn-login,
@@ -410,7 +577,7 @@ body {
         width: 100%;
         justify-content: center;
         margin-left: 0;
-        margin-top: 8px;
+        margin-top: 10px;
       }
     }
   }
@@ -428,30 +595,40 @@ body {
 
 @media (max-width: 768px) {
   .footer-top {
-    padding: 40px 0 30px;
+    padding: 50px 0 35px;
   }
   
   .footer-section {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
   }
   
   .footer-bottom {
     .footer-bottom-links {
       justify-content: center;
-      margin-top: 15px;
+      margin-top: 20px;
       flex-wrap: wrap;
+    }
+  }
+  
+  .brand-logo {
+    .logo-container {
+      .brand-text {
+        .brand-name {
+          font-size: 1.5rem;
+        }
+      }
     }
   }
 }
 
 // ============================================
-// ANIMATIONS
+// LUXURY ANIMATIONS
 // ============================================
 
-@keyframes fadeIn {
+@keyframes fadeInLuxury {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -459,10 +636,512 @@ body {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
 .navbar-custom,
 .footer-custom {
-  animation: fadeIn 0.5s ease-out;
+  animation: fadeInLuxury 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+// Gold Shimmer Effect for Headers
+.brand-name,
+.footer-brand-name {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+// Elegant Hover Glow
+.nav-link-custom,
+.btn-login,
+.btn-register,
+.social-link {
+  &:hover {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3),
+                0 0 40px rgba(212, 175, 55, 0.15);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+// // Color Variables
+// $primary: #667eea;
+// $primary-dark: #5568d3;
+// $secondary: #764ba2;
+// $dark: #1f2937;
+// $text-light: #6b7280;
+// $white: #ffffff;
+// $bg-light: #f9fafb;
+
+// // Global Body Styling
+// body {
+//   margin: 0;
+//   padding: 0;
+//   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+//   background: $bg-light;
+//   min-height: 100vh;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// // ============================================
+// // NAVBAR STYLING WITH BLUR EFFECT
+// // ============================================
+
+// .navbar-custom {
+//   background: rgba(255, 255, 255, 0.7);
+//   backdrop-filter: blur(12px);
+//   -webkit-backdrop-filter: blur(12px);
+//   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+//   padding: 12px 0;
+//   position: sticky;
+//   top: 0;
+//   z-index: 1000;
+//   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+//   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  
+//   .container-fluid {
+//     max-width: 1400px;
+//   }
+
+//   // SCROLLED STATE - Solid White
+//   &.scrolled {
+//     background: rgba(255, 255, 255, 0.98);
+//     backdrop-filter: blur(20px);
+//     -webkit-backdrop-filter: blur(20px);
+//     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+//     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+//   }
+// }
+
+// // Logo Styling
+// .brand-logo {
+//   text-decoration: none;
+  
+//   &:hover {
+//     opacity: 0.9;
+//   }
+  
+//   .logo-container {
+//     display: flex;
+//     align-items: center;
+//     gap: 12px;
+    
+//     .logo-svg {
+//       width: 45px;
+//       height: 45px;
+//     }
+    
+//     .brand-text {
+//       display: flex;
+//       flex-direction: column;
+      
+//       .brand-name {
+//         font-size: 1.5rem;
+//         font-weight: 800;
+//         background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+//         -webkit-background-clip: text;
+//         -webkit-text-fill-color: transparent;
+//         background-clip: text;
+//         line-height: 1.2;
+//         letter-spacing: -0.5px;
+//       }
+      
+//       .brand-tagline {
+//         font-size: 0.7rem;
+//         color: $text-light;
+//         font-weight: 500;
+//         letter-spacing: 0.5px;
+//       }
+//     }
+//   }
+// }
+
+// // Navigation Links
+// .navbar-nav {
+//   gap: 8px;
+  
+//   .nav-link-custom {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     padding: 10px 20px;
+//     border-radius: 10px;
+//     color: $dark;
+//     font-weight: 600;
+//     font-size: 0.95rem;
+//     text-decoration: none;
+//     transition: all 0.3s ease;
+    
+//     i {
+//       font-size: 1.1rem;
+//     }
+    
+//     &:hover {
+//       background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+//       color: $primary;
+//     }
+    
+//     &.active {
+//       background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+//       color: $white;
+//     }
+//   }
+// }
+
+// // Role Badge
+// .role-badge {
+//   display: flex;
+//   align-items: center;
+//   gap: 6px;
+//   padding: 8px 16px;
+//   background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+//   color: $primary;
+//   border-radius: 50px;
+//   font-weight: 700;
+//   font-size: 0.85rem;
+//   margin-left: 8px;
+  
+//   i {
+//     font-size: 1rem;
+//   }
+// }
+
+// // Auth Buttons
+// .btn-login,
+// .btn-register,
+// .btn-logout {
+//   display: flex;
+//   align-items: center;
+//   gap: 8px;
+//   padding: 10px 24px;
+//   border-radius: 10px;
+//   font-weight: 700;
+//   font-size: 0.9rem;
+//   border: none;
+//   cursor: pointer;
+//   transition: all 0.3s ease;
+//   margin-left: 8px;
+  
+//   i {
+//     font-size: 1rem;
+//   }
+// }
+
+// .btn-login {
+//   background: transparent;
+//   color: $primary;
+//   border: 2px solid $primary;
+  
+//   &:hover {
+//     background: $primary;
+//     color: $white;
+//     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+//   }
+// }
+
+// .btn-register {
+//   background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+//   color: $white;
+  
+//   &:hover {
+//     background: linear-gradient(135deg, $primary-dark 0%, #6d28d9 100%);
+//     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+//     transform: translateY(-2px);
+//   }
+// }
+
+// .btn-logout {
+//   background: #ef4444;
+//   color: $white;
+  
+//   &:hover {
+//     background: #dc2626;
+//     box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+//   }
+// }
+
+// // Mobile Toggle
+// .navbar-toggler {
+//   border: 2px solid $primary;
+//   padding: 8px 12px;
+  
+//   &:focus {
+//     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+//   }
+  
+//   .navbar-toggler-icon {
+//     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+//   }
+// }
+
+// // ============================================
+// // MAIN CONTENT
+// // ============================================
+
+// .main-content {
+//   flex: 1;
+//   min-height: calc(100vh - 80px);
+// }
+
+// // ============================================
+// // FOOTER STYLING
+// // ============================================
+
+// .footer-custom {
+//   background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+//   color: $white;
+//   margin-top: auto;
+// }
+
+// .footer-top {
+//   padding: 60px 0 40px;
+  
+//   .container {
+//     max-width: 1400px;
+//   }
+// }
+
+// .footer-section {
+//   .footer-logo {
+//     display: flex;
+//     align-items: center;
+//     gap: 12px;
+//     margin-bottom: 20px;
+    
+//     .footer-logo-svg {
+//       width: 40px;
+//       height: 40px;
+//     }
+    
+//     .footer-brand-name {
+//       font-size: 1.6rem;
+//       font-weight: 800;
+//       background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+//       -webkit-background-clip: text;
+//       -webkit-text-fill-color: transparent;
+//       background-clip: text;
+//     }
+//   }
+  
+//   .footer-description {
+//     color: rgba(255, 255, 255, 0.7);
+//     font-size: 0.95rem;
+//     line-height: 1.7;
+//     margin-bottom: 25px;
+//   }
+  
+//   .footer-social {
+//     display: flex;
+//     gap: 12px;
+    
+//     .social-link {
+//       width: 40px;
+//       height: 40px;
+//       background: rgba(255, 255, 255, 0.1);
+//       border-radius: 50%;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       color: $white;
+//       font-size: 1.2rem;
+//       text-decoration: none;
+//       transition: all 0.3s ease;
+      
+//       &:hover {
+//         background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+//         transform: translateY(-3px);
+//       }
+//     }
+//   }
+// }
+
+// .footer-title {
+//   font-size: 1.2rem;
+//   font-weight: 700;
+//   margin-bottom: 20px;
+//   color: $white;
+// }
+
+// .footer-links {
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+  
+//   li {
+//     margin-bottom: 12px;
+    
+//     a {
+//       color: rgba(255, 255, 255, 0.7);
+//       text-decoration: none;
+//       font-size: 0.95rem;
+//       transition: all 0.3s ease;
+//       display: inline-block;
+      
+//       &:hover {
+//         color: $white;
+//         padding-left: 5px;
+//       }
+//     }
+//   }
+// }
+
+// .footer-contact {
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+  
+//   li {
+//     display: flex;
+//     gap: 12px;
+//     margin-bottom: 16px;
+//     color: rgba(255, 255, 255, 0.7);
+//     font-size: 0.95rem;
+    
+//     i {
+//       color: $primary;
+//       font-size: 1.1rem;
+//       margin-top: 2px;
+//     }
+    
+//     span {
+//       flex: 1;
+//       line-height: 1.6;
+//     }
+//   }
+// }
+
+// .footer-bottom {
+//   padding: 25px 0;
+//   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  
+//   .footer-copyright {
+//     margin: 0;
+//     color: rgba(255, 255, 255, 0.6);
+//     font-size: 0.9rem;
+//   }
+  
+//   .footer-bottom-links {
+//     list-style: none;
+//     padding: 0;
+//     margin: 0;
+//     display: flex;
+//     gap: 20px;
+//     justify-content: flex-end;
+    
+//     li {
+//       a {
+//         color: rgba(255, 255, 255, 0.6);
+//         text-decoration: none;
+//         font-size: 0.9rem;
+//         transition: color 0.3s ease;
+        
+//         &:hover {
+//           color: $white;
+//         }
+//       }
+//     }
+//   }
+// }
+
+// // ============================================
+// // RESPONSIVE DESIGN
+// // ============================================
+
+// @media (max-width: 991px) {
+//   .navbar-custom {
+//     .navbar-collapse {
+//       margin-top: 15px;
+//       padding-top: 15px;
+//       border-top: 1px solid rgba(0, 0, 0, 0.1);
+//     }
+    
+//     .navbar-nav {
+//       gap: 10px;
+      
+//       .nav-item {
+//         width: 100%;
+//       }
+      
+//       .nav-link-custom,
+//       .role-badge {
+//         width: 100%;
+//         margin-left: 0;
+//       }
+      
+//       .btn-login,
+//       .btn-register,
+//       .btn-logout {
+//         width: 100%;
+//         justify-content: center;
+//         margin-left: 0;
+//         margin-top: 8px;
+//       }
+//     }
+//   }
+  
+//   .brand-logo {
+//     .logo-container {
+//       .brand-text {
+//         .brand-tagline {
+//           display: none;
+//         }
+//       }
+//     }
+//   }
+// }
+
+// @media (max-width: 768px) {
+//   .footer-top {
+//     padding: 40px 0 30px;
+//   }
+  
+//   .footer-section {
+//     margin-bottom: 30px;
+//   }
+  
+//   .footer-bottom {
+//     .footer-bottom-links {
+//       justify-content: center;
+//       margin-top: 15px;
+//       flex-wrap: wrap;
+//     }
+//   }
+// }
+
+// // ============================================
+// // ANIMATIONS
+// // ============================================
+
+// @keyframes fadeIn {
+//   from {
+//     opacity: 0;
+//     transform: translateY(20px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
+
+// .navbar-custom,
+// .footer-custom {
+//   animation: fadeIn 0.5s ease-out;
+// }
 
 
 

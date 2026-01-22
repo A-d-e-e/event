@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../environments/environment.development';
 import { AuthService } from './auth.service';
 
@@ -228,6 +228,46 @@ export class HttpService {
     return this.http.get(`${this.serverName}/api/users/role/${role}`);
   }
 
+  
+  // Submit feedback for an event (CLIENT role required)
+  submitFeedback(eventId: any, details: any): Observable<any> {
+    const url = `${this.serverName}/api/client/feedback/${eventId}`;
+    return this.http.post(url, details, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Get feedbacks for a specific event (PUBLIC - no auth needed)
+  getEventFeedbacks(eventId: any): Observable<any> {
+    const url = `${this.serverName}/api/public/feedbacks/${eventId}`;
+    return this.http.get(url, { headers: this.getPublicHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Get all verified feedbacks (PUBLIC - no auth needed)
+  getAllFeedbacks(): Observable<any> {
+    const url = `${this.serverName}/api/public/feedbacks`;
+    return this.http.get(url, { headers: this.getPublicHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Get feedback statistics for an event (PUBLIC - no auth needed)
+  getEventFeedbackStats(eventId: any): Observable<any> {
+    const url = `${this.serverName}/api/public/feedbacks/${eventId}/stats`;
+    return this.http.get(url, { headers: this.getPublicHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Toggle feedback verification (PLANNER role required)
+  toggleFeedbackVerification(feedbackId: any): Observable<any> {
+    const url = `${this.serverName}/api/planner/feedback/${feedbackId}/verify`;
+    return this.http.put(url, {}, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
   // ==================== OTHER METHODS ====================
 
   getStatename(): Observable<any> {
@@ -247,5 +287,16 @@ export class HttpService {
   //   return this.http.post(`${this.serverName}/api/otp/verify?email=${email}&otp=${otp}`, {});
   // }
   
+  // Error handler
+  private handleError(error: any): Observable<never> {
+    console.error('HTTP Service Error:', error);
+    return throwError(() => error);
+  }
+  
+  private getPublicHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  }
   
 }

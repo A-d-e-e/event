@@ -81,30 +81,34 @@ export class HomeComponent implements OnInit, OnDestroy {
   teamMembers = [
     {
       name: 'Nikita Rawat',
-      role: 'Awesome Cook',
+      // role: 'Awesome Cook',
+      role: ' ',
       // image: 'https://i.pravatar.cc/500?img=45'
       image: 'assets/team/Nikita.jpg'
     },
     {
       name: 'Aditya Pratap Singh',
-      role: 'Team Lead',
-      // image: 'https://i.pravatar.cc/500?img=12'
+      // role: 'Team Lead',
+      role: ' ',
       image: 'assets/team/Aditya.jpg'
     },
     {
       name: 'Aaron Prakash',
-      role: 'Trustworthy Rizzler',
+      // role: 'Trustworthy Rizzler',
+      role: ' ',
       image: 'assets/team/Aaron.jpg'
     },
     {
       name: 'Devanand B',
-      role: 'Mr. Steal-yo-girl',
+      // role: 'Mr. Steal-yo-girl',
+      role: ' ',
       image: 'assets/team/Devanand.jpg'
     },
     {
       name: 'Shane Sunny',
-      role: 'Final Boss',
-      image: 'https://i.pravatar.cc/500?img=15'
+      // role: 'Final Boss',
+      role: ' ',
+      image: 'assets/team/Shane.jpg'
     }
   ];
 

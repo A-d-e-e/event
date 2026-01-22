@@ -1,9 +1,7 @@
-
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
-
 import { of } from 'rxjs';
 import { catchError, finalize, map, timeout } from 'rxjs/operators';
 
@@ -16,15 +14,11 @@ export class BookingDetailsComponent implements OnInit {
 
   itemForm: FormGroup;
   paymentForm: FormGroup;
+  feedbackForm: FormGroup;
 
   eventObj: any[] = [];
   message: { type: 'success' | 'error', text: string } | null = null;
   searchPerformed: boolean = false;
-
-  tooltipVisible: boolean = false;
-  tooltipContent: any[] = [];
-  tooltipX: number = 0;
-  tooltipY: number = 0;
 
   // Payment related
   showPaymentModal: boolean = false;
@@ -35,7 +29,15 @@ export class BookingDetailsComponent implements OnInit {
   transactionDetails: any = null;
   isProcessing: boolean = false;
 
-  private readonly REQUEST_TIMEOUT_MS = 10000; // 10 seconds
+  // Feedback related
+  showFeedbackModal: boolean = false;
+  showFeedbacksView: boolean = false;
+  feedbacksList: any[] = [];
+  feedbackStats: any = null;
+  selectedRating: number = 0;
+  hoverRating: number = 0;
+
+  private readonly REQUEST_TIMEOUT_MS = 10000;
 
   constructor(
     private httpService: HttpService,
@@ -46,18 +48,24 @@ export class BookingDetailsComponent implements OnInit {
       searchTerm: ['', Validators.required]
     });
 
-    // Step-1 validators only (UPI validator will be added at Step-2)
     this.paymentForm = this.formBuilder.group({
       customerName: ['', Validators.required],
       customerEmail: ['', [Validators.required, Validators.email]],
       customerPhone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-      upiId: [''] // not required yet; Step-2 will enforce it
+      upiId: ['']
+    });
+
+    this.feedbackForm = this.formBuilder.group({
+      customerName: ['', Validators.required],
+      customerEmail: ['', [Validators.required, Validators.email]],
+      rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
+      feedbackText: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
     });
   }
 
   ngOnInit(): void {}
 
-  // ---------- Search ----------
+  // ========== SEARCH ==========
   searchEvent(): void {
     if (!this.itemForm.valid) {
       this.itemForm.get('searchTerm')?.markAsTouched();
@@ -79,13 +87,15 @@ export class BookingDetailsComponent implements OnInit {
   private handleSearchResponse(response: any): void {
     this.searchPerformed = true;
     if (response && Object.keys(response).length !== 0) {
-      // ensure paymentCompleted flag exists for UI
       const normalized = { ...response };
       if (typeof normalized.paymentCompleted !== 'boolean') {
         normalized.paymentCompleted = false;
       }
       this.eventObj = [normalized];
       this.showTemporaryMessage('success', 'Event found');
+      
+      // Load feedbacks for this event
+      this.loadEventFeedbacks(normalized.eventID);
     } else {
       this.eventObj = [];
       this.showTemporaryMessage('error', 'No event found');
@@ -104,7 +114,113 @@ export class BookingDetailsComponent implements OnInit {
     setTimeout(() => (this.message = null), 5000);
   }
 
-  // ---------- Compute ----------
+  // ========== FEEDBACK FUNCTIONS ==========
+  
+  openFeedbackModal(event: any): void {
+    this.selectedEvent = event;
+    this.showFeedbackModal = true;
+    this.selectedRating = 0;
+    this.feedbackForm.reset();
+  }
+
+  closeFeedbackModal(): void {
+    this.showFeedbackModal = false;
+    this.selectedRating = 0;
+    this.hoverRating = 0;
+  }
+
+  setRating(rating: number): void {
+    this.selectedRating = rating;
+    this.feedbackForm.patchValue({ rating });
+  }
+
+  setHoverRating(rating: number): void {
+    this.hoverRating = rating;
+  }
+
+  clearHoverRating(): void {
+    this.hoverRating = 0;
+  }
+
+  submitFeedback(): void {
+    if (!this.feedbackForm.valid) {
+      Object.keys(this.feedbackForm.controls).forEach(key => {
+        this.feedbackForm.get(key)?.markAsTouched();
+      });
+      this.showTemporaryMessage('error', 'Please fill all required fields');
+      return;
+    }
+
+    if (this.selectedRating === 0) {
+      this.showTemporaryMessage('error', 'Please select a rating');
+      return;
+    }
+
+    const feedbackData = {
+      ...this.feedbackForm.value,
+      rating: this.selectedRating
+    };
+
+    this.isProcessing = true;
+
+    this.httpService.submitFeedback(this.selectedEvent.eventID, feedbackData).subscribe(
+      response => {
+        this.showTemporaryMessage('success', 'Feedback submitted successfully!');
+        this.closeFeedbackModal();
+        this.loadEventFeedbacks(this.selectedEvent.eventID);
+        this.isProcessing = false;
+      },
+      error => {
+        this.showTemporaryMessage('error', 'Failed to submit feedback');
+        console.error('Feedback submission error:', error);
+        this.isProcessing = false;
+      }
+    );
+  }
+
+  viewEventFeedbacks(event: any): void {
+    this.selectedEvent = event;
+    this.showFeedbacksView = true;
+    this.loadEventFeedbacks(event.eventID);
+  }
+
+  closeFeedbacksView(): void {
+    this.showFeedbacksView = false;
+  }
+
+  loadEventFeedbacks(eventId: any): void {
+    this.httpService.getEventFeedbacks(eventId).subscribe(
+      feedbacks => {
+        this.feedbacksList = feedbacks || [];
+      },
+      error => {
+        console.error('Error loading feedbacks:', error);
+        this.feedbacksList = [];
+      }
+    );
+
+    this.httpService.getEventFeedbackStats(eventId).subscribe(
+      stats => {
+        this.feedbackStats = stats;
+      },
+      error => {
+        console.error('Error loading stats:', error);
+      }
+    );
+  }
+
+  getStarArray(rating: number): number[] {
+    return Array(5).fill(0).map((_, i) => i + 1);
+  }
+
+  getRatingPercentage(stars: number): number {
+    if (!this.feedbackStats || !this.feedbackStats.totalFeedbacks) return 0;
+    const count = this.feedbackStats.ratingDistribution[stars - 1] || 0;
+    return (count / this.feedbackStats.totalFeedbacks) * 100;
+  }
+
+  // ========== PAYMENT FUNCTIONS (existing) ==========
+  
   calculateTotalPrice(allocations: any[]): number {
     if (!allocations || allocations.length === 0) return 0;
     return allocations.reduce((total, allocation) => {
@@ -118,26 +234,6 @@ export class BookingDetailsComponent implements OnInit {
     const price = allocation?.resource?.price || 0;
     const quantity = allocation?.quantity || 0;
     return price * quantity;
-  }
-
-  // ---------- Tooltip ----------
-  showTooltip(event: MouseEvent, allocations: any[]): void {
-    this.tooltipContent = allocations || [];
-    this.tooltipX = event.clientX + 100;
-    this.tooltipY = event.clientY + 10;
-    this.tooltipVisible = true;
-  }
-
-  hideTooltip(): void {
-    this.tooltipVisible = false;
-  }
-
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    if (this.tooltipVisible) {
-      this.tooltipX = event.clientX + 10;
-      this.tooltipY = event.clientY + 10;
-    }
   }
 
   getStatusClass(status: string): string {
@@ -159,8 +255,6 @@ export class BookingDetailsComponent implements OnInit {
     }
   }
 
-  // ==================== PAYMENT FLOW ====================
-
   openPaymentModal(ev: any): void {
     const totalAmount = this.calculateTotalPrice(ev?.allocations);
     if (totalAmount <= 0) {
@@ -178,7 +272,6 @@ export class BookingDetailsComponent implements OnInit {
     this.showUpiModal = false;
     this.showBillSummary = false;
 
-    // Clear UPI field and remove validators at Step-1
     const upiCtrl = this.paymentForm.get('upiId');
     upiCtrl?.reset('');
     upiCtrl?.clearValidators();
@@ -189,9 +282,7 @@ export class BookingDetailsComponent implements OnInit {
     this.showPaymentModal = false;
   }
 
-  // Step-1: Continue to UPI (initiate payment, then go to step-2)
   proceedToUpi(): void {
-    // Validate only Step-1 fields
     const nameCtrl = this.paymentForm.get('customerName');
     const emailCtrl = this.paymentForm.get('customerEmail');
     const phoneCtrl = this.paymentForm.get('customerPhone');
@@ -228,7 +319,6 @@ export class BookingDetailsComponent implements OnInit {
 
     this.isProcessing = true;
 
-    // Try real API first; if it fails or times out, fall back with a temp id
     this.httpService.initiatePayment(this.selectedEvent.eventID, payload).pipe(
       timeout(this.REQUEST_TIMEOUT_MS),
       map(resp => this.normalizePaymentInitResponse(resp)),
@@ -237,24 +327,18 @@ export class BookingDetailsComponent implements OnInit {
         this.showTemporaryMessage('error', 'Payment server not responding. Using temporary reference.');
         return of({ paymentId: this.generateTempPaymentId() });
       }),
-      finalize(() => {
-        // handled in subscribe
-      })
+      finalize(() => {})
     ).subscribe(({ paymentId }) => {
       this.paymentId = paymentId;
-
-      // Move to Step-2
       this.showPaymentModal = false;
       this.showUpiModal = true;
 
-      // Now enforce UPI validators for Step-2
       const upiCtrl = this.paymentForm.get('upiId');
       upiCtrl?.setValidators([Validators.required, this.upiIdValidator()]);
       upiCtrl?.updateValueAndValidity({ emitEvent: false });
 
       this.isProcessing = false;
     }, () => {
-      // Hard error (unlikely after catchError). Still allow moving to UPI with temp id
       this.paymentId = this.generateTempPaymentId();
       this.showPaymentModal = false;
       this.showUpiModal = true;
@@ -267,7 +351,6 @@ export class BookingDetailsComponent implements OnInit {
     });
   }
 
-  // Step-2: Process UPI payment
   processUpiPayment(): void {
     const upiCtrl = this.paymentForm.get('upiId');
     upiCtrl?.markAsTouched();
@@ -291,20 +374,14 @@ export class BookingDetailsComponent implements OnInit {
       timeout(this.REQUEST_TIMEOUT_MS),
       catchError(err => {
         console.error('Payment processing failed (will simulate success for demo):', err);
-        // Simulate a success so you can see the Bill Summary
         const fake = this.buildFakeTransaction(upiId);
         return of({ success: true, payment: fake });
       }),
-      finalize(() => {
-        // handled in subscribe
-      })
+      finalize(() => {})
     ).subscribe(response => {
       if (response?.success) {
         this.transactionDetails = response.payment;
-
-        // ---- mark as paid in UI ----
         this.markEventAsPaid();
-
         this.showUpiModal = false;
         this.showBillSummary = true;
         this.showTemporaryMessage('success', 'Payment successful!');
@@ -321,8 +398,7 @@ export class BookingDetailsComponent implements OnInit {
 
   private markEventAsPaid(): void {
     if (!this.selectedEvent) return;
-    this.selectedEvent.paymentCompleted = true; // Client-side flag
-    // Optionally reflect a "paid" status label (won't affect your backend status)
+    this.selectedEvent.paymentCompleted = true;
     this.selectedEvent.paymentStatus = 'PAID';
 
     const idx = this.eventObj.findIndex(e => e.eventID === this.selectedEvent.eventID);
@@ -338,7 +414,7 @@ export class BookingDetailsComponent implements OnInit {
 
   closeBillSummary(): void {
     this.showBillSummary = false;
-    this.resetPaymentData(false); // do not clear event list; preserve Paid chip
+    this.resetPaymentData(false);
   }
 
   downloadBill(): void {
@@ -422,16 +498,12 @@ Thank you for your payment!
     }
   }
 
-  // ---------- Helpers ----------
-
   private normalizePaymentInitResponse(resp: any): { paymentId: number } {
-    // Accept server variations: paymentID / paymentId / id
     const id = resp?.paymentID ?? resp?.paymentId ?? resp?.id ?? null;
     return { paymentId: Number(id) || this.generateTempPaymentId() };
   }
 
   private generateTempPaymentId(): number {
-    // Unique but local-only
     return Number(String(Date.now()).slice(-9));
   }
 
@@ -453,7 +525,6 @@ Thank you for your payment!
   }
 
   private upiIdValidator(): ValidatorFn {
-    // Basic UPI pattern: username@provider
     const pattern = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
     return (control: AbstractControl) => {
       const value = (control.value || '').trim();

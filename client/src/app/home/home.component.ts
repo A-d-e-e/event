@@ -1,221 +1,3 @@
-// import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-// import { HttpService } from '../../services/http.service';
-
-// @Component({
-//   selector: 'app-home',
-//   templateUrl: './home.component.html',
-//   styleUrls: ['./home.component.scss']
-// })
-// export class HomeComponent implements OnInit {
-//   @ViewChild('testimonialTrack') testimonialTrack!: ElementRef;
-
-//   hoveredIndex: number | null = null;
-//   currentTestimonialIndex = 0;
-//   isAnimating = false;
-
-//   // Event Types for Hero Frames
-//   eventTypes = [
-//     {
-//       title: 'Weddings',
-//       subtitle: 'Dream Ceremonies',
-//       image: 'assets/events/wedding.jpg' // You'll need to add these images
-//     },
-//     {
-//       title: 'Private Get-Togethers',
-//       subtitle: 'Intimate Celebrations',
-//       image: 'assets/events/private.jpg'
-//     },
-//     {
-//       title: 'Festivals & Cultural',
-//       subtitle: 'Cultural Excellence',
-//       image: 'assets/events/festival.jpg'
-//     },
-//     {
-//       title: 'Ceremonies & Expos',
-//       subtitle: 'Grand Exhibitions',
-//       image: 'assets/events/expo.jpg'
-//     },
-//     {
-//       title: 'Corporate Events',
-//       subtitle: 'Professional Excellence',
-//       image: 'assets/events/corporate.jpg'
-//     }
-//   ];
-
-//   // Statistics (will be populated from database)
-//   stats = [
-//     {
-//       value: 0,
-//       label: 'Events Organized',
-//       icon: 'fas fa-calendar-check',
-//       gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-//     },
-//     {
-//       value: 0,
-//       label: 'Professional Planners',
-//       icon: 'fas fa-users',
-//       gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
-//     },
-//     {
-//       value: 0,
-//       label: 'Expert Staff Members',
-//       icon: 'fas fa-user-tie',
-//       gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
-//     }
-//   ];
-
-//   // Team Members
-//   teamMembers = [
-//     {
-//       name: 'Nikita Rawat',
-//       role: 'Awesome Cook',
-//       image: 'assets/team/member1.jpg' // Placeholder - add your images
-//     },
-//     {
-//       name: 'Aditya Pratap Singh',
-//       role: 'Team Lead',
-//       image: 'assets/team/member2.jpg'
-//     },
-//     {
-//       name: 'Aaron Prakash',
-//       role: 'Trustworthy Rizzler',
-//       image: 'assets/team/member3.jpg'
-//     },
-//     {
-//       name: 'Devanand B',
-//       role: 'Mr. Steal-yo-girl',
-//       image: 'assets/team/member4.jpg'
-//     },
-//     {
-//       name: 'Shane Sunny',
-//       role: 'Final Boss',
-//       image: 'assets/team/member5.jpg'
-//     }
-//   ];
-
-//   // Testimonials
-//   testimonials = [
-//     {
-//       text: 'Working with EventHub was an absolute pleasure! They transformed our corporate event into something truly spectacular. The attention to detail and professionalism exceeded all our expectations.',
-//       authorName: 'Anjali Mehta',
-//       authorTitle: 'CEO, TechCorp India',
-//       authorImage: 'assets/testimonials/person1.jpg',
-//       rating: 5
-//     },
-//     {
-//       text: 'Our wedding was a dream come true thanks to the EventHub team. From planning to execution, everything was flawless. They made our special day truly unforgettable!',
-//       authorName: 'Rohan & Priya',
-//       authorTitle: 'Happy Couple',
-//       authorImage: 'assets/testimonials/person2.jpg',
-//       rating: 5
-//     },
-//     {
-//       text: 'The team handled our annual conference with such expertise and care. Every detail was perfect, and our attendees were thoroughly impressed. Highly recommended!',
-//       authorName: 'Dr. Suresh Kumar',
-//       authorTitle: 'Director, Medical Association',
-//       authorImage: 'assets/testimonials/person3.jpg',
-//       rating: 5
-//     },
-//     {
-//       text: 'EventHub made our product launch a massive success. Their creativity and execution capabilities are top-notch. We will definitely work with them again!',
-//       authorName: 'Neha Gupta',
-//       authorTitle: 'Marketing Head, StartupXYZ',
-//       authorImage: 'assets/testimonials/person4.jpg',
-//       rating: 5
-//     }
-//   ];
-
-//   constructor(private httpService: HttpService) {}
-
-//   ngOnInit(): void {
-//     this.loadStatistics();
-//   }
-
-//   // Load live statistics from database
-//   loadStatistics(): void {
-//     // Get total events
-//     this.httpService.GetAllevents().subscribe(
-//       (events: any) => {
-//         this.stats[0].value = events.length;
-//       },
-//       error => console.error('Error loading events:', error)
-//     );
-
-//     // Get total planners (users with PLANNER role)
-//     // You'll need to add this endpoint to your backend
-//     this.httpService.getUsersByRole('PLANNER').subscribe(
-//       (planners: any) => {
-//         this.stats[1].value = planners.length;
-//       },
-//         (error: any) => {
-//         console.error('Error loading planners:', error);
-//         // Fallback to counting from users endpoint if available
-//         this.stats[1].value = 15; // Placeholder
-//       }
-//     );
-
-//     // Get total staff (users with STAFF role)
-//     this.httpService.getUsersByRole('STAFF').subscribe(
-//       (staff: any) => {
-//         this.stats[2].value = staff.length;
-//       },
-//         (error: any) => {
-//         console.error('Error loading staff:', error);
-//         // Fallback
-//         this.stats[2].value = 25; // Placeholder
-//       }
-//     );
-//   }
-
-//   // Testimonial Carousel Methods
-//   nextTestimonial(): void {
-//     if (this.isAnimating) return;
-    
-//     this.isAnimating = true;
-//     this.currentTestimonialIndex = (this.currentTestimonialIndex + 1) % this.testimonials.length;
-//     this.updateCarousel();
-    
-//     setTimeout(() => {
-//       this.isAnimating = false;
-//     }, 500);
-//   }
-
-//   previousTestimonial(): void {
-//     if (this.isAnimating) return;
-    
-//     this.isAnimating = true;
-//     this.currentTestimonialIndex = this.currentTestimonialIndex === 0 
-//       ? this.testimonials.length - 1 
-//       : this.currentTestimonialIndex - 1;
-//     this.updateCarousel();
-    
-//     setTimeout(() => {
-//       this.isAnimating = false;
-//     }, 500);
-//   }
-
-//   goToTestimonial(index: number): void {
-//     if (this.isAnimating || index === this.currentTestimonialIndex) return;
-    
-//     this.isAnimating = true;
-//     this.currentTestimonialIndex = index;
-//     this.updateCarousel();
-    
-//     setTimeout(() => {
-//       this.isAnimating = false;
-//     }, 500);
-//   }
-
-//   private updateCarousel(): void {
-//     if (this.testimonialTrack) {
-//       const offset = -this.currentTestimonialIndex * 100;
-//       this.testimonialTrack.nativeElement.style.transform = `translateX(${offset}%)`;
-//     }
-//   }
-// }
-
-
-
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { HttpClientJsonpModule } from '@angular/common/http';
@@ -299,30 +81,34 @@ export class HomeComponent implements OnInit, OnDestroy {
   teamMembers = [
     {
       name: 'Nikita Rawat',
-      role: 'Awesome Cook',
+      // role: 'Awesome Cook',
+      role: ' ',
       // image: 'https://i.pravatar.cc/500?img=45'
       image: 'assets/team/Nikita.jpg'
     },
     {
       name: 'Aditya Pratap Singh',
-      role: 'Team Lead',
-      // image: 'https://i.pravatar.cc/500?img=12'
+      // role: 'Team Lead',
+      role: ' ',
       image: 'assets/team/Aditya.jpg'
     },
     {
       name: 'Aaron Prakash',
-      role: 'Trustworthy Rizzler',
+      // role: 'Trustworthy Rizzler',
+      role: ' ',
       image: 'assets/team/Aaron.jpg'
     },
     {
       name: 'Devanand B',
-      role: 'Mr. Steal-yo-girl',
+      // role: 'Mr. Steal-yo-girl',
+      role: ' ',
       image: 'assets/team/Devanand.jpg'
     },
     {
       name: 'Shane Sunny',
-      role: 'Final Boss',
-      image: 'https://i.pravatar.cc/500?img=15'
+      // role: 'Final Boss',
+      role: ' ',
+      image: 'assets/team/Shane.jpg'
     }
   ];
 
@@ -378,15 +164,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.httpService.GetAllevents().subscribe(
       (events: any) => {
         // Filter only completed events (REMOVED ON 19/01/2026)
-        // const completedEvents = events.filter((event: any) => 
-        //   event.status && event.status.toLowerCase() === 'completed'
-        // );
-        // this.stats[0].value = completedEvents.length;
+        const completedEvents = events.filter((event: any) => 
+          event.status && event.status.toLowerCase() === 'completed'
+        );
+        this.stats[0].value = completedEvents.length;
         this.stats[0].value = events.length;
 
         // If no completed events, show total events count
-        // if (completedEvents.length === 0) {
-        if (events.length === 0) {
+        if (completedEvents.length === 0) {
+        // if (events.length === 0) {
           this.stats[0].value = events.length;
           console.log('No completed events found. Showing total events:', events.length);
         }

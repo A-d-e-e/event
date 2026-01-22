@@ -44,18 +44,21 @@ public class UserService implements UserDetailsService{
             user.getUsername(),
             user.getPassword(),
             new ArrayList<>());
- 
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     public List<User> getUsersByRole(String role) {
         return userRepository.findByRole(role);
     }
- 
- 
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
- 
- 

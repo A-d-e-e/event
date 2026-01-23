@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { HttpClientJsonpModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -21,31 +22,36 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: 'Weddings',
       subtitle: 'Dream Ceremonies',
       // image: 'https://www.focuzstudios.in/wp-content/uploads/2017/11/tamil-wedding-photography-in-bangalore-1-9.jpg'
-       image: 'assets/events/wedding.jpg'
+       image: 'assets/events/wedding.jpg',
+       sectionId: 'weddings'
     },
     {
       title: 'Private Get-Togethers',
       subtitle: 'Intimate Celebrations',
       // image: 'https://media.istockphoto.com/id/868935172/photo/heres-to-tonight.jpg?s=612x612&w=0&k=20&c=v1ceJ9aZwI43rPaQeceEx5L6ODyWFVwqxqpadC2ljG0='
-      image: 'assets/events/get_together.avif'
+      image: 'assets/events/get_together.avif',
+      sectionId: 'private'
     },
     {
       title: 'Festivals & Cultural',
       subtitle: 'Cultural Excellence',
       // image: 'https://img.freepik.com/free-photo/portrait-holi-powder-colors-celebration_23-2151960850.jpg?semt=ais_hybrid&w=740&q=80'
-      image: 'assets/events/festival.avif'
+      image: 'assets/events/festival.avif',
+      sectionId: 'festivals'
     },
     {
       title: 'Concerts',
       subtitle: 'Grand Exhibitions',
       // image: 'https://cdn.i-scmp.com/sites/default/files/styles/1020x680/public/d8/images/methode/2019/11/10/92a6b3ca-039a-11ea-ab68-c2fa11fa07a6_image_hires_201823.JPG?itok=SjBqvmYT&v=1573388310'
-      image:'assets/events/concert.avif'
+      image:'assets/events/concert.avif',
+      sectionId: 'concerts'
     },
     {
       title: 'Corporate Events',
       subtitle: 'Professional Excellence',
       // image: 'https://pbs.twimg.com/media/G8dEhDmbQAE3tZU.jpg'
-      image:'assets/events/corporate.avif'
+      image:'assets/events/corporate.avif',
+      sectionId: 'corporate'
     }
   ];
 
@@ -144,7 +150,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadStatistics();
@@ -219,6 +225,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
+  // Gallery navigation
+  navigateToGallery(sectionId: string): void {
+    this.router.navigate(['/gallery'], { fragment: sectionId });
+  }
   // Auto-scroll testimonials every 3 seconds
   startAutoScroll(): void {
     this.autoScrollInterval = setInterval(() => {

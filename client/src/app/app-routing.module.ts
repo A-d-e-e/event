@@ -16,6 +16,7 @@ import { EventMessagesComponent } from './eventmessage/event-messages.component'
 import { StaffMessagesComponent } from './staffmessage/staff-messages.component';
 import { HomeComponent } from './home/home.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { GalleryComponent } from './gallery/gallery.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'event-messages', component: EventMessagesComponent },      // For Planner
   { path: 'staff-messages', component: StaffMessagesComponent },  
   { path: 'forgot-password', component: ForgotPasswordComponent},
+  { path: 'gallery', component: GalleryComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 
   { path: '**', redirectTo: '/home', pathMatch: 'full' },

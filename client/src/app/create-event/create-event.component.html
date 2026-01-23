@@ -1,46 +1,54 @@
 <div class="create-event-container">
+  
   <!-- Page Header -->
   <div class="page-header">
     <h1 class="page-title">
       <span class="header-icon">{{ isUpdateMode ? '✏️' : '📅' }}</span>
       {{ isUpdateMode ? 'Update Event' : 'Create Event' }}
     </h1>
-    <p class="page-subtitle">{{ isUpdateMode ? 'Modify event details below' : 'Plan and schedule your upcoming events' }}</p>
+    <p class="page-subtitle">
+      {{ isUpdateMode ? 'Modify event details below' : 'Plan and schedule your upcoming events' }}
+    </p>
   </div>
-
+ 
   <!-- Success Message -->
   <div class="alert alert-success" *ngIf="showMessage">
     <span class="alert-icon">✓</span>
     <span class="alert-text">{{ responseMessage }}</span>
-    <button class="alert-close" (click)="closeAlert()">✕</button>
+    <button class="alert-close" (click)="closeAlert()">×</button>
   </div>
-
+ 
   <!-- Error Message -->
   <div class="alert alert-error" *ngIf="showError">
     <span class="alert-icon">⚠</span>
     <span class="alert-text">{{ errorMessage }}</span>
-    <button class="alert-close" (click)="closeAlert()">✕</button>
+    <button class="alert-close" (click)="closeAlert()">×</button>
   </div>
-
+ 
   <!-- Create/Update Event Form -->
   <div class="form-section">
     <div class="section-header">
       <h2 class="section-title">
-        <span class="section-icon">{{ isUpdateMode ? '✏️' : '📝' }}</span>
+        <span class="section-icon">{{ isUpdateMode ? '✏️' : '➕' }}</span>
         Event Details
       </h2>
-      <p class="section-description">{{ isUpdateMode ? 'Update the event information' : 'Fill in the information below to create a new event' }}</p>
+      <p class="section-description">
+        {{ isUpdateMode ? 'Update the event information' : 'Fill in the information below to create a new event' }}
+      </p>
     </div>
-
+ 
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
       <div class="form-grid">
+        
         <!-- Event Title -->
         <div class="form-group">
-          <label for="title" class="form-label">Event Title <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="title" 
-            formControlName="title" 
+          <label for="title" class="form-label">
+            Event Title <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
             class="form-input"
             placeholder="Enter event title"
             [class.error-input]="itemForm.get('title')?.invalid && itemForm.get('title')?.touched">
@@ -48,14 +56,16 @@
             Event title is required
           </div>
         </div>
-
+ 
         <!-- Location -->
         <div class="form-group">
-          <label for="location" class="form-label">Location <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="location" 
-            formControlName="location" 
+          <label for="location" class="form-label">
+            Location <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="location"
+            formControlName="location"
             class="form-input"
             placeholder="Enter event location"
             [class.error-input]="itemForm.get('location')?.invalid && itemForm.get('location')?.touched">
@@ -63,13 +73,15 @@
             Location is required
           </div>
         </div>
-
+ 
         <!-- Date & Time -->
         <div class="form-group">
-          <label for="dateTime" class="form-label">Date & Time <span class="required">*</span></label>
-          <input 
-            type="datetime-local" 
-            id="dateTime" 
+          <label for="dateTime" class="form-label">
+            Date & Time <span class="required">*</span>
+          </label>
+          <input
+            type="datetime-local"
+            id="dateTime"
             formControlName="dateTime"
             class="form-input"
             [min]="minDate"
@@ -78,12 +90,14 @@
             Date and time is required
           </div>
         </div>
-
+ 
         <!-- Status -->
         <div class="form-group">
-          <label for="status" class="form-label">Event Status <span class="required">*</span></label>
-          <select 
-            id="status" 
+          <label for="status" class="form-label">
+            Event Status <span class="required">*</span>
+          </label>
+          <select
+            id="status"
             formControlName="status"
             class="form-select"
             [class.error-input]="itemForm.get('status')?.invalid && itemForm.get('status')?.touched">
@@ -97,13 +111,15 @@
             Status is required
           </div>
         </div>
-
+ 
         <!-- Description -->
         <div class="form-group full-width">
-          <label for="description" class="form-label">Description <span class="required">*</span></label>
-          <textarea 
-            id="description" 
-            formControlName="description" 
+          <label for="description" class="form-label">
+            Description <span class="required">*</span>
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
             class="form-textarea"
             rows="4"
             placeholder="Enter event description"
@@ -112,22 +128,30 @@
             Description is required
           </div>
         </div>
+ 
       </div>
-
+ 
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">
-          <span class="btn-icon">{{ isUpdateMode ? '✓' : '➕' }}</span>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="itemForm.invalid">
+          <span class="btn-icon">{{ isUpdateMode ? '💾' : '➕' }}</span>
           <span class="btn-text">{{ isUpdateMode ? 'Update Event' : 'Create Event' }}</span>
         </button>
-        <button type="button" class="btn btn-secondary" (click)="isUpdateMode ? cancelUpdate() : itemForm.reset()">
-          <span class="btn-icon">{{ isUpdateMode ? '✕' : '🔄' }}</span>
+ 
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="isUpdateMode ? cancelUpdate() : itemForm.reset()">
+          <span class="btn-icon">{{ isUpdateMode ? '✖' : '🔄' }}</span>
           <span class="btn-text">{{ isUpdateMode ? 'Cancel' : 'Reset Form' }}</span>
         </button>
       </div>
     </form>
   </div>
-
-  <!-- Search Section -->
+ 
+  <!-- ✅ FIXED: Search Section with Auto-Search -->
   <div class="search-section">
     <div class="section-header">
       <h2 class="section-title">
@@ -136,25 +160,27 @@
       </h2>
       <p class="section-description">Search and manage your created events</p>
     </div>
-
+ 
     <div class="search-bar">
-      <input 
-        type="text" 
-        [(ngModel)]="searchQuery" 
-        (keyup.enter)="onSearch()"
+      <!-- ✅ AUTO-SEARCH: Triggers search on every keystroke -->
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="onSearch()"
         placeholder="Search by Event ID or Title..."
         class="search-input">
-      <button class="btn btn-search" (click)="onSearch()">
-        <span class="btn-icon">🔍</span>
-        <span class="btn-text">Search</span>
-      </button>
-      <button class="btn btn-secondary" (click)="searchQuery = ''; loadEvents()">
-        <span class="btn-icon">🔄</span>
+ 
+      <!-- ✅ FIXED: Clear button -->
+      <button
+        class="btn btn-secondary"
+        (click)="searchQuery = ''; loadAllEvents()"
+        *ngIf="searchQuery">
+        <span class="btn-icon">✖</span>
         <span class="btn-text">Clear</span>
       </button>
     </div>
   </div>
-
+ 
   <!-- Events List -->
   <div class="events-list-section">
     <div class="section-header">
@@ -164,7 +190,7 @@
         <span class="event-count">({{ events.length }})</span>
       </h2>
     </div>
-
+ 
     <!-- Events Table -->
     <div class="table-wrapper" *ngIf="paginatedEvents.length > 0">
       <table class="events-table">
@@ -181,13 +207,13 @@
         </thead>
         <tbody>
           <tr *ngFor="let event of paginatedEvents">
-            <td class="event-id">#{{ event.eventID }}</td>
+            <td class="event-id">{{ event.eventID }}</td>
             <td class="event-title">{{ event.title }}</td>
             <td class="event-description">{{ event.description }}</td>
             <td class="event-datetime">
               <span class="datetime-badge">
                 <i class="bi bi-calendar3"></i>
-                {{ event.dateTime | date: 'medium' }}
+                {{ event.dateTime | date:'medium' }}
               </span>
             </td>
             <td class="event-location">
@@ -197,21 +223,28 @@
               </span>
             </td>
             <td>
-              <span class="status-badge" [ngClass]="{
-                'status-upcoming': event.status === 'upcoming',
-                'status-ongoing': event.status === 'ongoing',
-                'status-completed': event.status === 'completed',
-                'status-cancelled': event.status === 'cancelled'
-              }">
+              <span class="status-badge"
+                [ngClass]="{
+                  'status-upcoming': event.status === 'upcoming',
+                  'status-ongoing': event.status === 'ongoing',
+                  'status-completed': event.status === 'completed',
+                  'status-cancelled': event.status === 'cancelled'
+                }">
                 {{ event.status | titlecase }}
               </span>
             </td>
             <td class="actions-cell">
               <div class="action-buttons">
-                <button class="btn-action btn-edit" (click)="editEvent(event)" title="Edit Event">
+                <button
+                  class="btn-action btn-edit"
+                  (click)="editEvent(event)"
+                  title="Edit Event">
                   <i class="bi bi-pencil-square"></i>
                 </button>
-                <button class="btn-action btn-delete" (click)="deleteEvent(event.eventID)" title="Delete Event">
+                <button
+                  class="btn-action btn-delete"
+                  (click)="deleteEvent(event.eventID)"
+                  title="Delete Event">
                   <i class="bi bi-trash3"></i>
                 </button>
               </div>
@@ -220,36 +253,41 @@
         </tbody>
       </table>
     </div>
-
+ 
     <!-- Empty State -->
     <div class="empty-state" *ngIf="paginatedEvents.length === 0">
       <div class="empty-icon">📭</div>
       <h3 class="empty-title">No Events Found</h3>
-      <p class="empty-text">{{ searchQuery ? 'Try a different search term' : 'Start by creating your first event above' }}</p>
+      <p class="empty-text">
+        {{ searchQuery ? 'Try a different search term' : 'Start by creating your first event above' }}
+      </p>
     </div>
-
+ 
     <!-- Pagination -->
     <div class="pagination" *ngIf="events.length > 0">
-      <button 
-        class="btn btn-pagination" 
-        (click)="previousPage()" 
+      <button
+        class="btn btn-pagination"
+        (click)="previousPage()"
         [disabled]="currentPage === 1">
-        <span class="pagination-icon">←</span>
+        <span class="pagination-icon">‹</span>
         <span class="pagination-text">Previous</span>
       </button>
+ 
       <span class="page-info">
         <span class="page-label">Page</span>
         <span class="current-page">{{ currentPage }}</span>
         <span class="separator">of</span>
         <span class="total-pages">{{ totalPages }}</span>
       </span>
-      <button 
-        class="btn btn-pagination" 
-        (click)="nextPage()" 
-        [disabled]="currentPage === totalPages">
+ 
+      <button
+        class="btn btn-pagination"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages">
         <span class="pagination-text">Next</span>
-        <span class="pagination-icon">→</span>
+        <span class="pagination-icon">›</span>
       </button>
     </div>
   </div>
+ 
 </div>

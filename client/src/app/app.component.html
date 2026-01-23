@@ -25,10 +25,10 @@
                                 <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
                             </linearGradient>
                         </defs>
-                        <circle cx="25" cy="25" r="23" fill="url(#logoGradient)" opacity="0.2"/>
-                        <path d="M25 10 L28 20 L38 20 L30 27 L33 37 L25 30 L17 37 L20 27 L12 20 L22 20 Z" 
-                              fill="url(#logoGradient)"/>
-                        <circle cx="25" cy="25" r="3" fill="white"/>
+                        <circle cx="25" cy="25" r="23" fill="url(#logoGradient)" opacity="0.2" />
+                        <path d="M25 10 L28 20 L38 20 L30 27 L33 37 L25 30 L17 37 L20 27 L12 20 L22 20 Z"
+                            fill="url(#logoGradient)" />
+                        <circle cx="25" cy="25" r="3" fill="white" />
                     </svg>
                     <div class="brand-text">
                         <span class="brand-name">Eventra</span>
@@ -38,8 +38,8 @@
             </a>
 
             <!-- Mobile Toggle Button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -68,14 +68,16 @@
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="IsLoggin && roleName === 'PLANNER'">
-                        <a class="nav-link nav-link-custom" [routerLink]="['/resource-allocate']" routerLinkActive="active">
+                        <a class="nav-link nav-link-custom" [routerLink]="['/resource-allocate']"
+                            routerLinkActive="active">
                             <i class="bi bi-diagram-3"></i>
                             <span>Allocate Resources</span>
                         </a>
                     </li>
                     <!-- NEW: PLANNER MESSAGE LINK -->
                     <li class="nav-item" *ngIf="IsLoggin && roleName === 'PLANNER'">
-                        <a class="nav-link nav-link-custom" [routerLink]="['/event-messages']" routerLinkActive="active">
+                        <a class="nav-link nav-link-custom" [routerLink]="['/event-messages']"
+                            routerLinkActive="active">
                             <i class="bi bi-chat-dots"></i>
                             <span>Messages</span>
                         </a>
@@ -90,7 +92,8 @@
                     </li>
                     <!-- NEW: STAFF MESSAGE LINK -->
                     <li class="nav-item" *ngIf="IsLoggin && roleName === 'STAFF'">
-                        <a class="nav-link nav-link-custom" [routerLink]="['/staff-messages']" routerLinkActive="active">
+                        <a class="nav-link nav-link-custom" [routerLink]="['/staff-messages']"
+                            routerLinkActive="active">
                             <i class="bi bi-chat-dots"></i>
                             <span>Messages</span>
                         </a>
@@ -98,7 +101,8 @@
 
                     <!-- CLIENT Navigation -->
                     <li class="nav-item" *ngIf="IsLoggin && roleName === 'CLIENT'">
-                        <a class="nav-link nav-link-custom" [routerLink]="['/booking-details']" routerLinkActive="active">
+                        <a class="nav-link nav-link-custom" [routerLink]="['/booking-details']"
+                            routerLinkActive="active">
                             <i class="bi bi-book"></i>
                             <span>Booking Details</span>
                         </a>
@@ -147,7 +151,7 @@
             <div class="container">
                 <div class="row g-4">
                     <!-- Company Info -->
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-3 col-md-6">
                         <div class="footer-section">
                             <div class="footer-logo">
                                 <svg class="footer-logo-svg" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
@@ -157,14 +161,14 @@
                                             <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
                                         </linearGradient>
                                     </defs>
-                                    <path d="M25 10 L28 20 L38 20 L30 27 L33 37 L25 30 L17 37 L20 27 L12 20 L22 20 Z" 
-                                          fill="url(#footerLogoGradient)"/>
+                                    <path d="M25 10 L28 20 L38 20 L30 27 L33 37 L25 30 L17 37 L20 27 L12 20 L22 20 Z"
+                                        fill="url(#footerLogoGradient)" />
                                 </svg>
                                 <span class="footer-brand-name">Eventra</span>
                             </div>
                             <p class="footer-description">
-                                Your premier event management platform. We transform your vision into unforgettable experiences 
-                                through innovative planning and seamless execution.
+                                Your premier event management platform. We transform your vision into unforgettable
+                                experiences through innovative planning and seamless execution.
                             </p>
                             <div class="footer-social">
                                 <a href="#" class="social-link" aria-label="Facebook">
@@ -188,23 +192,10 @@
                         <div class="footer-section">
                             <h5 class="footer-title">Quick Links</h5>
                             <ul class="footer-links">
-                                <li><a href="#" [routerLink]="['/dashboard']">Dashboard</a></li>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Services</a></li>
-                                <li><a href="#">Contact</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Services -->
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-section">
-                            <h5 class="footer-title">Our Services</h5>
-                            <ul class="footer-links">
-                                <li><a href="#">Event Planning</a></li>
-                                <li><a href="#">Resource Management</a></li>
-                                <li><a href="#">Vendor Coordination</a></li>
-                                <li><a href="#">Budget Tracking</a></li>
+                                <li><a routerLink="/dashboard">Dashboard</a></li>
+                                <li><a routerLink="/create-event">Create Event</a></li>
+                                <li><a routerLink="/gallery">Gallery</a></li>
+                                <li><a routerLink="/booking-details">Book Event</a></li>
                             </ul>
                         </div>
                     </div>
@@ -216,7 +207,7 @@
                             <ul class="footer-contact">
                                 <li>
                                     <i class="bi bi-geo-alt-fill"></i>
-                                    <span>123 Event Street, Chennai<br>Tamil Nadu, India 600001</span>
+                                    <span>Sector V, Rephiral Road, 662-67<br>Bhubaneswar, Odisha, India</span>
                                 </li>
                                 <li>
                                     <i class="bi bi-telephone-fill"></i>
@@ -224,9 +215,38 @@
                                 </li>
                                 <li>
                                     <i class="bi bi-envelope-fill"></i>
-                                    <span>hello@eventra.com</span>
+                                    <span>contact@eventra.com</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-clock-fill"></i>
+                                    <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Location Map Section -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-section">
+                            <h5 class="footer-title">
+                                <i class="bi bi-pin-map-fill"></i>
+                                Find Us
+                            </h5>
+                            <div class="map-container">
+                                <iframe class="location-map" [src]="mapUrl" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
+                                <div class="map-overlay">
+                                    <button class="map-view-btn" (click)="openMapInNewTab()">
+                                        <i class="bi bi-geo-alt"></i>
+                                        View on Google Maps
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="map-address">
+                                <i class="bi bi-building"></i>
+                                <strong>Eventra Headquarters</strong>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -237,12 +257,12 @@
         <div class="footer-bottom">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-6 text-center text-md-start">
+                    <div class="col-md-6">
                         <p class="footer-copyright">
                             © 2026 Eventra. All rights reserved.
                         </p>
                     </div>
-                    <div class="col-md-6 text-center text-md-end">
+                    <div class="col-md-6">
                         <ul class="footer-bottom-links">
                             <li><a href="#">Privacy Policy</a></li>
                             <li><a href="#">Terms of Service</a></li>

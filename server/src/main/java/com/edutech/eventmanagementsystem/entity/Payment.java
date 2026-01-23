@@ -1,5 +1,6 @@
 package com.edutech.eventmanagementsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -9,49 +10,43 @@ public class Payment {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long paymentID;
     
-    @ManyToOne
-    @JoinColumn(name = "event_eventID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", referencedColumnName = "event_id")
+    @JsonIgnore
     private Event event;
     
     @Column(nullable = false)
     private Double amount;
     
-    @Column(nullable = false)
-    private String paymentMethod; // UPI, Card, NetBanking
+    @Column(name = "payment_method")
+    private String paymentMethod;
     
-    @Column(nullable = false)
-    private String paymentStatus; // PENDING, SUCCESS, FAILED
+    @Column(name = "payment_status", nullable = false)
+    private String paymentStatus;
     
-    @Column
+    @Column(name = "transaction_id")
     private String transactionId;
     
-    @Column
+    @Column(name = "upi_id")
     private String upiId;
     
-    @Column
+    @Column(name = "payment_date")
     private LocalDateTime paymentDate;
     
-    @Column
+    @Column(name = "customer_name")
     private String customerName;
     
-    @Column
+    @Column(name = "customer_email")
     private String customerEmail;
     
-    @Column
+    @Column(name = "customer_phone")
     private String customerPhone;
     
     // Constructors
     public Payment() {
-        this.paymentDate = LocalDateTime.now();
-        this.paymentStatus = "PENDING";
-    }
-    
-    public Payment(Event event, Double amount, String paymentMethod) {
-        this.event = event;
-        this.amount = amount;
-        this.paymentMethod = paymentMethod;
         this.paymentDate = LocalDateTime.now();
         this.paymentStatus = "PENDING";
     }

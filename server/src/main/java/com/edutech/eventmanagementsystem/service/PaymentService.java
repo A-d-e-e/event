@@ -2,6 +2,7 @@ package com.edutech.eventmanagementsystem.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.edutech.eventmanagementsystem.entity.Event;
 import com.edutech.eventmanagementsystem.entity.Payment;
@@ -22,88 +23,140 @@ public class PaymentService {
     @Autowired
     private EventRepository eventRepository;
 
-    /**
-     * Initiate a payment for an event
-     * @param eventId Event ID
-     * @param payment Payment details
-     * @return Created payment object
-     */
+    @Transactional
     public Payment initiatePayment(Long eventId, Payment payment) {
-        Event event = eventRepository.findById(eventId)
-            .orElseThrow(() -> new EntityNotFoundException("Event not found with ID: " + eventId));
-        
-        payment.setEvent(event);
-        payment.setPaymentStatus("PENDING");
-        payment.setPaymentDate(LocalDateTime.now());
-        
-        return paymentRepository.save(payment);
+        try {
+            System.out.println("=== INITIATING PAYMENT ===");
+            System.out.println("Event ID: " + eventId);
+            
+            Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with ID: " + eventId));
+            
+            System.out.println("Event Title: " + event.getTitle());
+            
+            payment.setEvent(event);
+            payment.setPaymentStatus("PENDING");
+            payment.setPaymentDate(LocalDateTime.now());
+            
+            Payment saved = paymentRepository.save(payment);
+            paymentRepository.flush();
+            
+            System.out.println("✅ Payment initiated successfully");
+            System.out.println("   Payment ID: " + saved.getPaymentID());
+            
+            return saved;
+        } catch (Exception e) {
+            System.err.println("❌ ERROR in initiatePayment: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
-    /**
-     * Process UPI payment (dummy implementation)
-     * @param paymentId Payment ID
-     * @param upiId UPI ID used for payment
-     * @return Updated payment object
-     */
+    @Transactional
     public Payment processUpiPayment(Long paymentId, String upiId) {
-        Payment payment = paymentRepository.findById(paymentId)
-            .orElseThrow(() -> new EntityNotFoundException("Payment not found with ID: " + paymentId));
-        
-        // Simulate payment processing
-        payment.setUpiId(upiId);
-        payment.setPaymentStatus("SUCCESS");
-        payment.setTransactionId(generateTransactionId());
-        payment.setPaymentDate(LocalDateTime.now());
-        
-        return paymentRepository.save(payment);
+        try {
+            System.out.println("=== PROCESSING UPI PAYMENT ===");
+            System.out.println("Payment ID: " + paymentId);
+            
+            Payment payment = paymentRepository.findById(paymentId).orElse(null);
+            
+            if (payment == null) {
+                System.err.println("❌ Payment not found: " + paymentId);
+                throw new EntityNotFoundException("Payment not found with ID: " + paymentId);
+            }
+            
+            Event event = payment.getEvent();
+            if (event == null) {
+                throw new RuntimeException("Payment has no associated event");
+            }
+            
+            System.out.println("Event ID: " + event.getEventID());
+            
+            payment.setUpiId(upiId);
+            payment.setPaymentStatus("SUCCESS");
+            payment.setTransactionId(generateTransactionId());
+            payment.setPaymentDate(LocalDateTime.now());
+            
+            Payment savedPayment = paymentRepository.save(payment);
+            paymentRepository.flush();
+            
+            System.out.println("✅ Payment updated: " + savedPayment.getTransactionId());
+            
+            event.setPaymentCompleted(true);
+            event.setPaymentStatus("PAID");
+            Event savedEvent = eventRepository.save(event);
+            eventRepository.flush();
+            
+            System.out.println("✅ Event updated: payment_completed=" + savedEvent.getPaymentCompleted());
+            
+            return savedPayment;
+            
+        } catch (Exception e) {
+            System.err.println("❌ ERROR: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
-    /**
-     * Get payment by ID
-     * @param paymentId Payment ID
-     * @return Payment object
-     */
     public Payment getPaymentById(Long paymentId) {
         return paymentRepository.findById(paymentId)
-            .orElseThrow(() -> new EntityNotFoundException("Payment not found with ID: " + paymentId));
+            .orElseThrow(() -> new EntityNotFoundException("Payment not found"));
     }
 
-    /**
-     * Get all payments
-     * @return List of all payments
-     */
     public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
     }
 
-    /**
-     * Get payments by event ID
-     * @param eventId Event ID
-     * @return List of payments for the event
-     */
     public List<Payment> getPaymentsByEventId(Long eventId) {
-        return paymentRepository.findAll().stream()
-            .filter(payment -> payment.getEvent() != null && 
-                             payment.getEvent().getEventID().equals(eventId))
-            .collect(java.util.stream.Collectors.toList());
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) return List.of();
+        return paymentRepository.findByEvent(event);
     }
 
-    /**
-     * Generate a random transaction ID
-     * @return Transaction ID string
-     */
-    private String generateTransactionId() {
-        String prefix = "TXN";
-        Random random = new Random();
-        long number = 100000000000L + (long)(random.nextDouble() * 900000000000L);
-        return prefix + number;
+    public boolean hasSuccessfulPayment(Long eventId) {
+        try {
+            System.out.println("=== CHECKING PAYMENT STATUS ===");
+            System.out.println("Event ID: " + eventId);
+            
+            Event event = eventRepository.findById(eventId).orElse(null);
+            if (event == null) {
+                System.out.println("❌ Event not found");
+                return false;
+            }
+            
+            System.out.println("payment_completed: " + event.getPaymentCompleted());
+            
+            if (Boolean.TRUE.equals(event.getPaymentCompleted())) {
+                System.out.println("✅ Event is PAID");
+                return true;
+            }
+            
+            boolean hasPayment = paymentRepository.existsByEventAndPaymentStatus(event, "SUCCESS");
+            System.out.println("Payment record exists: " + hasPayment);
+            
+            if (hasPayment) {
+                System.out.println("⚠️ FIXING event status");
+                event.setPaymentCompleted(true);
+                event.setPaymentStatus("PAID");
+                eventRepository.save(event);
+                eventRepository.flush();
+            }
+            
+            return hasPayment;
+            
+        } catch (Exception e) {
+            System.err.println("❌ ERROR: " + e.getMessage());
+            return false;
+        }
     }
 
-    /**
-     * Calculate total amount for an event based on allocations
-     * @param event Event object with allocations
-     * @return Total amount
-     */
+    public Payment getLatestSuccessfulPayment(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) return null;
+        return paymentRepository.findFirstByEventAndPaymentStatusOrderByPaymentDateDesc(event, "SUCCESS")
+            .orElse(null);
+    }
+
     public Double calculateTotalAmount(Event event) {
         if (event == null || event.getAllocations() == null || event.getAllocations().isEmpty()) {
             return 0.0;
@@ -117,5 +170,9 @@ public class PaymentService {
                 return 0.0;
             })
             .sum();
+    }
+
+    private String generateTransactionId() {
+        return "TXN" + System.currentTimeMillis() + new Random().nextInt(1000);
     }
 }

@@ -71,19 +71,19 @@
   margin-bottom: 0.8rem;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #ffd700 !important;
+  color: #f7f7f7 !important;
   display: block;
   visibility: visible;
   opacity: 1;
   position: relative;
   z-index: 10;
-  text-shadow: 
-    0 0 60px rgba(255, 215, 0, 1),
-    0 0 40px rgba(255, 215, 0, 0.8),
-    0 0 20px rgba(255, 215, 0, 0.6),
-    0 4px 8px rgba(0, 0, 0, 1);
+  // text-shadow: 
+  //   0 0 60px rgba(255, 215, 0, 1),
+  //   0 0 40px rgba(255, 215, 0, 0.8),
+  //   0 0 20px rgba(255, 215, 0, 0.6),
+  //   0 4px 8px rgba(0, 0, 0, 1);
   filter: brightness(1.3) contrast(1.2);
-  -webkit-text-fill-color: #ffd700;
+  -webkit-text-fill-color: #f5f5f1;
   background: none;
 }
 
@@ -192,10 +192,10 @@
   font-family: 'Playfair Display', serif;
   font-size: 2.5rem;
   font-weight: 800;
-  color: #ffd700;
+  color: #f4f4f0;
   margin-bottom: 0.5rem;
   display: block;
-  -webkit-text-fill-color: #ffd700;
+  -webkit-text-fill-color: #f2f1ee;
 }
 
 .stat-description {
@@ -444,7 +444,7 @@
       rgba(26, 26, 26, 0.88) 50%,
       rgba(10, 10, 10, 0.92) 100%
     ),
-    url('https://images.pexels.com/photos/1306791/pexels-photo-1306791.jpeg');
+    url('https://plus.unsplash.com/premium_photo-1664790560123-c5f839457591?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZXZlbnRzfGVufDB8fDB8fHww');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -530,17 +530,17 @@
   margin-bottom: 1.5rem;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #ffd700;
+  color: #eae6d4;
   display: block;
   visibility: visible;
   opacity: 1;
-  text-shadow: 
-    0 0 60px rgba(255, 215, 0, 1),
-    0 0 40px rgba(255, 215, 0, 0.8),
-    0 0 20px rgba(255, 215, 0, 0.6),
-    0 4px 8px rgba(0, 0, 0, 1);
+  // text-shadow: 
+  //   0 0 60px rgb(248, 244, 244),
+  //   0 0 40px rgba(250, 247, 247, 0.8),
+  //   0 0 20px rgba(237, 232, 232, 0.6),
+  //   0 4px 8px rgb(249, 246, 246);
   filter: brightness(1.3) contrast(1.2);
-  -webkit-text-fill-color: #ffd700;
+  -webkit-text-fill-color: #f5f2f2;
   background: none;
 }
 

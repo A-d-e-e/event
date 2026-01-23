@@ -22,6 +22,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { OtpService } from '../services/OtpService';
+import { GalleryComponent } from './gallery/gallery.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +38,7 @@ import { OtpService } from '../services/OtpService';
       BookingDetailsComponent,
       EventMessagesComponent,
       ForgotPasswordComponent,
+      GalleryComponent,
     StaffMessagesComponent
   ],
   imports: [

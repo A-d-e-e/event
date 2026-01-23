@@ -3,13 +3,10 @@
   <!-- Hero Section - 5 Expanding Frames -->
   <section class="hero-frames-section">
     <div class="frames-container">
-      <div 
-        class="event-frame" 
-        *ngFor="let event of eventTypes; let i = index"
-        [style.background-image]="'url(' + event.image + ')'"
-        [class.expanded]="hoveredIndex === i"
-        (mouseenter)="hoveredIndex = i"
-        (mouseleave)="hoveredIndex = null">
+      <div class="event-frame" *ngFor="let event of eventTypes; let i = index"
+        [style.background-image]="'url(' + event.image + ')'" [class.expanded]="hoveredIndex === i"
+        (mouseenter)="hoveredIndex = i" (mouseleave)="hoveredIndex = null" (click)="navigateToGallery(event.sectionId)"
+        style="cursor: pointer;">
         <div class="frame-overlay"></div>
         <div class="frame-content">
           <h2 class="frame-title">{{ event.title }}</h2>

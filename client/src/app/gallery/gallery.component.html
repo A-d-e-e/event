@@ -1,0 +1,178 @@
+<div class="gallery-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <span class="header-icon">🖼️</span>
+      <div class="header-text">
+        <h1 class="page-title">Event Gallery</h1>
+        <p class="page-subtitle">Memories from Our Finest Celebrations</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery Navigation -->
+  <div class="gallery-nav">
+    <button class="nav-btn" [class.active]="activeSection === 'weddings'" (click)="scrollToSection('weddings')">
+      <span class="nav-icon">💍</span>
+      <span class="nav-label">Weddings</span>
+    </button>
+    <button class="nav-btn" [class.active]="activeSection === 'private'" (click)="scrollToSection('private')">
+      <span class="nav-icon">🎉</span>
+      <span class="nav-label">Private Get-Togethers</span>
+    </button>
+    <button class="nav-btn" [class.active]="activeSection === 'festivals'" (click)="scrollToSection('festivals')">
+      <span class="nav-icon">🎭</span>
+      <span class="nav-label">Festivals & Cultural</span>
+    </button>
+    <button class="nav-btn" [class.active]="activeSection === 'concerts'" (click)="scrollToSection('concerts')">
+      <span class="nav-icon">🎸</span>
+      <span class="nav-label">Concerts</span>
+    </button>
+    <button class="nav-btn" [class.active]="activeSection === 'corporate'" (click)="scrollToSection('corporate')">
+      <span class="nav-icon">💼</span>
+      <span class="nav-label">Corporate Events</span>
+    </button>
+  </div>
+
+  <!-- WEDDINGS SECTION -->
+  <section id="weddings" class="gallery-section">
+    <div class="section-header">
+      <span class="section-badge">💍 Weddings</span>
+      <h2 class="section-title">Celebrating Love & Unity</h2>
+      <p class="section-description">
+        From intimate ceremonies to grand celebrations, we've captured the magic of countless love stories
+      </p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item" *ngFor="let image of weddingImages; let i = index"
+        (click)="openLightbox('weddings', i)">
+        <img [src]="image.url" [alt]="image.alt" loading="lazy">
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <span class="overlay-icon">🔍</span>
+            <p class="overlay-text">{{ image.caption }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVATE GET-TOGETHERS SECTION -->
+  <section id="private" class="gallery-section">
+    <div class="section-header">
+      <span class="section-badge">🎉 Private Get-Togethers</span>
+      <h2 class="section-title">Intimate Moments, Grand Memories</h2>
+      <p class="section-description">
+        Exclusive gatherings where friends and family create unforgettable moments together
+      </p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item" *ngFor="let image of privateImages; let i = index" (click)="openLightbox('private', i)">
+        <img [src]="image.url" [alt]="image.alt" loading="lazy">
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <span class="overlay-icon">🔍</span>
+            <p class="overlay-text">{{ image.caption }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FESTIVALS & CULTURAL SECTION -->
+  <section id="festivals" class="gallery-section">
+    <div class="section-header">
+      <span class="section-badge">🎭 Festivals & Cultural</span>
+      <h2 class="section-title">Celebrating Heritage & Tradition</h2>
+      <p class="section-description">
+        Vibrant cultural celebrations showcasing the rich tapestry of traditions and festivities
+      </p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item" *ngFor="let image of festivalImages; let i = index"
+        (click)="openLightbox('festivals', i)">
+        <img [src]="image.url" [alt]="image.alt" loading="lazy">
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <span class="overlay-icon">🔍</span>
+            <p class="overlay-text">{{ image.caption }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCERTS SECTION -->
+  <section id="concerts" class="gallery-section">
+    <div class="section-header">
+      <span class="section-badge">🎸 Concerts</span>
+      <h2 class="section-title">Live Music, Electric Energy</h2>
+      <p class="section-description">
+        Spectacular performances that brought crowds to their feet with unforgettable musical experiences
+      </p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item" *ngFor="let image of concertImages; let i = index"
+        (click)="openLightbox('concerts', i)">
+        <img [src]="image.url" [alt]="image.alt" loading="lazy">
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <span class="overlay-icon">🔍</span>
+            <p class="overlay-text">{{ image.caption }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORPORATE EVENTS SECTION -->
+  <section id="corporate" class="gallery-section">
+    <div class="section-header">
+      <span class="section-badge">💼 Corporate Events</span>
+      <h2 class="section-title">Professional Excellence Delivered</h2>
+      <p class="section-description">
+        From conferences to team building, we've powered countless professional gatherings
+      </p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item" *ngFor="let image of corporateImages; let i = index"
+        (click)="openLightbox('corporate', i)">
+        <img [src]="image.url" [alt]="image.alt" loading="lazy">
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <span class="overlay-icon">🔍</span>
+            <p class="overlay-text">{{ image.caption }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="lightbox-overlay" *ngIf="showLightbox" (click)="closeLightbox()">
+    <div class="lightbox-container" (click)="$event.stopPropagation()">
+      <button class="lightbox-close" (click)="closeLightbox()">✕</button>
+      <button class="lightbox-nav prev" (click)="previousImage()" *ngIf="currentImageIndex > 0">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="lightbox-nav next" (click)="nextImage()"
+        *ngIf="currentImageIndex < currentGalleryImages.length - 1">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <div class="lightbox-content" *ngIf="currentGalleryImages[currentImageIndex]">
+        <img [src]="currentGalleryImages[currentImageIndex].url" [alt]="currentGalleryImages[currentImageIndex].alt"
+          class="lightbox-image">
+        <div class="lightbox-caption">
+          <h3>{{ currentGalleryImages[currentImageIndex].caption }}</h3>
+          <p class="image-counter">{{ currentImageIndex + 1 }} / {{ currentGalleryImages.length }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" *ngIf="showBackToTop" (click)="scrollToTop()" [@fadeInOut]>
+    <i class="fas fa-arrow-up"></i>
+  </button>
+</div>

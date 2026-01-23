@@ -21,35 +21,30 @@ export class HomeComponent implements OnInit, OnDestroy {
     {
       title: 'Weddings',
       subtitle: 'Dream Ceremonies',
-      // image: 'https://www.focuzstudios.in/wp-content/uploads/2017/11/tamil-wedding-photography-in-bangalore-1-9.jpg'
-       image: 'assets/events/wedding.jpg',
-       sectionId: 'weddings'
+      image: 'assets/events/wedding.jpg',
+      sectionId: 'weddings'
     },
     {
       title: 'Private Get-Togethers',
       subtitle: 'Intimate Celebrations',
-      // image: 'https://media.istockphoto.com/id/868935172/photo/heres-to-tonight.jpg?s=612x612&w=0&k=20&c=v1ceJ9aZwI43rPaQeceEx5L6ODyWFVwqxqpadC2ljG0='
       image: 'assets/events/get_together.avif',
       sectionId: 'private'
     },
     {
       title: 'Festivals & Cultural',
       subtitle: 'Cultural Excellence',
-      // image: 'https://img.freepik.com/free-photo/portrait-holi-powder-colors-celebration_23-2151960850.jpg?semt=ais_hybrid&w=740&q=80'
       image: 'assets/events/festival.avif',
       sectionId: 'festivals'
     },
     {
       title: 'Concerts',
       subtitle: 'Grand Exhibitions',
-      // image: 'https://cdn.i-scmp.com/sites/default/files/styles/1020x680/public/d8/images/methode/2019/11/10/92a6b3ca-039a-11ea-ab68-c2fa11fa07a6_image_hires_201823.JPG?itok=SjBqvmYT&v=1573388310'
       image:'assets/events/concert.avif',
       sectionId: 'concerts'
     },
     {
       title: 'Corporate Events',
       subtitle: 'Professional Excellence',
-      // image: 'https://pbs.twimg.com/media/G8dEhDmbQAE3tZU.jpg'
       image:'assets/events/corporate.avif',
       sectionId: 'corporate'
     }
@@ -61,7 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       value: 0,
       label: 'Events Organized',
       icon: 'fas fa-calendar-check',
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      gradient: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)'
     },
     {
       value: 0,
@@ -87,66 +82,56 @@ export class HomeComponent implements OnInit, OnDestroy {
   teamMembers = [
     {
       name: 'Nikita Rawat',
-      // role: 'Awesome Cook',
       role: ' ',
-      // image: 'https://i.pravatar.cc/500?img=45'
       image: 'assets/team/Nikita.jpg'
     },
     {
       name: 'Aditya Pratap Singh',
-      // role: 'Team Lead',
       role: ' ',
       image: 'assets/team/Aditya.jpg'
     },
     {
       name: 'Aaron Prakash',
-      // role: 'Trustworthy Rizzler',
       role: ' ',
       image: 'assets/team/Aaron.jpg'
     },
     {
       name: 'Devanand B',
-      // role: 'Mr. Steal-yo-girl',
       role: ' ',
       image: 'assets/team/Devanand.jpg'
     },
     {
       name: 'Shane Sunny',
-      // role: 'Final Boss',
       role: ' ',
       image: 'assets/team/Shane.jpg'
     }
   ];
 
-  // Testimonials
-  testimonials = [
+  // Testimonials - will be loaded from database
+  testimonials: any[] = [];
+  
+  // Fallback testimonials if no feedbacks exist
+  fallbackTestimonials = [
     {
-      text: 'Working with EventHub was an absolute pleasure! They transformed our corporate event into something truly spectacular. The attention to detail and professionalism exceeded all our expectations.',
-      authorName: 'Anjali Mehta',
-      authorTitle: 'CEO, TechCorp India',
-      authorImage: 'https://i.pravatar.cc/200?img=45',
-      rating: 5
+      feedbackText: 'Working with EventHub was an absolute pleasure! They transformed our corporate event into something truly spectacular. The attention to detail and professionalism exceeded all our expectations.',
+      customerName: 'Anjali Mehta',
+      customerEmail: 'anjali.mehta@techcorp.in',
+      rating: 5,
+      authorImage: 'https://i.pravatar.cc/200?img=45'
     },
     {
-      text: 'Our wedding was a dream come true thanks to the EventHub team. From planning to execution, everything was flawless. They made our special day truly unforgettable!',
-      authorName: 'Rohan & Priya',
-      authorTitle: 'Happy Couple',
-      authorImage: 'https://i.pravatar.cc/200?img=32',
-      rating: 5
+      feedbackText: 'Our wedding was a dream come true thanks to the EventHub team. From planning to execution, everything was flawless. They made our special day truly unforgettable!',
+      customerName: 'Rohan & Priya',
+      customerEmail: 'rohan.priya@wedding.com',
+      rating: 5,
+      authorImage: 'https://i.pravatar.cc/200?img=32'
     },
     {
-      text: 'The team handled our annual conference with such expertise and care. Every detail was perfect, and our attendees were thoroughly impressed. Highly recommended!',
-      authorName: 'Dr. Suresh Kumar',
-      authorTitle: 'Director, Medical Association',
-      authorImage: 'https://i.pravatar.cc/200?img=68',
-      rating: 5
-    },
-    {
-      text: 'EventHub made our product launch a massive success. Their creativity and execution capabilities are top-notch. We will definitely work with them again!',
-      authorName: 'Neha Gupta',
-      authorTitle: 'Marketing Head, StartupXYZ',
-      authorImage: 'https://i.pravatar.cc/200?img=47',
-      rating: 5
+      feedbackText: 'The team handled our annual conference with such expertise and care. Every detail was perfect, and our attendees were thoroughly impressed. Highly recommended!',
+      customerName: 'Dr. Suresh Kumar',
+      customerEmail: 'suresh.kumar@medical.org',
+      rating: 5,
+      authorImage: 'https://i.pravatar.cc/200?img=68'
     }
   ];
 
@@ -154,6 +139,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadStatistics();
+    this.loadLatestFeedbacks();
     this.startAutoScroll();
   }
 
@@ -164,28 +150,66 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Load latest 3 feedbacks from database
+  loadLatestFeedbacks(): void {
+    this.httpService.getAllFeedbacks().subscribe(
+      (feedbacks: any[]) => {
+        console.log('Raw feedbacks from API:', feedbacks);
+        
+        if (feedbacks && feedbacks.length > 0) {
+          // Take only the latest 3 feedbacks and add avatar images
+          this.testimonials = feedbacks.slice(0, 3).map((feedback: any, index: number) => ({
+            ...feedback,
+            authorImage: this.getRandomAvatar(index)
+          }));
+          
+          console.log('Loaded testimonials:', this.testimonials);
+        } else {
+          // Use fallback testimonials if no feedbacks exist
+          this.testimonials = this.fallbackTestimonials;
+          console.log('No feedbacks found, using fallback testimonials');
+        }
+      },
+      error => {
+        console.error('Error loading feedbacks:', error);
+        // Use fallback testimonials on error
+        this.testimonials = this.fallbackTestimonials;
+      }
+    );
+  }
+
+  // Generate random avatar for testimonials
+  private getRandomAvatar(index: number): string {
+    const avatarIds = [45, 32, 68, 47, 28, 15, 22, 38, 51, 64];
+    const randomId = avatarIds[index % avatarIds.length];
+    return `https://i.pravatar.cc/200?img=${randomId}`;
+  }
+
+  // Helper method to get star array for ratings
+  getStarArray(rating: number): number[] {
+    return Array(5).fill(0).map((_, i) => i + 1);
+  }
+
   // Load live statistics from database
   loadStatistics(): void {
-    // Get COMPLETED events only
+    // Get all events
     this.httpService.GetAllevents().subscribe(
       (events: any) => {
-        // Filter only completed events (REMOVED ON 19/01/2026)
+        // Filter only completed events
         const completedEvents = events.filter((event: any) => 
           event.status && event.status.toLowerCase() === 'completed'
         );
-        this.stats[0].value = completedEvents.length;
+        
+        // Show total events count
         this.stats[0].value = events.length;
 
-        // If no completed events, show total events count
         if (completedEvents.length === 0) {
-        // if (events.length === 0) {
-          this.stats[0].value = events.length;
           console.log('No completed events found. Showing total events:', events.length);
         }
       },
       error => {
         console.error('Error loading events:', error);
-        this.stats[0].value = 0; // Fallback based on your database
+        this.stats[0].value = 0;
       }
     );
 
@@ -196,8 +220,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error => {
         console.error('Error loading planners:', error);
-        // Fallback to manual count from your database
-        this.stats[1].value = 0; // Based on your user table
+        this.stats[1].value = 0;
       }
     );
 
@@ -208,19 +231,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error => {
         console.error('Error loading staff:', error);
-        // Fallback
-        this.stats[2].value = 0; // Based on your user table
+        this.stats[2].value = 0;
       }
     );
 
+    // Get total clients (users with CLIENT role)
     this.httpService.getUsersByRole('CLIENT').subscribe(
-      (staff: any) => {
-        this.stats[3].value = staff.length;
+      (clients: any) => {
+        this.stats[3].value = clients.length;
       },
       error => {
-        console.error('Error loading staff:', error);
-        // Fallback
-        this.stats[3].value = 0; // Based on your user table
+        console.error('Error loading clients:', error);
+        this.stats[3].value = 0;
       }
     );
   }
@@ -229,10 +251,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   navigateToGallery(sectionId: string): void {
     this.router.navigate(['/gallery'], { fragment: sectionId });
   }
+
   // Auto-scroll testimonials every 3 seconds
   startAutoScroll(): void {
     this.autoScrollInterval = setInterval(() => {
-      if (!this.isAnimating) {
+      if (!this.isAnimating && this.testimonials.length > 0) {
         this.nextTestimonial();
       }
     }, 3000); // 3 seconds
@@ -253,7 +276,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Testimonial Carousel Methods
   nextTestimonial(): void {
-    if (this.isAnimating) return;
+    if (this.isAnimating || this.testimonials.length === 0) return;
     
     this.isAnimating = true;
     this.currentTestimonialIndex = (this.currentTestimonialIndex + 1) % this.testimonials.length;
@@ -265,7 +288,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   previousTestimonial(): void {
-    if (this.isAnimating) return;
+    if (this.isAnimating || this.testimonials.length === 0) return;
     
     this.pauseAutoScroll();
     this.isAnimating = true;
@@ -281,7 +304,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   goToTestimonial(index: number): void {
-    if (this.isAnimating || index === this.currentTestimonialIndex) return;
+    if (this.isAnimating || index === this.currentTestimonialIndex || this.testimonials.length === 0) return;
     
     this.pauseAutoScroll();
     this.isAnimating = true;
@@ -295,7 +318,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private updateCarousel(): void {
-    if (this.testimonialTrack) {
+    if (this.testimonialTrack && this.testimonials.length > 0) {
       const offset = -this.currentTestimonialIndex * 100;
       this.testimonialTrack.nativeElement.style.transform = `translateX(${offset}%)`;
     }

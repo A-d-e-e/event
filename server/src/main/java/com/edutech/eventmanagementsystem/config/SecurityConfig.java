@@ -1,5 +1,5 @@
 package com.edutech.eventmanagementsystem.config;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.annotation.Bean;
@@ -27,9 +27,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
- 
+
 import com.edutech.eventmanagementsystem.jwt.JwtRequestFilter;
- 
+
 @Configuration
 
 @EnableWebSecurity
@@ -43,14 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtRequestFilter jwtRequestFilter;
 
     private final PasswordEncoder passwordEncoder;
- 
+
     @Autowired
 
     public SecurityConfig(UserDetailsService userDetailsService,
 
-                          JwtRequestFilter jwtRequestFilter,
+            JwtRequestFilter jwtRequestFilter,
 
-                          PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
 
         this.userDetailsService = userDetailsService;
 
@@ -59,8 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.passwordEncoder = passwordEncoder;
 
     }
- 
- 
+
     @Override
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -68,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 
     }
- 
+
     @Override
 
     protected void configure(HttpSecurity http) throws Exception {
@@ -77,15 +76,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/planner/messages").hasAuthority("PLANNER")
-.antMatchers(HttpMethod.GET, "/api/planner/messages/**").hasAuthority("PLANNER")
+                .antMatchers(HttpMethod.GET, "/api/planner/messages/**").hasAuthority("PLANNER")
 
-// For STAFF
-.antMatchers(HttpMethod.POST, "/api/staff/messages").hasAuthority("STAFF")
-.antMatchers(HttpMethod.GET, "/api/staff/messages/**").hasAuthority("STAFF")
-.antMatchers(HttpMethod.POST, "/api/client/feedback/{eventId}").hasAuthority("CLIENT")
-        .antMatchers(HttpMethod.GET, "/api/public/feedbacks/**").permitAll()
-        .antMatchers(HttpMethod.PUT, "/api/planner/feedback/{feedbackId}/verify").hasAuthority("PLANNER")
-                .antMatchers("/api/otp/send","/api/otp/verify").permitAll()
+                // For STAFF
+                .antMatchers(HttpMethod.POST, "/api/staff/messages").hasAuthority("STAFF")
+                .antMatchers(HttpMethod.GET, "/api/staff/messages/**").hasAuthority("STAFF")
+                .antMatchers(HttpMethod.POST, "/api/client/feedback/{eventId}").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.GET, "/api/public/feedbacks/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/planner/feedback/{feedbackId}/verify").hasAuthority("PLANNER")
+                .antMatchers("/api/otp/send", "/api/otp/verify").permitAll()
 
                 .antMatchers(HttpMethod.POST, "/api/user/register").permitAll()
 
@@ -102,9 +101,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/planner/allocate-resources").hasAuthority("PLANNER")
 
                 .antMatchers("/api/users/role/**").permitAll()
-                
+
                 .antMatchers(HttpMethod.GET, "/api/user/events").permitAll()
-                
+
                 .antMatchers(HttpMethod.GET, "/api/staff/event-details/{eventId}").hasAuthority("STAFF")
 
                 .antMatchers(HttpMethod.PUT, "/api/staff/update-setup/{eventId}").hasAuthority("STAFF")
@@ -116,11 +115,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
- 
+
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-    } 
- 
+    }
+
     @Bean
 
     @Override

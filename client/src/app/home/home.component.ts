@@ -109,6 +109,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Testimonials - will be loaded from database
   testimonials: any[] = [];
+  isLoadingTestimonials: boolean = true;
   
   // Fallback testimonials if no feedbacks exist
   fallbackTestimonials = [
@@ -152,28 +153,47 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Load latest 3 feedbacks from database
   loadLatestFeedbacks(): void {
+    this.isLoadingTestimonials = true;
+    
     this.httpService.getAllFeedbacks().subscribe(
       (feedbacks: any[]) => {
         console.log('Raw feedbacks from API:', feedbacks);
         
         if (feedbacks && feedbacks.length > 0) {
-          // Take only the latest 3 feedbacks and add avatar images
-          this.testimonials = feedbacks.slice(0, 3).map((feedback: any, index: number) => ({
-            ...feedback,
+          // Sort by feedbackDate (newest first) and take only the latest 3
+          const sortedFeedbacks = feedbacks
+            .sort((a, b) => {
+              const dateA = new Date(a.feedbackDate).getTime();
+              const dateB = new Date(b.feedbackDate).getTime();
+              return dateB - dateA; // Descending order (newest first)
+            })
+            .slice(0, 3); // Take only first 3
+
+          // Map feedbacks to testimonials format with avatar images
+          this.testimonials = sortedFeedbacks.map((feedback: any, index: number) => ({
+            feedbackText: feedback.feedbackText,
+            customerName: feedback.customerName,
+            customerEmail: feedback.customerEmail,
+            rating: feedback.rating,
+            feedbackDate: feedback.feedbackDate,
             authorImage: this.getRandomAvatar(index)
           }));
           
-          console.log('Loaded testimonials:', this.testimonials);
+          console.log('Loaded latest 3 testimonials from database:', this.testimonials);
         } else {
           // Use fallback testimonials if no feedbacks exist
           this.testimonials = this.fallbackTestimonials;
-          console.log('No feedbacks found, using fallback testimonials');
+          console.log('No feedbacks found in database, using fallback testimonials');
         }
+        
+        this.isLoadingTestimonials = false;
       },
       error => {
-        console.error('Error loading feedbacks:', error);
+        console.error('Error loading feedbacks from API:', error);
         // Use fallback testimonials on error
         this.testimonials = this.fallbackTestimonials;
+        this.isLoadingTestimonials = false;
+        console.log('API error, using fallback testimonials');
       }
     );
   }
@@ -322,5 +342,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       const offset = -this.currentTestimonialIndex * 100;
       this.testimonialTrack.nativeElement.style.transform = `translateX(${offset}%)`;
     }
+  }
+
+  // Format date for display
+  formatDate(date: any): string {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
   }
 }

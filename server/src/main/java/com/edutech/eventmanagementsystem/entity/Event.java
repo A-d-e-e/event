@@ -1,28 +1,42 @@
 package com.edutech.eventmanagementsystem.entity;
  
- 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
  
-@Table(name = "events") // do not change table name
- 
+@Table(name = "events")
 @Entity
 public class Event {
  
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "event_id")
     private Long eventID;
+    
     private String title;
-    private  String description;
+    
+    private String description;
+    
     private Date dateTime;
+    
     private String location;
+    
     private String status;
+    
+    // NEW PAYMENT FIELDS
+    @Column(name = "payment_completed")
+    private Boolean paymentCompleted = false;
+    
+    @Column(name = "payment_status")
+    private String paymentStatus = "PENDING";
  
     @OneToMany(mappedBy = "event")
     private List<Allocation> allocations;
  
+    // Constructors
     public Event() {
+        this.paymentCompleted = false;
+        this.paymentStatus = "PENDING";
     }
  
     public Event(Long eventID, String title, String description, Date dateTime, String location, String status, List<Allocation> allocations) {
@@ -33,8 +47,11 @@ public class Event {
         this.location = location;
         this.status = status;
         this.allocations = allocations;
+        this.paymentCompleted = false;
+        this.paymentStatus = "PENDING";
     }
  
+    // Getters and Setters
     public Long getEventID() {
         return eventID;
     }
@@ -90,7 +107,21 @@ public class Event {
     public void setAllocations(List<Allocation> allocations) {
         this.allocations = allocations;
     }
-   
+    
+    // NEW PAYMENT GETTERS AND SETTERS
+    public Boolean getPaymentCompleted() {
+        return paymentCompleted;
+    }
+    
+    public void setPaymentCompleted(Boolean paymentCompleted) {
+        this.paymentCompleted = paymentCompleted;
+    }
+    
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+    
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
 }
- 
- 

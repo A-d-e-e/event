@@ -7,90 +7,108 @@ import org.springframework.web.bind.annotation.*;
 
 import com.edutech.eventmanagementsystem.entity.Event;
 import com.edutech.eventmanagementsystem.service.EventService;
+import com.edutech.eventmanagementsystem.service.PaymentService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*") // Enable CORS for all origins
+@CrossOrigin(origins = "*")
 public class ClientController {
 
     @Autowired
     private EventService eventService;
+    
+    @Autowired
+    private PaymentService paymentService;
 
-    /**
-     * Get booking details by Event ID
-     * Endpoint: GET /api/client/booking-details/{eventId}
-     * Returns: Event object with all details including allocations and prices
-     */
     @GetMapping("/api/client/booking-details/{eventId}")
     public ResponseEntity<Event> getBookingDetails(@PathVariable Long eventId) {
         try {
+            System.out.println("=== GET BOOKING DETAILS ===");
+            System.out.println("Event ID: " + eventId);
+            
             Event event = eventService.getEventDetails(eventId);
-            if (event != null) {
-                return ResponseEntity.ok(event);
-            } else {
+            if (event == null) {
+                System.out.println("❌ Event not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        } catch (EntityNotFoundException e) {
-            System.err.println("Event not found: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            
+            System.out.println("Event: " + event.getTitle());
+            
+            boolean hasPaid = paymentService.hasSuccessfulPayment(eventId);
+            event.setPaymentCompleted(hasPaid);
+            event.setPaymentStatus(hasPaid ? "PAID" : "PENDING");
+            
+            System.out.println("Payment Status: " + event.getPaymentStatus());
+            
+            return ResponseEntity.ok(event);
+            
         } catch (Exception e) {
-            System.err.println("Error fetching booking details: " + e.getMessage());
+            System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Search booking details by Event Title
-     * Endpoint: GET /api/client/booking-details/search?title={title}
-     * Returns: First matching Event object with allocations and prices
-     */
     @GetMapping("/api/client/booking-details/search")
     public ResponseEntity<Event> searchBookingDetailsByTitle(@RequestParam String title) {
         try {
+            System.out.println("=== SEARCH BOOKING ===");
+            System.out.println("Title: " + title);
+            
             if (title == null || title.trim().isEmpty()) {
                 return ResponseEntity.badRequest().build();
             }
 
             List<Event> events = eventService.searchEventsByTitle(title.trim());
             
-            if (events != null && !events.isEmpty()) {
-                // Return the first matching event
-                return ResponseEntity.ok(events.get(0));
-            } else {
+            if (events == null || events.isEmpty()) {
+                System.out.println("❌ No events found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
+            
+            Event event = events.get(0);
+            System.out.println("Found: " + event.getTitle());
+            
+            boolean hasPaid = paymentService.hasSuccessfulPayment(event.getEventID());
+            event.setPaymentCompleted(hasPaid);
+            event.setPaymentStatus(hasPaid ? "PAID" : "PENDING");
+            
+            System.out.println("Payment Status: " + event.getPaymentStatus());
+            
+            return ResponseEntity.ok(event);
+            
         } catch (Exception e) {
-            System.err.println("Error searching booking details by title: " + e.getMessage());
+            System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Get all events for client view
-     * Endpoint: GET /api/client/allEvents
-     * Returns: List of all events with allocations
-     */
     @GetMapping("/api/client/allEvents")
     public ResponseEntity<List<Event>> getAllEventsForClient() {
         try {
             List<Event> events = eventService.getAllEvents();
+            
+            events.forEach(event -> {
+                try {
+                    boolean hasPaid = paymentService.hasSuccessfulPayment(event.getEventID());
+                    event.setPaymentCompleted(hasPaid);
+                    event.setPaymentStatus(hasPaid ? "PAID" : "PENDING");
+                } catch (Exception e) {
+                    event.setPaymentCompleted(false);
+                    event.setPaymentStatus("PENDING");
+                }
+            });
+            
             return ResponseEntity.ok(events);
         } catch (Exception e) {
-            System.err.println("Error fetching all events for client: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Get event details by title for client (alternative endpoint)
-     * Endpoint: GET /api/client/event-detailsbyTitleforClient/{title}
-     * Returns: Event object matching the title
-     */
     @GetMapping("/api/client/event-detailsbyTitleforClient/{title}")
     public ResponseEntity<Event> getEventDetailsByTitleForClient(@PathVariable String title) {
         try {
@@ -100,14 +118,20 @@ public class ClientController {
 
             List<Event> events = eventService.searchEventsByTitle(title.trim());
             
-            if (events != null && !events.isEmpty()) {
-                return ResponseEntity.ok(events.get(0));
-            } else {
+            if (events == null || events.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
+            
+            Event event = events.get(0);
+            
+            boolean hasPaid = paymentService.hasSuccessfulPayment(event.getEventID());
+            event.setPaymentCompleted(hasPaid);
+            event.setPaymentStatus(hasPaid ? "PAID" : "PENDING");
+            
+            return ResponseEntity.ok(event);
+            
         } catch (Exception e) {
-            System.err.println("Error fetching event details by title for client: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

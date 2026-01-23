@@ -26,34 +26,37 @@ public class PaymentController {
     @Autowired
     private EventService eventService;
 
-    /**
-     * Initiate payment for an event
-     * POST /api/payment/initiate/{eventId}
-     */
     @PostMapping("/initiate/{eventId}")
-    public ResponseEntity<Payment> initiatePayment(@PathVariable Long eventId,
-                                                   @RequestBody Payment payment) {
+    public ResponseEntity<?> initiatePayment(@PathVariable Long eventId, @RequestBody Payment payment) {
         try {
+            System.out.println("=== INITIATE PAYMENT API CALLED ===");
+            System.out.println("Event ID: " + eventId);
+            
             Payment createdPayment = paymentService.initiatePayment(eventId, payment);
+            System.out.println("✅ Payment created: " + createdPayment.getPaymentID());
+            
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPayment);
+            
         } catch (EntityNotFoundException e) {
-            System.err.println("Event not found: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            System.err.println("❌ Event not found: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                Map.of("error", "Event not found", "message", e.getMessage())
+            );
         } catch (Exception e) {
-            System.err.println("Error initiating payment: " + e.getMessage());
+            System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                Map.of("error", "Failed to initiate payment", "message", e.getMessage())
+            );
         }
     }
 
-    /**
-     * Process UPI payment
-     * POST /api/payment/process-upi/{paymentId}
-     */
     @PostMapping("/process-upi/{paymentId}")
-    public ResponseEntity<Map<String, Object>> processUpiPayment(@PathVariable Long paymentId,
-                                                                  @RequestBody Map<String, String> upiData) {
+    public ResponseEntity<?> processUpiPayment(@PathVariable Long paymentId, @RequestBody Map<String, String> upiData) {
         try {
+            System.out.println("=== PROCESS UPI API CALLED ===");
+            System.out.println("Payment ID: " + paymentId);
+            
             String upiId = upiData.get("upiId");
             if (upiId == null || upiId.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body(
@@ -68,75 +71,50 @@ public class PaymentController {
             response.put("message", "Payment processed successfully");
             response.put("payment", payment);
             
+            System.out.println("✅ Payment successful");
+            
             return ResponseEntity.ok(response);
+            
         } catch (EntityNotFoundException e) {
-            System.err.println("Payment not found: " + e.getMessage());
+            System.err.println("❌ Payment not found: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 Map.of("success", false, "message", e.getMessage())
             );
         } catch (Exception e) {
-            System.err.println("Error processing UPI payment: " + e.getMessage());
+            System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                Map.of("success", false, "message", "Failed to process payment")
+                Map.of("success", false, "message", "Payment processing failed: " + e.getMessage())
             );
         }
     }
 
-    /**
-     * Get payment details by ID
-     * GET /api/payment/{paymentId}
-     */
     @GetMapping("/{paymentId}")
-    public ResponseEntity<Payment> getPaymentById(@PathVariable Long paymentId) {
+    public ResponseEntity<?> getPaymentById(@PathVariable Long paymentId) {
         try {
             Payment payment = paymentService.getPaymentById(paymentId);
             return ResponseEntity.ok(payment);
         } catch (EntityNotFoundException e) {
-            System.err.println("Payment not found: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            System.err.println("Error fetching payment: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                Map.of("error", "Payment not found")
+            );
         }
     }
 
-    /**
-     * Get all payments
-     * GET /api/payment/all
-     */
     @GetMapping("/all")
     public ResponseEntity<List<Payment>> getAllPayments() {
-        try {
-            List<Payment> payments = paymentService.getAllPayments();
-            return ResponseEntity.ok(payments);
-        } catch (Exception e) {
-            System.err.println("Error fetching payments: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Payment> payments = paymentService.getAllPayments();
+        return ResponseEntity.ok(payments);
     }
 
-    /**
-     * Get payments by event ID
-     * GET /api/payment/event/{eventId}
-     */
     @GetMapping("/event/{eventId}")
     public ResponseEntity<List<Payment>> getPaymentsByEventId(@PathVariable Long eventId) {
-        try {
-            List<Payment> payments = paymentService.getPaymentsByEventId(eventId);
-            return ResponseEntity.ok(payments);
-        } catch (Exception e) {
-            System.err.println("Error fetching payments for event: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Payment> payments = paymentService.getPaymentsByEventId(eventId);
+        return ResponseEntity.ok(payments);
     }
 
-    /**
-     * Calculate total amount for an event
-     * GET /api/payment/calculate/{eventId}
-     */
     @GetMapping("/calculate/{eventId}")
-    public ResponseEntity<Map<String, Object>> calculateAmount(@PathVariable Long eventId) {
+    public ResponseEntity<?> calculateAmount(@PathVariable Long eventId) {
         try {
             Event event = eventService.getEventDetails(eventId);
             if (event == null) {
@@ -156,10 +134,8 @@ public class PaymentController {
             
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.err.println("Error calculating amount: " + e.getMessage());
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                Map.of("success", false, "message", "Failed to calculate amount")
+                Map.of("success", false, "message", e.getMessage())
             );
         }
     }
